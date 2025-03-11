@@ -7,8 +7,9 @@
 mayor = -100000
 menor = 100000
 i = 1
+n = int(input("Digite la cantidad de números que quiere ingresar: "))
 # Se pide al usuario que digite n numeros enteros
-while i <= 12:
+while i <= n:
     numero = int(input("Digite un numero entero: "))   
     if numero > mayor:
         mayor = numero

@@ -8,6 +8,6 @@ if numeroEntero>0:
     print("El numero "+ str(numeroEntero) +" es positivo" )   #Se imprime el numero entero y se dice que es positivo
 else:
     if numeroEntero==0:
-        print("El numero "+ str(numeroEntero) +" es nulo" )   #Se imprime el numero entero y se dice que es cero
+        print("El numero "+ str(numeroEntero) +" es nulo" )   #Se imprime el numero entero y se dice que es nulo
     else:
         print("El numero "+ str(numeroEntero) +" es negativo" )   #Se imprime el numero entero y se dice que es negativo

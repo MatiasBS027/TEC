@@ -7,9 +7,9 @@
 mayor = -100000
 menor = 100000
 i = 1
-
+# Se pide al usuario que digite n numeros enteros
 while i <= 12:
-    numero = int(input("Digite un numero entero: "))   # Se pide al usuario que digite un numero entero
+    numero = int(input("Digite un numero entero: "))   
     if numero > mayor:
         mayor = numero
     if numero < menor:

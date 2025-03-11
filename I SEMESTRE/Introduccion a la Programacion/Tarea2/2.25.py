@@ -34,4 +34,4 @@ def determinarNumero(pa,pb,pc):
 a = int(input("Digite el valor de a: "))
 b = int(input("Digite el valor de b: "))
 c = int(input("Digite el valor de c: "))
-print(determinarNumero(a,b,c))
+print(determinarNumero(a,

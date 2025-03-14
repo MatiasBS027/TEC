@@ -38,7 +38,9 @@ def costoEnfermedadAux(ptipoEnfermedad, pedad, pdias): # Función auxiliar para 
     '''
     if type(ptipoEnfermedad) != int or type(pedad) != int or type(pdias) != int: # Verifica si los datos ingresados son enteros
         return "Los tres numeros deben ser numeros enteros"
-    elif ptipoEnfermedad <=0 or pedad <0 or pdias <=0: # Verifica si los datos ingresados son mayores a 0
+    elif ptipoEnfermedad not in [1, 2, 3, 4]: # Verifica si el tipo de enfermedad es 1, 2, 3 o 4
+        return "El tipo de enfermedad debe ser 1, 2, 3 o 4"
+    elif pedad <0 or pdias <=0: # Verifica si los datos ingresados son mayores a 0
         return "Los tres numeros deben ser mayores a 0"
     else:
         return costoEnfermedad(ptipoEnfermedad, pedad, pdias)
@@ -53,14 +55,12 @@ def costoEnfermedadES():
     Salidas:
     -costoEnfermedad(): Llama a la función 'costoEnfermedadAux'
     '''
-    while True:
-        try:
-            tipoEnfermedad = int(input("¿Cual es el tipo de enfermedad del paciente?:\nEnfermedad /1/2/3/4/:  ")) # Solicita al usuario que ingrese el tipo de enfermedad
-            edad = int(input("¿Cual es la edad del paciente?: ")) # Solicita al usuario que ingrese la edad del paciente
-            dias = int(input("¿Cuantos dias de tratamiento necesita el paciente?: ")) # Solicita al usuario que ingrese los dias de tratamiento
-            break
-        except ValueError:
-            print("Todos los valores ingresados deben ser números enteros. Por favor, intente de nuevo.")
+    try:
+        tipoEnfermedad = int(input("¿Cual es el tipo de enfermedad del paciente?:\nEnfermedad /1/2/3/4/:  ")) # Solicita al usuario que ingrese el tipo de enfermedad
+        edad = int(input("¿Cual es la edad del paciente?: ")) # Solicita al usuario que ingrese la edad del paciente
+        dias = int(input("¿Cuantos dias de tratamiento necesita el paciente?: ")) # Solicita al usuario que ingrese los dias de tratamiento
+    except ValueError:
+        return print("Todos los valores ingresados deben ser números enteros.")
     
     return print(costoEnfermedadAux(tipoEnfermedad, edad, dias)) # Imprime el resultado de la función 'costoEnfermedad'
 

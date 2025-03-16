@@ -61,6 +61,7 @@ def obtenerNumEmpleadosES():
         for i in range(numEmpleados):
             numDelEmpleado = int(input(f"Ingrese el numero del empleado "+ str(i+1)+ ": "))
             sueldo = int(input(f"Ingrese el sueldo del empleado"+ str(i+1)+": $"))
+            obtenerNumEmpleados(sueldo, numDelEmpleado, mayorSueldo, numDelEmpleadoM)
                 
     except ValueError:
         return "Los datos deben ser numeros enteros"

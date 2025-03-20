@@ -126,49 +126,109 @@ def convertirBinarioADecimal(pNumeroBinario):
         potencia -= 1
     return valorDecimal
 
-# Código principal para probar las funciones
-try:
-# Prueba Reto 6
-    print("\n=== Reto 6: Dígito Mayor ===")
-    numeroReto6 = input("Digite un número sin letras: ")
-    if numeroReto6.isdigit():
-        print(validarEntrada(int(numeroReto6)))
-    else:
-        print("El valor debe ser únicamente entero")
+def determinarDigitoMayorAUX(pNumero):
+    """
+    Función auxiliar para validar entrada del Reto 6
+    """
+    try:
+        if not pNumero.isdigit():
+            return "El valor debe ser únicamente entero"
+        numero = int(pNumero)
+        if numero <= 0:
+            return "El número debe ser mayor a 0"
+        return determinarDigitoMayor(numero)
+    except ValueError:
+        return "Error en la entrada"
 
-    # Prueba Reto 7
-    print("\n=== Reto 7: Potencia ===")
-    baseReto7 = int(input("Digite la base: "))
-    exponenteReto7 = int(input("Digite el exponente: "))
-    print(calcularPotencia(baseReto7, exponenteReto7))
+def calcularPotenciaAUX(pBase, pExponente):
+    """
+    Función auxiliar para validar entrada del Reto 7
+    """
+    try:
+        base = int(pBase)
+        exponente = int(pExponente)
+        if base < 0 or exponente < 0:
+            return "Los valores deben ser positivos"
+        return calcularPotencia(base, exponente)
+    except ValueError:
+        return "Error: Ingrese solo números"
 
-    # Prueba Reto 8
-    print("\n=== Reto 8: Número Primo ===")
-    numeroReto8 = int(input("Digite un número: "))
-    print(esNumeroPrimo(numeroReto8))
+def esNumeroPrimoAUX(pNumero):
+    """
+    Función auxiliar para validar entrada del Reto 8
+    """
+    try:
+        numero = int(pNumero)
+        if numero <= 1:
+            return "El número debe ser mayor a 1"
+        return esNumeroPrimo(numero)
+    except ValueError:
+        return "Error: Ingrese un número válido"
 
-    # Prueba Reto 9
-    print("\n=== Reto 9: Suma de Múltiplos ===")
-    numeroReto9 = int(input("Digite un número entero positivo: "))
-    digitoReto9 = int(input("Digite el dígito para verificar múltiplos: "))
-    print(f"La suma de los dígitos múltiplos de {digitoReto9} es: {sumarDigitosMultiplos(numeroReto9, digitoReto9)}")
+def sumarDigitosMultiplosAUX(pNumero, pDigito):
+    """
+    Función auxiliar para validar entrada del Reto 9
+    """
+    try:
+        numero = int(pNumero)
+        digito = int(pDigito)
+        if numero <= 0:
+            return "El número debe ser mayor a 0"
+        if digito <= 0:
+            return "El dígito debe ser mayor a 0"
+        return sumarDigitosMultiplos(numero, digito)
+    except ValueError:
+        return "Error: Ingrese solo números"
 
-    # Prueba Reto 10
-    print("\n=== Reto 10: Verificar Binario ===")
-    numeroReto10 = int(input("Digite un número para verificar si es binario: "))
-    if esNumeroBinario(numeroReto10):
-        print("El número ES binario")
-    else:
-        print("El número NO es binario")
+def esNumeroBinarioAUX(pNumero):
+    """
+    Función auxiliar para validar entrada del Reto 10
+    """
+    try:
+        numero = int(pNumero)
+        if numero < 0:
+            return "El número debe ser positivo"
+        return "El número ES binario" if esNumeroBinario(numero) else "El número NO es binario"
+    except ValueError:
+        return "Error: Ingrese un número válido"
 
-    # Prueba Reto 11
-    print("\n=== Reto 11: Convertir Binario a Decimal ===")
-    numeroBinarioReto11 = input("Digite un número binario: ")
-    if all(digito in '01' for digito in numeroBinarioReto11):
-        resultado = convertirBinarioADecimal(numeroBinarioReto11)
-        print(f"El número binario {numeroBinarioReto11} en decimal es: {resultado}")
-    else:
-        print("Por favor ingrese un número binario válido (solo 0s y 1s)")
+def convertirBinarioADecimalAUX(pBinario):
+    """
+    Función auxiliar para validar entrada del Reto 11
+    """
+    if not pBinario:
+        return "Error: Ingrese un número"
+    if not all(digito in '01' for digito in pBinario):
+        return "Error: Ingrese solo números binarios (0 y 1)"
+    return convertirBinarioADecimal(pBinario)
 
-except ValueError as e:
-    print("Por favor ingrese valores numéricos válidos")
+# Modificar el código principal para usar las nuevas funciones AUX
+print("\n=== Reto 6: Dígito Mayor ===")
+numeroReto6 = input("Digite un número sin letras: ")
+print(determinarDigitoMayorAUX(numeroReto6))
+
+print("\n=== Reto 7: Potencia ===")
+baseReto7 = input("Digite la base: ")
+exponenteReto7 = input("Digite el exponente: ")
+print(calcularPotenciaAUX(baseReto7, exponenteReto7))
+
+print("\n=== Reto 8: Número Primo ===")
+numeroReto8 = input("Digite un número: ")
+print(esNumeroPrimoAUX(numeroReto8))
+
+print("\n=== Reto 9: Suma de Múltiplos ===")
+numeroReto9 = input("Digite un número entero positivo: ")
+digitoReto9 = input("Digite el dígito para verificar múltiplos: ")
+print(sumarDigitosMultiplosAUX(numeroReto9, digitoReto9))
+
+print("\n=== Reto 10: Verificar Binario ===")
+numeroReto10 = input("Digite un número para verificar si es binario: ")
+print(esNumeroBinarioAUX(numeroReto10))
+
+print("\n=== Reto 11: Convertir Binario a Decimal ===")
+numeroBinarioReto11 = input("Digite un número binario: ")
+resultado = convertirBinarioADecimalAUX(numeroBinarioReto11)
+if isinstance(resultado, int):
+    print(f"El número binario {numeroBinarioReto11} en decimal es: {resultado}")
+else:
+    print(resultado)

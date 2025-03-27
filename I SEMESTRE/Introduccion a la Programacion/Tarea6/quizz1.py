@@ -40,19 +40,19 @@ def contarAparicionesES(pn1,pn2):
 print("\n=== Encontrar Digitos ===")
 pn1= 22
 pn2= 2228
-print("Para la entrada:",pn1,pn2)
+print("Para la entrada:",(pn1,pn2))
 print(contarAparicionesES(pn1,pn2))
 pn1= 808
 pn2= 80808808
-print("Para la entrada:",pn1,pn2)
+print("Para la entrada:",(pn1,pn2))
 print(contarAparicionesES(pn1,pn2))
 pn1= 12345
 pn2= 1234
-print("Para la entrada:",pn1,pn2)
+print("Para la entrada:",(pn1,pn2))
 print(contarAparicionesES(pn1,pn2))
 pn1= 1
 pn2= 10111010 
-print("Para la entrada:",pn1,pn2)
+print("Para la entrada:",(pn1,pn2))
 print(contarAparicionesES(pn1,pn2))
 
 #==============================reto2=============================
@@ -107,33 +107,33 @@ def remplazarNumeroES(pnume,pnume2,pnume3):
         return "Debe ingresar un número entero"
 
 print("\n=== Remplazar Digitos ===")
-pnume= 22
-pnume2= 2228
+pnume=22
+pnume2=2228
 pnume3=4
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))
-pnume= 808
+pnume=808
 pnume2=980808808
 pnume3=25
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))
-pnume= 457
-pnume2= 4528457
+pnume=457
+pnume2=4528457
 pnume3=12345
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))
 pnume=123450
 pnume2=1234
 pnume3=30
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))
 pnume=22
 pnume2=2228
 pnume3=4.5
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))
 pnume=22
 pnume2="0"
 pnume3=4
-print("Para la entrada:",pnume,pnume2,pnume3)
+print("Para la entrada:",(pnume,pnume2,pnume3))
 print(remplazarNumeroES(pnume,pnume2,pnume3))

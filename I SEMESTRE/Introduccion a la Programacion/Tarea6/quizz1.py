@@ -23,6 +23,7 @@ def contarApariciones(pnum, pnum2):
         pnum2 //= divisor  
 
     return contador 
+
 def contarAparicionesAUX(pnum,pnum2):
     if pnum < 0 and pnum2 < 0:
         return "Ambos números deben ser mayores a 0"

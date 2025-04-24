@@ -161,3 +161,51 @@ codigo= "16570R1450T"
 print("Para la entrada:",codigo)
 print(decodificarNeumáticosES(codigo),"\n")
 
+#----------------Reto 3 con ER -------------------
+#Definicion de funciones
+def decodificarNeumáticosAUX(codigo):
+    if not re.search("^\d{5}", codigo):
+        return "El ancho de la llanta o la relación de altura y ancho ingresados son incorrectos para poder decodificar el neumático."
+    elif not re.search("^.{5}[RD]", codigo):
+        return "La construcción del radial es incorrecta para poder decodificar el neumático."
+    elif not re.search("1[4-7]", codigo):
+        return "El diametro en pulgadas es incorrecto para poder decodificar el neumático."
+    elif not re.search("(90|[7-8][0-9])", codigo[8:10]):
+        return "La capacidad de carga es incorrecta para poder decodificar el neumático."
+    elif not re.search("[KLMPQRSTUHVWYZR]", codigo):
+        return "El código indicado no corresponde a una lectura correcta de un neumático."
+    else:
+        return decodificarNeumáticos(codigo)
+
+def decodificarNeumáticosES(codigo):
+    try:
+        resultado = decodificarNeumáticosAUX(codigo)
+        if isinstance(resultado, str):
+            return resultado  
+        altura, anchura, radial, diametro, capacidad, velocidad = resultado
+        return (f"""El ancho de la llanta que usa su vehículo es: {anchura} milímetros
+Para un {altura} de la relación altura y ancho
+Con construcción {radial}
+Su diámetro es de {diametro} pulgadas
+Su índice de carga es de {codigo[8:10]}, por ende, permite un soporte de {capacidad} kg
+Cuidado, la velocidad máxima que soporta su llanta es de {velocidad} Km/h""")
+
+    except ValueError:
+        return "El código indicado no corresponde a una lectura correcta de un neumático. "
+
+print("\n========= Decodificacion de un Neumatico con ER ===========")
+codigo= "16570R1484T"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555D1687V"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555D1687AA"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555B1687ZR"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "16570R1450T"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")

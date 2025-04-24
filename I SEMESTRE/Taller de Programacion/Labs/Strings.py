@@ -26,7 +26,7 @@ def nomenclatraVarillaAux (pcodigo):
         return "El diámetro de entrada no es un valor permitido"
     elif pcodigo[3] not in "SW":
         return "Debe indicar el proceso de fabricación S o W"
-    elif pcodigo[4:] not in ["40","60","70"]:
+    elif pcodigo[4:] not in ("40","60","70"): #La profe dejo usar tuplas en este caso
         return "El grado del acero no es un valor permitido"
     else:
         return nomenclatraVarilla(pcodigo)
@@ -72,15 +72,15 @@ def nomenclatraVarillaAux (pcodigo):
     -str: Mensaje de error si el código es inválido
     -tuple: Componentes de la varilla si el código es válido
     '''
-    if not re.match('.{6}', pcodigo):    # Valida longitud exacta de 6 caracteres
+    if not re.match('.{6}', pcodigo):   
         return "Debe indicar 6 valores exactamente"
-    if not re.match('[A-Z]{2}', pcodigo[0:2]):     # Valida que los primeros 2 caracteres sean letras mayúsculas
+    if not re.match('[A-Z]{2}', pcodigo[0:2]):    
         return "Valores deben ser sólo letras mayúsculas"
-    if not re.match('[34568]', pcodigo[2]):    # Valida el diámetro
+    if not re.match('[34568]', pcodigo[2]):    
         return "El diámetro de entrada no es un valor permitido"
-    if not re.match('[SW]', pcodigo[3]):     # Valida el proceso de fabricación
+    if not re.match('[SW]', pcodigo[3]):     
         return "Debe indicar el proceso de fabricación S o W"
-    if not re.match('(40|60|70)$', pcodigo[4:]):     # Valida el grado de acero
+    if not re.match('(40|60|70)$', pcodigo[4:]):     
         return "El grado del acero no es un valor permitido"
     
     return nomenclatraVarilla(pcodigo)
@@ -88,7 +88,7 @@ def nomenclatraVarillaAux (pcodigo):
 
 def nomenclatraVarillaES (codigo):
     '''
-    Funcionamiento: Genera una descripción legible de las características de la varilla
+    Funcionamiento: Genera una descripción legible de las características de la varilla con expresiones regulares
     Entradas:
     -codigo(str): Código completo de la varilla
     Salidas:
@@ -118,6 +118,14 @@ print(nomenclatraVarillaES(codigo),"\n")
 #----------------Reto 3-------------------
 #Definicion de funciones
 def decodificarNeumáticosAUX(codigo):
+    '''
+    Funcionamiento: Valida que el código del neumático cumpla con el formato requerido
+    Entradas:
+    -codigo(str): Código del neumático a validar
+    Salidas:
+    -str: Mensaje de error si el código es inválido
+    -tuple: Componentes del neumático si el código es válido
+    '''
     carga = int(codigo[8:10])
     if len(codigo) == 12:
         if codigo[11] != "R":
@@ -129,6 +137,13 @@ def decodificarNeumáticosAUX(codigo):
     return decodificarNeumáticos(codigo)
 
 def decodificarNeumáticosES(codigo):
+    '''
+    Funcionamiento: Genera una descripción legible de las características del neumático
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Descripción detallada del neumático o mensaje de error si el código es inválido
+    '''
     try:
         resultado = decodificarNeumáticosAUX(codigo)
         if isinstance(resultado, str):
@@ -164,6 +179,14 @@ print(decodificarNeumáticosES(codigo),"\n")
 #----------------Reto 3 con ER -------------------
 #Definicion de funciones
 def decodificarNeumáticosAUX(codigo):
+    '''
+    Funcionamiento: Valida que el código del neumático cumpla con el formato requerido con expresiones regulares
+    Entradas:
+    -codigo(str): Código del neumático a validar
+    Salidas:
+    -str: Mensaje de error si el código es inválido
+    -tuple: Componentes del neumático si el código es válido
+    '''
     if not re.search("^\d{5}", codigo):
         return "El ancho de la llanta o la relación de altura y ancho ingresados son incorrectos para poder decodificar el neumático."
     elif not re.search("^.{5}[RD]", codigo):
@@ -178,6 +201,13 @@ def decodificarNeumáticosAUX(codigo):
         return decodificarNeumáticos(codigo)
 
 def decodificarNeumáticosES(codigo):
+    '''
+    Funcionamiento: Genera una descripción legible de las características del neumático
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Descripción detallada del neumático o mensaje de error si el código es inválido
+    '''
     try:
         resultado = decodificarNeumáticosAUX(codigo)
         if isinstance(resultado, str):

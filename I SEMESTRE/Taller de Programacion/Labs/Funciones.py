@@ -74,30 +74,65 @@ def nomenclatraVarilla (pcodigo):
 #-------------Reto 2------------------
 #Definicion de funciones
 def anchuraLlanta(codigo):
+    '''
+    Funcionamiento: Obtiene el ancho de la llanta en milímetros
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Ancho de la llanta en milímetros
+    '''
     if codigo[0:3] == "195":
         return "195"
     elif codigo[0:3] == "165":
         return "165"
 
 def alturaAncho(codigo):
+    '''
+    Funcionamiento: Obtiene la relación de aspecto entre altura y ancho
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Porcentaje de la relación altura/ancho
+    '''
     if codigo[3:5] == "55":
         return "55%"
     elif codigo[3:5] == "70":
         return "70%"
 
 def construccion(codigo):
+    '''
+    Funcionamiento: Determina el tipo de construcción del neumático
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Tipo de construcción (Radial o Diagonal)
+    '''
     if codigo[5] == "R":
         return "Radial"
     elif codigo[5] == "D":
         return "Diagonal"
 
 def diametroLlanta(codigo):
+    '''
+    Funcionamiento: Obtiene el diámetro de la llanta en pulgadas
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Diámetro de la llanta en pulgadas
+    '''
     if codigo[6:8] == "16":
         return "16"
     elif codigo[6:8] == "14":
         return "14"
 
 def capacidadCarga(codigo):
+    '''
+    Funcionamiento: Convierte el índice de carga a su equivalente en kilogramos
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Capacidad de carga en kilogramos
+    '''
     if codigo[8:10] == "70":
         return "335"
     elif codigo[8:10] == "71":
@@ -142,6 +177,13 @@ def capacidadCarga(codigo):
         return "600"
 
 def velocidadMax(codigo):
+    '''
+    Funcionamiento: Convierte el código de velocidad a kilómetros por hora
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -str: Velocidad máxima en km/h
+    '''
     if codigo[10:] == "K":
         return "110"
     elif codigo[10:] == "L":
@@ -175,6 +217,13 @@ def velocidadMax(codigo):
 
 
 def decodificarNeumáticos(codigo):
+    '''
+    Funcionamiento: Descompone el código del neumático en sus componentes
+    Entradas:
+    -codigo(str): Código completo del neumático
+    Salidas:
+    -tuple: (altura, anchura, radial, diametro, capacidad, velocidad)
+    '''
     anchura = anchuraLlanta(codigo)
     altura = alturaAncho(codigo)
     radial = construccion(codigo)

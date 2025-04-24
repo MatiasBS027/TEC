@@ -46,19 +46,19 @@ def nomenclatraVarillaES (codigo):
     fabricante, diametro, fabricacion, acero = resultado
     return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
 
-print("\n=== Nomenclatura de una varilla sin ER ===")
+print("\n========= Nomenclatura de una varilla sin ER ==========")
 codigo= "SV5S6"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV9S60"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV5S55"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV5S60"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 
 
 #-------------Reto 1 con ER------------------
@@ -101,16 +101,63 @@ def nomenclatraVarillaES (codigo):
     fabricante, diametro, fabricacion, acero = resultado
     return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
 
-print("\n=== Nomenclatura de una varilla con ER ===")
+print("\n========= Nomenclatura de una varilla con ER ==========")
 codigo= "SV5S6"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV9S60"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV5S55"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV5S60"
 print("Para la entrada:",codigo)
-print(nomenclatraVarillaES(codigo))
+print(nomenclatraVarillaES(codigo),"\n")
+
+#----------------Reto 3-------------------
+#Definicion de funciones
+def decodificarNeumáticosAUX(codigo):
+    carga = int(codigo[8:10])
+    if len(codigo) == 12:
+        if codigo[11] != "R":
+            return "El código indicado no corresponde a una lectura correcta de un neumático. "
+    if codigo[5] not in "RD":
+        return "La construcción del radial es incorrecta para poder decodificar el neumático."
+    if carga <70 or carga > 90:
+        return "La capacidad de carga es incorrecta para poder decodificar el neumático. "
+    return decodificarNeumáticos(codigo)
+
+def decodificarNeumáticosES(codigo):
+    try:
+        resultado = decodificarNeumáticosAUX(codigo)
+        if isinstance(resultado, str):
+            return resultado  
+        altura, anchura, radial, diametro, capacidad, velocidad = resultado
+        return (f"""El ancho de la llanta que usa su vehículo es: {anchura} milímetros
+Para un {altura} de la relación altura y ancho
+Con construcción {radial}
+Su diámetro es de {diametro} pulgadas
+Su índice de carga es de {codigo[8:10]}, por ende, permite un soporte de {capacidad} kg
+Cuidado, la velocidad máxima que soporta su llanta es de {velocidad} Km/h""")
+
+    except ValueError:
+        return "El código indicado no corresponde a una lectura correcta de un neumático. "
+
+print("\n========= Decodificacion de un Neumatico sin ER ===========")
+codigo= "16570R1484T"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555D1687V"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555D1687AA"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "19555B1687ZR"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+codigo= "16570R1450T"
+print("Para la entrada:",codigo)
+print(decodificarNeumáticosES(codigo),"\n")
+

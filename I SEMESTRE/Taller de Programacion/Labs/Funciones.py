@@ -6,6 +6,13 @@
 #----------------Reto 1-------------------
 #Definicion de funciones
 def diametroVarilla (diametro):
+    '''
+    Funcionamiento: Convierte el código numérico del diámetro a su descripción en pulgadas
+    Entradas:
+    -diametro(str): Código del diámetro de la varilla (3,4,5,6,8)
+    Salidas:
+    -diametro(str): Descripción del diámetro en formato de pulgadas
+    '''
     if diametro == "3":
         diametro = "3/8 pulgadas"
     elif diametro == "4":
@@ -19,6 +26,13 @@ def diametroVarilla (diametro):
     return diametro
 
 def fabricacionVarilla (fabricacion):
+    '''
+    Funcionamiento: Determina el tipo de acero y su característica de soldabilidad
+    Entradas:
+    -fabricacion(str): Código del tipo de fabricación (S,W)
+    Salidas:
+    -fabricacion(str): Descripción completa del tipo de acero y su soldabilidad
+    '''
     if fabricacion == "S":
         fabricacion = "Acero al carbono no soldable a temperatura ambiente." 
     elif fabricacion == "W":
@@ -26,6 +40,13 @@ def fabricacionVarilla (fabricacion):
     return fabricacion
 
 def aceroVarilla (acero):
+    '''
+    Funcionamiento: Convierte el código de resistencia a su valor en kgf/cm2
+    Entradas:
+    -acero(str): Código de resistencia del acero (40,60,70)
+    Salidas:
+    -acero(str): Valor de resistencia en kgf/cm2
+    '''
     if acero == "40":
         acero = "2800 kgf/cm2"
     elif acero == "60":
@@ -35,6 +56,13 @@ def aceroVarilla (acero):
     return acero
 
 def nomenclatraVarilla (pcodigo):
+    '''
+    Funcionamiento: Descompone el código de la varilla en sus componentes
+    Entradas:
+    -pcodigo(str): Código completo de la varilla de 6 caracteres
+    Salidas:
+    -tuple: (fabricante, diametro, fabricacion, acero)
+    '''
     fabricante = pcodigo[:2]
     diametro = diametroVarilla(pcodigo[2])
     fabricacion = fabricacionVarilla(pcodigo[3])
@@ -43,6 +71,14 @@ def nomenclatraVarilla (pcodigo):
     return fabricante, diametro, fabricacion, acero
 
 def nomenclatraVarillaAux (pcodigo):
+    '''
+    Funcionamiento: Valida que el código de la varilla cumpla con el formato requerido
+    Entradas:
+    -pcodigo(str): Código de la varilla a validar
+    Salidas:
+    -str: Mensaje de error si el código es inválido
+    -tuple: Componentes de la varilla si el código es válido
+    '''
     if len(pcodigo) != 6:
         return "Debe indicar 6 valores exactamente"
     if not pcodigo[:2].isalpha() or not pcodigo[:2].isupper():
@@ -57,12 +93,19 @@ def nomenclatraVarillaAux (pcodigo):
         return nomenclatraVarilla(pcodigo)
 
 def nomenclatraVarillaES (codigo):
-        #codigo = str(input("Ingrese el codigo de la varilla: "))
-        resultado = nomenclatraVarillaAux(codigo)
-        if isinstance(resultado, str):
-            return resultado  # Retorna el mensaje de error directamente
-        fabricante, diametro, fabricacion, acero = resultado
-        return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
+    '''
+    Funcionamiento: Genera una descripción legible de las características de la varilla
+    Entradas:
+    -codigo(str): Código completo de la varilla
+    Salidas:
+    -str: Descripción detallada de la varilla o mensaje de error
+    '''
+    #codigo = str(input("Ingrese el codigo de la varilla: "))
+    resultado = nomenclatraVarillaAux(codigo)
+    if isinstance(resultado, str):
+        return resultado  # Retorna el mensaje de error directamente
+    fabricante, diametro, fabricacion, acero = resultado
+    return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
 
 print("\n=== Nomenclatura de una varilla ===")
 codigo= "SV5S6"

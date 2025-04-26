@@ -1,6 +1,6 @@
 #Elaborado por: Matias Benavides y Luis Carlos Tinoco Vargas
 #Fecha de creacion: 23/4/2024 6:00 PM
-#Ultima modificacion: 23/4/2024 6:00 PM
+#Ultima modificacion: 26/4/2024 12:00 PM
 # Version de Python: 3.13.2
 
 #importacion de librerias
@@ -67,7 +67,7 @@ print(nomenclatraVarillaES(codigo),"\n")
 
 #-------------Reto 1 con ER------------------
 #Definicion de funciones
-def nomenclatraVarillaAux (pcodigo):
+def nomenclatraVarillaAuxER (pcodigo):
     '''
     Funcionamiento: Valida que el código de la varilla cumpla con el formato requerido
     Entradas:
@@ -90,7 +90,7 @@ def nomenclatraVarillaAux (pcodigo):
     return nomenclatraVarilla(pcodigo)
 
 
-def nomenclatraVarillaES (codigo):
+def nomenclatraVarillaESER (codigo):
     '''
     Funcionamiento: Genera una descripción legible de las características de la varilla con expresiones regulares
     Entradas:
@@ -99,7 +99,7 @@ def nomenclatraVarillaES (codigo):
     -str: Descripción detallada de la varilla o mensaje de error
     '''
     #codigo = str(input("Ingrese el codigo de la varilla: "))
-    resultado = nomenclatraVarillaAux(codigo)
+    resultado = nomenclatraVarillaAuxER(codigo)
     if isinstance(resultado, str):
         return resultado  # Retorna el mensaje de error directamente
     fabricante, diametro, fabricacion, acero = resultado
@@ -183,7 +183,7 @@ print(reconocerTarjetaES(codigo),"\n")
 
 #----------------Reto 2 con ER-------------------
 #Definicion de funciones
-def reconocerTarjetaAux(ptarjeta):
+def reconocerTarjetaAuxER(ptarjeta):
     '''
     Funcionamiento: Valida que el texto de la tarjeta cumpla con el formato requerido.
     Entradas:
@@ -205,7 +205,7 @@ def reconocerTarjetaAux(ptarjeta):
     else:
         return reconocerTarjeta(ptarjeta)
 
-def reconocerTarjetaES(tarjeta):
+def reconocerTarjetaESER(tarjeta):
     '''
     Funcionamiento: Genera una descripción legible de las características de la tarjeta.
     Entradas:
@@ -214,7 +214,7 @@ def reconocerTarjetaES(tarjeta):
     - str: Descripción detallada de la tarjeta o mensaje de error si el texto es inválido.
     '''
     #tarjeta = input("ingrese su tarjeta: ")
-    resultado = reconocerTarjetaAux(tarjeta)
+    resultado = reconocerTarjetaAuxER(tarjeta)
     if isinstance(resultado, str):
         return resultado
     micro, capacidad, bus, velMin, velMax, velMinEsc  = resultado
@@ -304,7 +304,7 @@ print(decodificarNeumáticosES(codigo),"\n")
 
 #----------------Reto 3 con ER -------------------
 #Definicion de funciones
-def decodificarNeumáticosAUX(codigo):
+def decodificarNeumáticosAUXER(codigo):
     '''
     Funcionamiento: Valida que el código del neumático cumpla con el formato requerido con expresiones regulares
     Entradas:
@@ -326,7 +326,7 @@ def decodificarNeumáticosAUX(codigo):
     else:
         return decodificarNeumáticos(codigo)
 
-def decodificarNeumáticosES(codigo):
+def decodificarNeumáticosESER(codigo):
     '''
     Funcionamiento: Genera una descripción legible de las características del neumático
     Entradas:
@@ -335,7 +335,7 @@ def decodificarNeumáticosES(codigo):
     -str: Descripción detallada del neumático o mensaje de error si el código es inválido
     '''
     try:
-        resultado = decodificarNeumáticosAUX(codigo)
+        resultado = decodificarNeumáticosAUXER(codigo)
         if isinstance(resultado, str):
             return resultado  
         altura, anchura, radial, diametro, capacidad, velocidad = resultado

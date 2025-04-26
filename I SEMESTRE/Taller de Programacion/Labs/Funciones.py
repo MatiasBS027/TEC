@@ -1,6 +1,6 @@
 #Elaborado por: Matias Benavides y Luis Carlos Tinoco Vargas
 #Fecha de creacion: 23/4/2024 6:00 PM
-#Ultima modificacion: 23/4/2024 6:00 PM
+#Ultima modificacion: 26/4/2024 12:00 PM
 # Version de Python: 3.13.2
 
 #----------------Reto 1-------------------

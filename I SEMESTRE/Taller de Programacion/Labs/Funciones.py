@@ -1,4 +1,4 @@
-#Elaborado por: Matias Benavides
+#Elaborado por: Matias Benavides y Luis Carlos Tinoco Vargas
 #Fecha de creacion: 23/4/2024 6:00 PM
 #Ultima modificacion: 23/4/2024 6:00 PM
 # Version de Python: 3.13.2
@@ -70,8 +70,39 @@ def nomenclatraVarilla (pcodigo):
 
     return fabricante, diametro, fabricacion, acero
 
+#----------------Reto 2-------------------
+#Definicion de funciones
+def reconocerTarjeta(ptarjeta):
+    micro = "MicroSD"
+    capacidad = "16MB, 32MB, etc"
+    bus = "sin bus UHS"
+    velMin = "10MB/s"
+    velMax = "104MB/s"
+    velMinEsc = "2"
 
-#-------------Reto 2------------------
+    if ptarjeta.startswith("MicroSDHC"):
+        micro += "HC"
+        capacidad = "4GB, 8GB, 16GB, etc"
+        bus = "con bus de UHS"
+    elif ptarjeta.startswith("MicroSDXC"):
+        micro += "XC"
+        capacidad = "64GB, 128GB, etc"
+        bus = "con bus de UHS"
+    if "U3" in ptarjeta:
+        velMin = "30MB/s"
+    if "II" in ptarjeta:
+        velMax = "312MB/s"
+    if "4" in ptarjeta:
+        velMinEsc = "4"
+    elif "6" in ptarjeta:
+        velMinEsc = "6"
+    elif "10" in ptarjeta:
+        velMinEsc = "10"
+
+    return micro, capacidad, bus, velMin, velMax, velMinEsc
+
+
+#-------------Reto 3------------------
 #Definicion de funciones
 def anchuraLlanta(codigo):
     '''

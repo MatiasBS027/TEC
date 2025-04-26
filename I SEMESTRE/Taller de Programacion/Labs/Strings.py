@@ -1,4 +1,4 @@
-#Elaborado por: Matias Benavides
+#Elaborado por: Matias Benavides y Luis Carlos Tinoco Vargas
 #Fecha de creacion: 23/4/2024 6:00 PM
 #Ultima modificacion: 23/4/2024 6:00 PM
 # Version de Python: 3.13.2
@@ -44,7 +44,11 @@ def nomenclatraVarillaES (codigo):
     if isinstance(resultado, str):
         return resultado  # Retorna el mensaje de error directamente
     fabricante, diametro, fabricacion, acero = resultado
-    return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
+    return (
+        f"El fabricante es: {fabricante}\n"
+        f"El diametro de la varilla es: {diametro}\n"
+        f"Proceso de Fabricación: {fabricacion}\n"
+        f"Grados de acero: {acero}")
 
 print("\n========= Nomenclatura de una varilla sin ER ==========")
 codigo= "SV5S6"
@@ -99,7 +103,11 @@ def nomenclatraVarillaES (codigo):
     if isinstance(resultado, str):
         return resultado  # Retorna el mensaje de error directamente
     fabricante, diametro, fabricacion, acero = resultado
-    return "El fabricante es: " + fabricante + "\nEl diametro de la varilla es: " + diametro + "\nProceso de Fabricación: " + fabricacion + "\nGrados de acero: " + acero
+    return (
+    f"El fabricante es: {fabricante}\n"
+    f"El diametro de la varilla es: {diametro}\n"
+    f"Proceso de Fabricación: {fabricacion}\n"
+    f"Grados de acero: {acero}")
 
 print("\n========= Nomenclatura de una varilla con ER ==========")
 codigo= "SV5S6"
@@ -114,6 +122,124 @@ print(nomenclatraVarillaES(codigo),"\n")
 codigo= "SV5S60"
 print("Para la entrada:",codigo)
 print(nomenclatraVarillaES(codigo),"\n")
+
+#----------------Reto 2-------------------
+#Definicion de funciones
+def reconocerTarjetaAux(ptarjeta):
+    '''
+    Funcionamiento: Valida que el texto de la tarjeta cumpla con el formato requerido.
+    Entradas:
+    - ptarjeta (str): Texto de la tarjeta a validar.
+    Salidas:
+    - str: Mensaje de error si el texto es inválido.
+    - función: Llama a la función `reconocerTarjeta` si el texto es válido.
+    '''
+    if not ptarjeta.startswith("Micro"):
+        return "Debe ingresar un texto para poder decodificar.\nEl texto brindado no es posible de decodificar."
+    elif not (ptarjeta.startswith("MicroSD") and (ptarjeta[7:9] in ["HC", "XC"] or ptarjeta[7] in ["U", "I"])):
+        return "El tipo de tarjeta no es un nombre existente correctamente."
+    elif not ("U1" in ptarjeta or "U3" in ptarjeta):
+        return "El número de la clase UHS incluído no es correcto (U1 o U3)."
+    elif not ("II" in ptarjeta or "I" in ptarjeta):
+        return "El número de Bus UHS incluído no es correcto (I o II)."
+    else:
+        return reconocerTarjeta(ptarjeta)
+
+def reconocerTarjetaES(tarjeta):
+    '''
+    Funcionamiento: Genera una descripción legible de las características de la tarjeta.
+    Entradas:
+    - tarjeta (str): Texto completo de la tarjeta.
+    Salidas:
+    - str: Descripción detallada de la tarjeta o mensaje de error si el texto es inválido.
+    '''
+    #tarjeta = input("ingrese su tarjeta: ")
+    resultado = reconocerTarjetaAux(tarjeta)
+    if isinstance(resultado, str):
+        return resultado
+    micro, capacidad, bus, velMin, velMax, velMinEsc  = resultado
+    return (
+    f"Usted está usando:\n"
+    f"Una tarjeta: {micro} con capacidad de {capacidad} {bus}.\n"
+    f"Velocidad mínima de escritura: {velMin}\n"
+    f"Velicidad máxima de lectura/escritura: {velMax}\n"
+    f"Velocidad mínima de escritura: {velMinEsc}" )
+
+print("\n========= Decodificando la micro sin ER ===========")
+codigo= "micro"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroDU1I10"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroSDU1I10"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroSDXCU3II6"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+
+
+
+#----------------Reto 2 con ER-------------------
+#Definicion de funciones
+def reconocerTarjetaAux(ptarjeta):
+    '''
+    Funcionamiento: Valida que el texto de la tarjeta cumpla con el formato requerido.
+    Entradas:
+    - ptarjeta (str): Texto de la tarjeta a validar.
+    Salidas:
+    - str: Mensaje de error si el texto es inválido.
+    - función: Llama a la función `reconocerTarjeta` si el texto es válido.
+    '''
+    if not re.search("^Micro", ptarjeta):
+        return "Debe ingresar un texto para poder decodificar.\nEl texto brindado no es posible de decodificar."
+    elif not re.search("^MicroSD(HC|XC)?", ptarjeta):
+        return "El tipo de tarjeta no es un nombre existente correctamente."
+    elif not re.search("U[13]", ptarjeta):
+        return "El número de la clase UHS incluído no es correcto (U1 o U3)."
+    elif not re.search("II?", ptarjeta):
+        return "El número de Bus UHS incluído no es correcto (I o II)."
+    elif not re.search("2|4|6|10", ptarjeta):
+        return "La clase incluída no es correcta (2,4,6 o 10)."
+    else:
+        return reconocerTarjeta(ptarjeta)
+
+def reconocerTarjetaES(tarjeta):
+    '''
+    Funcionamiento: Genera una descripción legible de las características de la tarjeta.
+    Entradas:
+    - tarjeta (str): Texto completo de la tarjeta.
+    Salidas:
+    - str: Descripción detallada de la tarjeta o mensaje de error si el texto es inválido.
+    '''
+    #tarjeta = input("ingrese su tarjeta: ")
+    resultado = reconocerTarjetaAux(tarjeta)
+    if isinstance(resultado, str):
+        return resultado
+    micro, capacidad, bus, velMin, velMax, velMinEsc  = resultado
+    return (
+    f"Usted está usando:\n"
+    f"Una tarjeta: {micro} con capacidad de {capacidad} {bus}.\n"
+    f"Velocidad mínima de escritura: {velMin}\n"
+    f"Velicidad máxima de lectura/escritura: {velMax}\n"
+    f"Velocidad mínima de escritura: {velMinEsc}")
+
+
+print("\n========= Decodificando la micro con ER ===========")
+codigo= "micro"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroDU1I10"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroSDU1I10"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+codigo= "MicroSDXCU3II6"
+print("Para la entrada:",codigo)
+print(reconocerTarjetaES(codigo),"\n")
+
 
 #----------------Reto 3-------------------
 #Definicion de funciones

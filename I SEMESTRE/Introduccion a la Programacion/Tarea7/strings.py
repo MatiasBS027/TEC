@@ -42,36 +42,6 @@ print(calcularEdadES(fechaNacimiento),"\n")
 
 #----------------Reto 7-------------------
 #Definicion de funciones
-def desEncriptar(codASCII, valor):
-    aceptar = input("¿Desea desencriptar el mensaje? SI/NO: ").lower()
-    if aceptar == "si":
-        nuevoMsj = ""
-        for i in codASCII:
-            if i in (" ", "," , "."): # Solo vamos a dejar igual a la coma, el espacio y el punto
-                nuevoValor = ord(i)
-                nuevoMsj+= str(chr(nuevoValor))
-            else:
-                nuevoValor = ord(i) - valor
-                nuevoMsj += str(chr(nuevoValor))
-        return (nuevoMsj)
-    else:
-        valor = 0
-        return "Ya no puede desencriptar el mensaje."
-
-
-def Encriptar(mensaje, valor):
-    codASCII = ""
-    for i in mensaje:
-        if i in (" ", "," , "."): # Solo vamos a dejar igual a la coma, el espacio y el punto
-            nuevoValor = ord(i)
-            codASCII += str(chr(nuevoValor))
-        else:
-            nuevoValor = ord(i) + valor
-            codASCII += str(chr(nuevoValor))
-
-    print (codASCII)
-    return desEncriptar(codASCII, valor)
-
 def EncriptarAux(mensaje, valor):
     if mensaje == "":
         return "No se ha ingresado un mensaje"

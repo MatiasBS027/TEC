@@ -1,21 +1,32 @@
-#Elaborado por Luis Tinoco
+#Elaborado por Luis Tinoco y Matias Benavides
 #Fecha de creación 30/04/2025 07:30
 #última modificación 30/04/2025 20:00
 #python versió 3.13
 
 import re
 
-""" Esta función revisa si una cédula es válida:
-Debe tener 9 dígitos y no puede comenzar con 0."""
+
 def esCedulaValida(cedula):
+    """ Esta función revisa si una cédula es válida:
+    Debe tener 9 dígitos y no puede comenzar con 0."""
     return re.fullmatch(r"^[1-9]\d{8}$", cedula) is not None
 
 # Esta función recibe el primer dígito de la cédula y devuelve el nombre de la provincia correspondiente.
-def nombreProvincia(numero):
+'''def nombreProvincia(numero):
     provincias = {"1": "San José", "2": "Alajuela", "3": "Cartago",
         "4": "Heredia", "5": "Guanacaste", "6": "Puntarenas",
-        "7": "Limón", "8": "Naturalizados", "9": "Partida especial"}
-    return provincias.get(numero, "Desconocida")
+        "7": "Limón", "8": "Nacionales o naturalizados", "9": "Partida especial de nacimientos"}
+    return provincias.get(numero, "Desconocida")'''
+
+
+def nombreProvincia(numero):
+    provincias = ("San José", "Alajuela", "Cartago", "Heredia", 
+            "Guanacaste", "Puntarenas", "Limón", 
+            "Nacionales o naturalizados", "Partida especial de nacimientos")
+    try:
+        return provincias[int(numero) - 1]
+    except (ValueError, IndexError):
+        return "Desconocida"
 
 # Permite al usuario ingresar 4 nuevas cédulas válidas y no repetidas para agregarlas a la lista.
 def agregarDonantes(lista):
@@ -42,17 +53,29 @@ def mostrarDatosDonante(lista):
         provincia = nombreProvincia(cedula[0])
         tomo = cedula[1:5]
         asiento = cedula[5:]
-        print(f"Usted es de {provincia}, está registrado en el tomo {tomo}, y el asiento {asiento}.")
+        print(f"\nUsted es de {provincia}, está registrado en el tomo {tomo}, y el asiento {asiento}.")
 
 # Filtra y muestra los donantes según el número de provincia que indique el usuario.
 def mostrarPorProvincia(lista):
+    print("\nSeleccione una provincia:")
+    print("Codigo. Provincia")
+    print("1. San José")
+    print("2. Alajuela")
+    print("3. Cartago") 
+    print("4. Heredia")
+    print("5. Guanacaste")
+    print("6. Puntarenas")
+    print("7. Limón")
+    print("8. Nacionalizado o naturalizado (Extranjero)")
+    print("9. Partida especial de nacimientos (Casos especiales)")
+
     codigo = input("Ingrese el código de provincia (1-9): ")
     if codigo not in "123456789":
         print("Código inválido.")
         return
     encontrados = [c for c in lista if c.startswith(codigo)]
     if encontrados:
-        print(f"Los donadores de la provincia de {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
+        print(f"\nLos donadores de la provincia de {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
         for c in encontrados:
             print(" -", c)
     else:
@@ -64,21 +87,24 @@ def mostrarTodos(lista):
         codigo = str(i)
         encontrados = [c for c in lista if c.startswith(codigo)]
         if encontrados:
-            print(f"Los donadores de la provincia de {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
+            if len(encontrados) == 1:
+                print(f"\nEl donador de la provincia de {nombreProvincia(codigo)}, es {len(encontrados)} con las cédulas:")
+            else:
+                print(f"\nLos donadores de la provincia de {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
             for c in encontrados:
                 print(" -", c)
 
-# Muestra los donantes que tienen códigos especiales: naturalizados (8) o partida especial (9).
 def mostrarNoTipicos(lista):
     for codigo in ["8", "9"]:
         encontrados = [c for c in lista if c.startswith(codigo)]
         if encontrados:
-            print(f"Los donadores de la provincia de {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
+            if len(encontrados) == 1:
+                print(f"\nEl donador {nombreProvincia(codigo)}, es {len(encontrados)} con las cédulas:")
+            else:
+                print(f"\nLos donadores {nombreProvincia(codigo)}, son {len(encontrados)} con las cédulas:")
             for c in encontrados:
                 print(" -", c)
 
-"""Este es el menú principal que permite al usuario interactuar con el programa.
- El usuario puede elegir entre las diferentes opciones para trabajar con la lista de donantes."""
 def menu():
     lista = ["303500621", "101110218", "412340987", "267893456",
         "154328765", "534561234", "187674329", "265437654",

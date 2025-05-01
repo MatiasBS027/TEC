@@ -115,13 +115,11 @@ def mostrarTodos(lista):
     Salidas:
     - str: Reporte completo de donantes por provincia
     """
-    hayDonadores = False
     resultado = ""
     for i in range(1, 10):
         codigo = str(i)
         encontrados = [c for c in lista if c.startswith(codigo)]
         if encontrados:
-            hayDonadores = True
             if len(encontrados) == 1:
                 resultado += f"\nEl donador de la provincia de {nombreProvincia(codigo)}, es {len(encontrados)} con la cédula:"
             else:

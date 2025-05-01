@@ -5,7 +5,7 @@
 
 #Importando librerías 
 try:
-    from funcionesLab import *
+    from funcionesListas import *
     print("Funciones importadas correctamente")
 except ImportError as e:
     print(f"Error al importar las funciones: {e}")

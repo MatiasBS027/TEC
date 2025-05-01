@@ -4,11 +4,7 @@
 #python versió 3.13
 
 #Importando librerías 
-try:
-    from funcionesListas import *
-    print("Funciones importadas correctamente")
-except ImportError as e:
-    print(f"Error al importar las funciones: {e}")
+from funcionesListas import *
 import re
 #Definición de funciones
 def menu():

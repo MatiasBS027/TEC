@@ -71,10 +71,13 @@ def generarReporte(estudiantes, estadisticas):
 
         for estudiante in estudiantes:
             try:
-                nombre, apellido1, apellido2, estado, carne, correo, notas = estudiante
+                nombre, apellido1, apellido2, genero, carne, correo, notas = estudiante
+                # Convertir True/False a Masculino/Femenino
+                generoTexto = "Masculino" if genero == "True" else "Femenino"
+                notasLimpias = notas.replace("(", "").replace(")", "")
                 notaFinal = float(notas.split(",")[3].strip().replace("(", "").replace(")", ""))
                 estadoTexto = "Aprobado" if notaFinal > 70 else "Reposición" if 60 <= notaFinal <= 70 else "Reprobado"
-                archivoHtml.write(f"<tr><td>{nombre}</td><td>{apellido1} {apellido2}</td><td>{estado}</td><td>{carne}</td><td>{correo}</td><td>{notas}</td><td>{estadoTexto}</td></tr>\n")
+                archivoHtml.write(f"<tr><td>{nombre}</td><td>{apellido1} {apellido2}</td><td>{generoTexto}</td><td>{carne}</td><td>{correo}</td><td>{notasLimpias}</td><td>{estadoTexto}</td></tr>\n")
             except (ValueError, IndexError):
                 archivoHtml.write(f"<tr><td colspan='7'>Datos inválidos</td></tr>\n")
 

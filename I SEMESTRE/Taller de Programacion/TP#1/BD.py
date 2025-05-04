@@ -38,7 +38,7 @@ def agregarEstudiantes(writer, lineas, cantidad, anno1, anno2, n1, n2, n3):
         # Escribir en el archivo CSV
         writer.writerow([nombre, apellido1, apellido2, estado, carne, correo, nota])
 
-def crearBdDinamica(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2):
+def crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2):
     """
     Funcionamiento:
     - Procesa la información para generar una base de datos dinámica de estudiantes.
@@ -55,7 +55,7 @@ def crearBdDinamica(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3
     - Escribe los datos de los estudiantes en un archivo CSV.
     """
     # Estudiantes del primer recurso
-    with open("BDDinamica.csv", "a", newline="", encoding="utf-8") as archivo:
+    with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
         for _ in range(round(obtenerCantidad(pCantidad, pPorcentaje))):
             nombre = names.get_first_name()
@@ -69,9 +69,9 @@ def crearBdDinamica(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3
             # Escribir en el archivo CSV
             writer.writerow([nombre, apellido1, apellido2, estado, carne, correo, nota])
     # Estudiantes del archivo estudiantes.txt
-    with open("estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
+    with open(r"d:\Matias\TEC\I SEMESTRE\Taller de Programacion\TP#1\estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
         lineas = archivoEstudiantes.readlines()
-    with open("BDDinamica.csv", "a", newline="", encoding="utf-8") as archivo:
+    with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
         agregarEstudiantes(writer, lineas, min(round(obtenerCantidad(pCantidad2, pPorcentaje2)), len(lineas)), anno1, anno2, n1, n2, n3)
 
@@ -99,7 +99,7 @@ def cargarSedes():
     - Imprime un mensaje de error si el archivo no se encuentra.
     """
     try:
-        with open("sedes.txt", "r", encoding="utf-8") as archivo:
+        with open(r"d:\Matias\TEC\I SEMESTRE\Taller de Programacion\TP#1\sedes.txt", "r", encoding="utf-8") as archivo:
             sedes = archivo.readlines()
         # Generar códigos dinámicamente (01, 02, 03, ...)
         return [f"{i+1:02}" for i in range(len(sedes))]
@@ -164,7 +164,7 @@ def generarNota(n1, n2, n3):
     total = round((n1 * (nota1 / 100) + n2 * (nota2 / 100) + n3 * (nota3 / 100)), 1)
     return (nota1, nota2, nota3, total)
 
-def crearBdDinamicaAux(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2):
+def crearBasedeDatosAux(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2):
     """
     Funcionamiento:
     - Valida las variables ingresadas y llama a la función principal para crear la base de datos.
@@ -177,7 +177,7 @@ def crearBdDinamicaAux(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2,
     - anno1: int, año inicial para generar el carné.
     - anno2: int, año final para generar el carné.
     Salidas:
-    - Llama a la función crearBdDinamica si los datos son válidos.
+    - Llama a la función crearBasedeDatos si los datos son válidos.
     - Imprime mensajes de error si los datos no son válidos.
     """
     try:
@@ -192,21 +192,21 @@ def crearBdDinamicaAux(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2,
         anno2 = int(anno2)
         if anno2 < anno1:
             print("El segundo año debe ser mayor que el primer año.")
-            return crearBdDinamicaEs()
+            return crearBasedeDatosEs()
         if pCantidad > 0 and pPorcentaje > 0:
             if n1 + n2 + n3 == 100:
-                return crearBdDinamica(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2)
+                return crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n3, anno1, anno2)
             else:
                 print("Los valores de las evaluaciones tienen que sumar exactamente 100 entre los tres.")
-                return crearBdDinamicaEs()
+                return crearBasedeDatosEs()
         else:
             print("Ingrese datos válidos.")
-            return crearBdDinamicaEs()
+            return crearBasedeDatosEs()
     except ValueError:
         print("Ingrese datos válidos.")
-        return crearBdDinamicaEs()
+        return crearBasedeDatosEs()
 
-def crearBdDinamicaEs():
+def crearBasedeDatosEs():
     """
     Funcionamiento:
     - Solicita al usuario los datos necesarios para crear la base de datos dinámica.
@@ -214,23 +214,32 @@ def crearBdDinamicaEs():
     Entradas:
     - Ninguna (los datos se solicitan mediante input).
     Salidas:
-    - Llama a la función crearBdDinamicaAux con los datos ingresados.
+    - Llama a la función crearBasedeDatosAux con los datos ingresados.
     - Imprime mensajes de error si las entradas no son válidas.
     """
     try:
-        cantidad1 = int(input("Ingrese la cantidad de alumnos que se sacarán del primer recurso: "))
-        porcentaje1 = int(input("Ingrese el porcentaje de alumnos que se sacarán del primer recurso: "))
-        cantidad2 = int(input("Ingrese la cantidad de alumnos que se sacarán del segundo recurso: "))
-        porcentaje2 = int(input("Ingrese el porcentaje de alumnos que se sacarán del segundo recurso: "))
+        '''cantidad1 = int(input("Ingrese la cantidad de alumnos que se tomaran de la primera fuente: "))
+        porcentaje1 = int(input("Ingrese el porcentaje de esos alumnos que se tomaran de la primera fuente: "))
+        cantidad2 = int(input("Ingrese la cantidad de alumnos que se tomaran de la segunda fuente: "))
+        porcentaje2 = int(input("Ingrese el porcentaje de esos alumnos que se tomaran de la segunda fuente: "))
         n1 = int(input("Ingrese el valor de la primera evaluación: "))
         n2 = int(input("Ingrese el valor de la segunda evaluación: "))
         n3 = int(input("Ingrese el valor de la tercera evaluación: "))
         anno1 = int(input("Ingrese el primer año para el rango de carné (Debe ser el menor): "))
-        anno2 = int(input("Ingrese el segundo año para el rango de carné (Debe ser el mayor): "))
-        return crearBdDinamicaAux(cantidad1, porcentaje1, cantidad2, porcentaje2, n1, n2, n3, anno1, anno2)
+        anno2 = int(input("Ingrese el segundo año para el rango de carné (Debe ser el mayor): "))'''
+        cantidad1 = 10
+        porcentaje1 = 50
+        cantidad2 = 10
+        porcentaje2 = 50
+        n1 = 30
+        n2 = 30
+        n3 = 40
+        anno1 = 2023
+        anno2 = 2025
+        return crearBasedeDatosAux(cantidad1, porcentaje1, cantidad2, porcentaje2, n1, n2, n3, anno1, anno2)
     except ValueError:
         print("Error: Ingrese valores numéricos válidos.")
-        return crearBdDinamicaEs()
+        return crearBasedeDatosEs()
 
 # programa principal
-crearBdDinamicaEs()
+crearBasedeDatosEs()

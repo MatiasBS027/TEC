@@ -8,6 +8,16 @@ from funciones import *
 
 #definición de funciones
 def menuPrincipal(edificio):
+    """
+    Funcionamiento:
+    - Muestra un menú principal con opciones para gestionar el alquiler de apartamentos en un edificio.
+    - Permite al usuario seleccionar una opción y ejecuta la función correspondiente.
+    Entradas:
+    - edificio: dict o estructura que representa el estado del edificio (pisos, apartamentos, etc.).
+    Salidas:
+    - str: Mensaje de despedida si el usuario selecciona la opción de salir.
+    - Imprime mensajes en consola indicando el resultado de las operaciones seleccionadas.
+    """
     while True:        
         try:
             menu = "\n--- Menú Principal ---\n" + \
@@ -39,6 +49,17 @@ def menuPrincipal(edificio):
 
 
 def alquilerEs():
+    """
+    Funcionamiento:
+    - Solicita al usuario el número de pisos y apartamentos por piso para inicializar un edificio.
+    - Llama a la función `menuPrincipal` para gestionar las operaciones del edificio.
+    Entradas:
+    - Ninguna entrada directa, pero solicita al usuario ingresar el número de pisos y apartamentos por consola.
+    Salidas:
+    - str: Mensaje de error si la inicialización del edificio falla.
+    - str: Mensaje de despedida al finalizar el programa.
+    - Imprime mensajes en consola indicando errores o resultados de las operaciones.
+    """
     while True:
         try:
             pisos = int(input("Ingrese el número de pisos del edificio: "))

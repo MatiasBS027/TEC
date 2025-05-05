@@ -4,7 +4,7 @@
 # versión de python 3.13.2
 
 # bloque import
-import names  # pip install names
+import names 
 import csv
 import random
 
@@ -69,11 +69,16 @@ def crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n
             # Escribir en el archivo CSV
             writer.writerow([nombre, apellido1, apellido2, estado, carne, correo, nota])
     # Estudiantes del archivo estudiantes.txt
-    with open(r"d:\Matias\TEC\I SEMESTRE\Taller de Programacion\TP#1\estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
-        lineas = archivoEstudiantes.readlines()
-    with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
-        writer = csv.writer(archivo)
-        agregarEstudiantes(writer, lineas, min(round(obtenerCantidad(pCantidad2, pPorcentaje2)), len(lineas)), anno1, anno2, n1, n2, n3)
+    try:
+        with open("estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
+                lineas = archivoEstudiantes.readlines()
+        with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
+                writer = csv.writer(archivo)
+                agregarEstudiantes(writer, lineas, min(round(obtenerCantidad(pCantidad2, pPorcentaje2)), len(lineas)), anno1, anno2, n1, n2, n3)
+    except FileNotFoundError:
+            print("Error: No se encontró el archivo 'estudiantes.txt'. Se omitirán los estudiantes de este archivo.")
+    except Exception as e:
+        print(f"Error al crear la base de datos: {str(e)}")
 
 def obtenerCantidad(cant, porc):
     """
@@ -99,7 +104,7 @@ def cargarSedes():
     - Imprime un mensaje de error si el archivo no se encuentra.
     """
     try:
-        with open(r"d:\Matias\TEC\I SEMESTRE\Taller de Programacion\TP#1\sedes.txt", "r", encoding="utf-8") as archivo:
+        with open("sedes.txt", "r", encoding="utf-8") as archivo:
             sedes = archivo.readlines()
         # Generar códigos dinámicamente (01, 02, 03, ...)
         return [f"{i+1:02}" for i in range(len(sedes))]

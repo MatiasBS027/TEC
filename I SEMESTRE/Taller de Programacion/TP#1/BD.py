@@ -69,7 +69,7 @@ def crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n
             # Escribir en el archivo CSV
             writer.writerow([nombre, apellido1, apellido2, estado, carne, correo, nota])
     # Estudiantes del archivo estudiantes.txt
-    with open(r"c:\Progra\TEC\I SEMESTRE\Taller de Programacion\TP#1\estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
+    with open("estudiantes.txt", "r", encoding="utf-8") as archivoEstudiantes:
         lineas = archivoEstudiantes.readlines()
     with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
@@ -99,7 +99,7 @@ def cargarSedes():
     - Imprime un mensaje de error si el archivo no se encuentra.
     """
     try:
-        with open(r"c:\Progra\TEC\I SEMESTRE\Taller de Programacion\TP#1\sedes.txt", "r", encoding="utf-8") as archivo:
+        with open("sedes.txt", "r", encoding="utf-8") as archivo:
             sedes = archivo.readlines()
         # Generar códigos dinámicamente (01, 02, 03, ...)
         return [f"{i+1:02}" for i in range(len(sedes))]

@@ -232,7 +232,7 @@ def crearBasedeDatosEs():
             return crearBasedeDatosAux(cantidad1, porcentaje1, cantidad2, porcentaje2, n1, n2, n3, anno1, anno2)
         except ValueError:
             print("Error: Ingrese valores numéricos válidos.")
-            return crearBasedeDatosEs()
+            return
 
 # programa principal
 crearBasedeDatosEs()

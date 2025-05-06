@@ -17,6 +17,7 @@ def leerDatosCsv(rutaArchivo):
     except FileNotFoundError:
         print(f"Error: Archivo {rutaArchivo} no encontrado")
         return 
+
 def filtrarDatosCompletos(datosCrudos):
     """
     Función:

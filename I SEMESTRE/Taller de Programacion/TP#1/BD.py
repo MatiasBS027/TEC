@@ -4,7 +4,7 @@
 # versión de python 3.13.2
 
 # bloque import
-import names  # pip install names
+import names  
 import csv
 import random
 
@@ -220,7 +220,7 @@ def crearBasedeDatosEs():
     """
     while True:
         try:
-            '''cantidad1 = int(input("Ingrese la cantidad de alumnos que se tomaran de la primera fuente: "))
+            cantidad1 = int(input("Ingrese la cantidad de alumnos que se tomaran de la primera fuente: "))
             porcentaje1 = int(input("Ingrese el porcentaje de esos alumnos que se tomaran de la primera fuente: "))
             cantidad2 = int(input("Ingrese la cantidad de alumnos que se tomaran de la segunda fuente: "))
             porcentaje2 = int(input("Ingrese el porcentaje de esos alumnos que se tomaran de la segunda fuente: "))
@@ -228,16 +228,7 @@ def crearBasedeDatosEs():
             n2 = int(input("Ingrese el valor de la segunda evaluación: "))
             n3 = int(input("Ingrese el valor de la tercera evaluación: "))
             anno1 = int(input("Ingrese el primer año para el rango de carné (Debe ser el menor): "))
-            anno2 = int(input("Ingrese el segundo año para el rango de carné (Debe ser el mayor): "))'''
-            cantidad1 = 10
-            porcentaje1 = 50
-            cantidad2 = 10
-            porcentaje2 = 50
-            n1 = 30
-            n2 = 30
-            n3 = 40
-            anno1 = 2023
-            anno2 = 2025
+            anno2 = int(input("Ingrese el segundo año para el rango de carné (Debe ser el mayor): "))
             return crearBasedeDatosAux(cantidad1, porcentaje1, cantidad2, porcentaje2, n1, n2, n3, anno1, anno2)
         except ValueError:
             print("Error: Ingrese valores numéricos válidos.")

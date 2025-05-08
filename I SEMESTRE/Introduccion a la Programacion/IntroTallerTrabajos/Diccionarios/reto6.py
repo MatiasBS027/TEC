@@ -1,5 +1,4 @@
-import re
-
+#Elaborado por: Matias Benavides, Steven Cruz, Jose Daniel Ruiz
 def separarPalabras(cadena):
     palabra = cadena.split()
     return palabra
@@ -28,5 +27,8 @@ def validar(cadena):
     else:
         return crearIndice(cadena)
 
-cadena = input("Ingrese una cadena de texto: ").lower()
-print(validar(cadena))
+def cadenaES():
+    cadena = input("Ingrese una cadena de texto: ").lower()
+    return validar(cadena)
+
+print(cadenaES())

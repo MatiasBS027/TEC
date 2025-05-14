@@ -1,32 +1,28 @@
-import csv
+import pickle
 
-def guardarEdificioCSV(edificio, nombre_archivo="edificio.csv"):
+def guardarEdificio(edificio, nombre_archivo="edificio.pkl"):
     """
-    Guarda la matriz del edificio en un archivo CSV.
-    
+    Guarda la matriz del edificio en un archivo binario usando pickle.
     Parámetros:
     - edificio: list[list[int]], matriz de alquileres del edificio
     - nombre_archivo: str, nombre del archivo a guardar
     """
-    with open(nombre_archivo, mode="w", newline="") as archivo:
-        writer = csv.writer(archivo)
-        for fila in edificio:
-            writer.writerow(fila)
+    try:
+        with open(nombre_archivo, "wb") as archivo:
+            pickle.dump(edificio, archivo)
+        return f"El edificio se ha guardado correctamente en {nombre_archivo}."
+    except Exception as e:
+        return f"Error al guardar el archivo: {e}"
 
-
-def cargarEdificioCSV(nombre_archivo="edificio.csv"):
+def cargarEdificio(nombre_archivo="edificio.pkl"):
     """
-    Carga la matriz del edificio desde un archivo CSV.
-
+    Carga la matriz del edificio desde un archivo binario usando pickle.
     Parámetros:
     - nombre_archivo: str, nombre del archivo a leer
-
     Retorna:
-    - list[list[int]], matriz del edificio
+    - list[list[int]] si tiene éxito
+    - Excepción si no se encuentra el archivo
     """
-    edificio = []
-    with open(nombre_archivo, mode="r") as archivo:
-        reader = csv.reader(archivo)
-        for fila in reader:
-            edificio.append([int(valor) for valor in fila])
+    with open(nombre_archivo, "rb") as archivo:
+        edificio = pickle.load(archivo)
     return edificio

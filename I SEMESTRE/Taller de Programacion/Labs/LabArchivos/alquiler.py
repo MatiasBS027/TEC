@@ -5,9 +5,10 @@
 
 #importar librerías
 from funciones import *
-import csv
 from archivo import * 
+
 #definición de funciones
+
 def ingresoAlquilerMenu(edificio):
     """
     Funcionamiento:
@@ -63,13 +64,13 @@ def menuPrincipal(edificio):
             opcion = input("Seleccione una opción (1-6): ")
             if opcion == "1":
                 resultado = alquilarApartamento(edificio, solicitarValorAlquiler)
-                guardarEdificioCSV(edificio)
+                guardarEdificio(edificio)
             elif opcion == "2":
                 resultado = modificarRenta(edificio)
-                guardarEdificioCSV(edificio)
+                guardarEdificio(edificio)
             elif opcion == "3":
                 resultado = desalojar(edificio)
-                guardarEdificioCSV(edificio)
+                guardarEdificio(edificio)
             elif opcion == "4":
                 resultado = ingresoAlquilerMenu(edificio)
             elif opcion == "5":
@@ -95,13 +96,13 @@ def alquilerEs():
     - str: Mensaje de despedida al finalizar el programa.
     - Imprime mensajes en consola indicando errores o resultados de las operaciones.
     """
-    archivo = "edificio.csv"
+    archivo = "edificio.pkl"
     try:
-        edificio = cargarEdificioCSV(archivo)           # Cargar el edificio desde el archivo CSV
-        print("Archivo existente encontrado. Cargando edificio...")        
-        return menuPrincipal(edificio)        # Si el archivo existe, solo se carga y se entra al menú principal
-    except FileNotFoundError:        # Si no existe el archivo, pide datos y crea uno nuevo
-        while True: 
+        edificio = cargarEdificio(archivo)  # Cargar el edificio desde el archivo pickle
+        print("Archivo existente encontrado. Cargando edificio...")
+        return menuPrincipal(edificio)  # Si el archivo existe, carga y muestra el menú
+    except FileNotFoundError:
+        while True:  # Si no se encuentra el archivo, solicita los datos para crear el edificio
             try:
                 pisos = int(input("Ingrese el número de pisos del edificio: "))
                 apartamentos = int(input("Ingrese el número de apartamentos por piso: "))
@@ -109,8 +110,9 @@ def alquilerEs():
                 if isinstance(edificio, str):
                     return edificio
                 else:
-                    guardarEdificioCSV(edificio)  # Guardar después de crear la matriz
-                    return menuPrincipal(edificio)  
+                    guardarEdificio(edificio)  # Guardar el edificio recién creado
+                    return menuPrincipal(edificio)
             except ValueError:
                 print("Debe ingresar un número entero.")
+
 print (alquilerEs())

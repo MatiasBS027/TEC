@@ -36,7 +36,6 @@ def reporteTotalEdificio(edificio):
         return (f"Total de apartamentos alquilados: {alquilados}, para un porcentaje de {porcentajeA}% \n"
                 f"Total de apartamentos desocupados: {desocupados}, para un porcentaje de {porcentajeB}%")
 
-
 def alquilerPorApartamento(edificio):
     """
     Funcionamiento:
@@ -47,16 +46,14 @@ def alquilerPorApartamento(edificio):
     - str: Mensaje con el monto de alquiler del apartamento seleccionado.
     """
     if hayEspacio(edificio) == False:
-        return "No hay apartamentos ocupados para calcular el ingreso."
+            return "No hay apartamentos ocupados para calcular el ingreso."
     else:
         while True:  # Bucle para seguir pidiendo datos válidos
             piso = pisoAux(edificio) - 1  # el -1 es para ajustar el índice a 0
             apartamento = apartamentoAux(edificio) - 1
-            if edificio[piso][apartamento] != 0:
-                return f"El apartamento {apartamento+1} en el piso {piso+1} está alquilado por ${edificio[piso][apartamento]}."
-            else:
-                print(f"El apartamento {apartamento+1} en el piso {piso+1} no está alquilado. Intente nuevamente.")
-                continue
+            monto = edificio[piso][apartamento]
+            estado = "Alquilado" if monto != 0 else "Libre"
+            return f"El apartamento {apartamento+1} en el piso {piso+1} está {estado} por ${monto}."
 
 def alquilerPorPiso(edificio):
     """
@@ -76,15 +73,13 @@ def alquilerPorPiso(edificio):
             totalAlquiler = 0
             for i in range(len(apartamentosPiso)):  # Itera manualmente con un índice
                 monto = apartamentosPiso[i]
-                if monto != 0:  # Verifica si el apartamento está alquilado
-                    print(f"Piso #: {piso + 1}")
-                    print(f"Apartamento #: {i + 1}")
-                    print(f"Monto de alquiler $: {monto}\n")
-                    totalAlquiler += monto  # Suma el monto al total del piso
-            if totalAlquiler > 0:
-                return(f"Para un total de ingresos del piso {piso+1} de ${totalAlquiler}")
-            else:
-                return f"No hay apartamentos alquilados en el piso {piso + 1}."
+                estado = "Alquilado" if monto != 0 else "Libre"
+                print(f"Piso #: {piso + 1}")
+                print(f"Apartamento #: {i + 1}")
+                print(f"Estado: {estado}")
+                print(f"Monto de alquiler $: {monto}\n")
+                totalAlquiler += monto  # Suma el monto al total del piso
+            return(f"Para un total de ingresos del piso {piso+1} de ${totalAlquiler}")
 
 def alquilerPorColumna(edificio):
     """
@@ -103,15 +98,13 @@ def alquilerPorColumna(edificio):
             totalAlquiler = 0
             for i in range(len(edificio)):  # Itera manualmente con un índice
                 monto = edificio[i][apartamento]
-                if monto != 0:  # Verifica si el apartamento está alquilado
-                    print(f"Piso #: {i + 1}")
-                    print(f"Apartamento #: {apartamento + 1}")
-                    print(f"Monto de alquiler $: {monto}\n")
-                    totalAlquiler += monto  # Suma el monto al total del piso
-            if totalAlquiler > 0:
-                return(f"Para un total de ingresos de la columna {apartamento+1} de ${totalAlquiler}")
-            else:
-                return f"No hay apartamentos alquilados en la columna {apartamento + 1}."
+                estado = "Alquilado" if monto != 0 else "Libre"
+                print(f"Piso #: {i + 1}")
+                print(f"Apartamento #: {apartamento + 1}")
+                print(f"Estado: {estado}")
+                print(f"Monto de alquiler $: {monto}\n")
+                totalAlquiler += monto  # Suma el monto al total de la columna
+            return(f"Para un total de ingresos de la columna {apartamento+1} de ${totalAlquiler}")
 
 def totalidadEdificio(edificio):
     """
@@ -129,13 +122,14 @@ def totalidadEdificio(edificio):
         for i in range(len(edificio)):  # Itera manualmente con un índice
             for j in range(len(edificio[i])):  # Itera manualmente con un índice
                 monto = edificio[i][j]
-                if monto != 0:  # Verifica si el apartamento está alquilado
-                    print(f"Piso #: {i + 1}")
-                    print(f"Apartamento #: {j + 1}")
-                    print(f"Monto de alquiler $: {monto}\n")
-                    totalAlquiler += monto  # Suma el monto al total del piso
+                estado = "Alquilado" if monto != 0 else "Libre"
+                print(f"Piso #: {i + 1}")
+                print(f"Apartamento #: {j + 1}")
+                print(f"Estado: {estado}")
+                print(f"Monto de alquiler $: {monto}\n")
+                totalAlquiler += monto  # Suma el monto al total del edificio
         return(f"Para un total de ganancias ${totalAlquiler}")
-
+    
 def desalojar(edificio):
     """
     Funcionamiento:

@@ -5,7 +5,7 @@
 
 #importar librerias
 import random
-
+import requests
 
 #definición de funciónes 
 def buscarTxt():
@@ -64,7 +64,6 @@ def atraparPoke(porcentaje):
     pokemon = buscarTxt()
     if not pokemon:
         return "No hay Pokémon para atrapar."
-        return
     totalPokemon = len(pokemon)
     cantidadAtrapados  = round((porcentaje / 100) * totalPokemon)
     cantidadHuyeron = totalPokemon - cantidadAtrapados
@@ -83,10 +82,64 @@ def atraparPoke(porcentaje):
     guardarEstadosPokemon(atrapados, huidos)
     return atrapados, huidos
 
+def listaAtrapados(atrapados):
+    listaIds = []
+    for poke in atrapados:
+        idPoke = int(poke[0])
+        listaIds.append(idPoke)
+    return listaIds
+
+def obtenerInfoPokemon(idPoke):
+    url = f"https://pokeapi.co/api/v2/pokemon/{idPoke}"
+    try:
+        respuesta = requests.get(url)
+        datos = respuesta.json()
+        idApi = datos['id']
+        nombre = datos['name']
+        esShiny = False  # Puedes cambiar a random si deseas
+        peso = datos['weight']  *10
+        altura = datos['height']  *10
+        estadisticas = datos['stats']
+        statsOrden = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
+        statsValores = []
+        for statNombre in statsOrden:
+            for stat in estadisticas:
+                if stat['stat']['name'] == statNombre:
+                    statsValores.append(stat['base_stat'])
+                    break
+        totalEstats = sum(statsValores)
+        tipos = []
+        for tipo in datos['types']:
+            nombreTipo = tipo['type']['name']
+            tipos.append(nombreTipo)
+        if esShiny:
+            urlImagen = datos['sprites']['front_shiny']
+        else:
+            urlImagen = datos['sprites']['front_default']
+        infoPokemon = {
+            idApi: [
+                nombre,
+                (esShiny, peso, altura),
+                [totalEstats] + statsValores,
+                tipos,
+                urlImagen]}
+        return infoPokemon
+    except Exception as e:
+        print(f"Error al obtener info de Pokémon {idPoke}: {e}")
+        return None
+
 
 resultado = atraparPokeES()
 if isinstance(resultado, tuple):
     atrapados, huidos = resultado
     print("Proceso de captura completado.")
+    listaIdAtrapados = listaAtrapados(atrapados)
+    diccPoke = {}
+    for id in listaIdAtrapados:
+        info = obtenerInfoPokemon(id)
+        if info:
+            diccPoke.update(info)
+    for idPoke, datos in diccPoke.items():
+        print(f"ID: {idPoke}: \n{datos}")
 else:
     print(resultado)  # Mensaje de error

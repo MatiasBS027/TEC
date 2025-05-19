@@ -100,14 +100,15 @@ def obtenerInfoPokemon(idPoke):
         peso = datos['weight']  *10
         altura = datos['height']  *10
         estadisticas = datos['stats']
-        statsOrden = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
+        stats = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
         statsValores = []
-        for statNombre in statsOrden:
+        for statNombre in stats:
             for stat in estadisticas:
                 if stat['stat']['name'] == statNombre:
                     statsValores.append(stat['base_stat'])
                     break
         totalEstats = sum(statsValores)
+        statsTupla = tuple(statsValores)  # (PS, A, D, AE, DE, V)
         tipos = []
         for tipo in datos['types']:
             nombreTipo = tipo['type']['name']
@@ -120,7 +121,7 @@ def obtenerInfoPokemon(idPoke):
             idApi: [
                 nombre,
                 (esShiny, peso, altura),
-                [totalEstats] + statsValores,
+                [totalEstats, statsTupla],
                 tipos,
                 urlImagen]}
         return infoPokemon
@@ -128,6 +129,23 @@ def obtenerInfoPokemon(idPoke):
         print(f"Error al obtener info de Pokémon {idPoke}: {e}")
         return None
 
+def imprimirInfoPokemon(diccPoke):
+    for idPoke, datos in diccPoke.items():
+        nombre = datos[0]
+        esShiny, peso, altura = datos[1]
+        totalEstad, stats = datos[2]
+        tipos = datos[3]
+        urlImagen = datos[4]
+        
+        print(f"ID: {idPoke}:")
+        print("[")
+        print(f"  '{nombre}',")
+        print(f"  ({esShiny}, {peso}, {altura}),")
+        print(f"  [{totalEstad}, {stats}],")
+        print(f"  {tipos},")
+        print(f"  '{urlImagen}'")
+        print("]")
+        print()
 
 resultado = atraparPokeES()
 if isinstance(resultado, tuple):
@@ -139,7 +157,6 @@ if isinstance(resultado, tuple):
         info = obtenerInfoPokemon(id)
         if info:
             diccPoke.update(info)
-    for idPoke, datos in diccPoke.items():
-        print(f"ID: {idPoke}: \n{datos}")
+    imprimirInfoPokemon(diccPoke)
 else:
     print(resultado)  # Mensaje de error

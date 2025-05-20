@@ -71,7 +71,7 @@ def cargarImagen(label, url):
     except Exception as e:
         print(f"Error al cargar la imagen: {e}")
 
-def cargarPokemon(idPokemon, nombreLabel, entradas, imagenLabel):
+def cargarPokemon(idPokemon, nombre, entradas, imagen):
     """
     Carga los datos del Pokémon desde la API y actualiza la interfaz.
     
@@ -85,46 +85,36 @@ def cargarPokemon(idPokemon, nombreLabel, entradas, imagenLabel):
         datosPokemon = obtenerInfoPokemon(idPokemon)
         if datosPokemon:
             for id, datos in datosPokemon.items():
-                nombreLabel.config(text=datos[0].capitalize())
-                
+                nombre.config(text=datos[0].capitalize())
                 # Llenar campos
                 esShiny, peso, altura = datos[1]
                 totalEstad, stats = datos[2]
                 tipos = datos[3]
                 urlImagen = datos[4]
-                
-                entradas["Peso:"].delete(0, tk.END)
                 entradas["Peso:"].insert(0, f"{peso/10:.1f} kg")
-                
-                entradas["Altura:"].delete(0, tk.END)
                 entradas["Altura:"].insert(0, f"{altura/10:.1f} m")
-                
-                entradas["Tipos:"].delete(0, tk.END)
                 # Lista original de tipos
-                tiposCapitalizados = []
+                tiposCap = []
                 for t in tipos:
                     tipoCap = t.capitalize()
                     # Agregar el resultado a la nueva lista
-                    tiposCapitalizados.append(tipoCap)
+                    tiposCap.append(tipoCap)
                 # Unir todos los elementos capitalizados usando "/" como separador
-                tiposUnidos = "/".join(tiposCapitalizados)
-                entradas["Tipos:"].insert(0, tiposUnidos)
+                tipos = "/".join(tiposCap)
+                entradas["Tipos:"].insert(0, tipos)
                 # Llenar estadísticas
                 camposStats = ["PS:", "Ataque:", "Defensa:", "A Esp:", "D Esp:", "Veloc:"]
                 for i, campoStat in enumerate(camposStats):
-                    entradas[campoStat].delete(0, tk.END)
                     entradas[campoStat].insert(0, stats[i])
-                entradas["Estad T:"].delete(0, tk.END)
                 entradas["Estad T:"].insert(0, totalEstad)
                 # Cargar la imagen
-                cargarImagen(imagenLabel, urlImagen)
+                cargarImagen(imagen, urlImagen)
     except Exception as e:
         print(f"Error al cargar el Pokémon: {e}")
 
 def mostrarDetallePokemon(idPokemon):
     """
     Muestra una ventana con los detalles del Pokémon.
-    
     Args:
         idPokemon: ID del Pokémon a mostrar (por defecto: 16, Pidgey)
     """
@@ -135,44 +125,30 @@ def mostrarDetallePokemon(idPokemon):
     # Marco principal para el contenido
     marcoContenido = tk.Frame(ventana, bg="white")
     marcoContenido.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-    
     # Marco para el nombre y la imagen
     marcoPokemon = tk.Frame(marcoContenido, bg="white")
     marcoPokemon.pack(fill=tk.X, padx=5, pady=5)
-    
     # Nombre del Pokémon
-    nombrePokemon = tk.Label(marcoPokemon, 
-                        font=("Arial", 12, "bold"), bg="white")
+    nombrePokemon = tk.Label(marcoPokemon,font=("Arial", 12, "bold"), bg="white")
     nombrePokemon.pack(side=tk.LEFT, padx=5)
-    
     # Espacio para la imagen del Pokémon
     imagenLabel = tk.Label(marcoPokemon)
     imagenLabel.pack(side=tk.LEFT, padx=5)
-    
     # Marco para los detalles
     marcoDetalles = tk.Frame(marcoContenido)
     marcoDetalles.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-    
     # Campos de detalles
-    campos = ["Peso:", "Altura:", "Tipos:", "PS:", "Ataque:", 
-            "Defensa:", "A Esp:", "D Esp:", "Veloc:", "Estad T:"]
+    campos = ["Peso:", "Altura:", "Tipos:", "PS:", "Ataque:", "Defensa:", "A Esp:", "D Esp:", "Veloc:", "Estad T:"]
     entradas = {}
-    
     for i, campo in enumerate(campos):
-        tk.Label(marcoDetalles, text=campo, 
-                anchor=tk.W).grid(row=i, column=0, sticky=tk.W, pady=2)
-        
+        tk.Label(marcoDetalles, text=campo,anchor=tk.W).grid(row=i, column=0, sticky=tk.W, pady=2)
         entrada = tk.Entry(marcoDetalles, width=15, relief=tk.SUNKEN, bd=1)
         entrada.grid(row=i, column=1, sticky=tk.W, pady=2, padx=5)
         entradas[campo] = entrada
-    
     # Botón de regresar
-    tk.Button(marcoContenido, text="Regresar", 
-            command=ventana.destroy).pack(pady=10)
-    
+    tk.Button(marcoContenido, text="Regresar", command=ventana.destroy).pack(pady=10)
     # Cargar los datos del Pokémon
     cargarPokemon(idPokemon, nombrePokemon, entradas, imagenLabel)
-    
     # Centrar la ventana
     ventana.update_idletasks()
     ancho = ventana.winfo_width()

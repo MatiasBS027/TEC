@@ -39,10 +39,28 @@ def agregarEstudiantes(writer, lineas, cantidad, anno1, anno2, n1, n2, n3):
     """
     dominioCorreo = "@estudiantec.cr"
     for i in range(cantidad):
-        linea = lineas[i].strip().split(",") if lineas else []
-        nombre = linea[0] if linea else names.get_first_name()
-        apellido1 = linea[1] if linea else names.get_last_name()
-        apellido2 = linea[2] if len(linea) > 2 else names.get_last_name()
+        # Verifica si hay líneas disponibles
+        if lineas:
+            # Obtiene y divide la línea i por comas, eliminando espacios en blanco al inicio y final
+            linea = lineas[i].strip().split(",")
+        else:
+            # Si no hay líneas, se asigna una lista vacía
+            linea = []
+        # Si la línea contiene al menos un elemento, se toma como nombre; de lo contrario, se genera un nombre aleatorio
+        if linea:
+            nombre = linea[0]
+        else:
+            nombre = names.get_first_name()
+        # Si la línea contiene al menos dos elementos, se toma como primer apellido; si no, se genera uno aleatorio
+        if linea:
+            apellido1 = linea[1]
+        else:
+            apellido1 = names.get_last_name()
+        # Si la línea contiene más de dos elementos, se toma el tercer como segundo apellido; de lo contrario, se genera uno aleatorio
+        if len(linea) > 2:
+            apellido2 = linea[2]
+        else:
+            apellido2 = names.get_last_name()
         estado = random.choice([True, False])  # Generar True/False aleatoriamente
         # Generar carné, correo y notas
         carne = generarCarne(random.randint(anno1, anno2))
@@ -70,7 +88,7 @@ def crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n
     # Estudiantes del primer recurso
     with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
-        for _ in range(round(obtenerCantidad(pCantidad, pPorcentaje))):
+        for i in range(round(obtenerCantidad(pCantidad, pPorcentaje))):
             nombre = names.get_first_name()
             apellido1 = names.get_last_name()
             apellido2 = names.get_last_name()
@@ -99,7 +117,8 @@ def obtenerCantidad(cant, porc):
     - int: cantidad calculada de estudiantes.
     """
     porcentajeTotal = 100
-    return round(cant * (porc / porcentajeTotal))
+    porcentaje = round(cant * (porc / porcentajeTotal))
+    return porcentaje
 
 def cargarSedes():
     """
@@ -115,7 +134,10 @@ def cargarSedes():
         with open("sedes.txt", "r", encoding="utf-8") as archivo:
             sedes = archivo.readlines()
         # Generar códigos dinámicamente (01, 02, 03, ...)
-        return [f"{i+1:02}" for i in range(len(sedes))]
+        codigo=[]
+        for i in range(len(sedes)):
+            codigo.append(f"{i+1:02}")
+        return codigo
     except FileNotFoundError:
         print("Error: No se encontró el archivo 'sedes.txt'.")
         return []
@@ -364,7 +386,11 @@ def filtrarDatosCompletos(datosCrudos):
     Salidas:
     - Retorna lista solo con filas válidas
     """
-    return [fila for fila in datosCrudos if len(fila) >= 7]
+    filtrados = []
+    for fila in datosCrudos:
+        if len(fila)>=7:
+            filtrados.append(fila)
+    return filtrados
 
 def parsearNotasHtmlCsv(notasStr):
     """
@@ -380,7 +406,14 @@ def parsearNotasHtmlCsv(notasStr):
     try:
         # Elimina paréntesis y espacios, luego divide por comas
         notas = notasStr.strip("() ").split(",")
-        notas = [n.strip() for n in notas]
+        # Crear una nueva lista para almacenar las notas sin espacios al principio ni al final
+        notasLimpias = []
+        # Recorrer cada nota en la lista original 'notas'
+        for n in notas:
+            # Eliminar los espacios en blanco alrededor de la nota y agregarla a la nueva lista
+            notasLimpias.append(n.strip())
+        # Reemplazar la lista original con la lista de notas limpias
+        notas = notasLimpias
         return notas, float(notas[3])  # Retorna notas y el promedio
     except (ValueError, IndexError) as e:
         print(f"Error procesando notas: {notasStr} - {str(e)}")
@@ -420,7 +453,13 @@ def procesarEstudianteHtmlCsv(fila):
         if notaFinal is False:
             return False
         estado = determinarEstado(notaFinal)
-        generoTexto = "Masculino" if genero == "True" else "Femenino"
+        # Si 'genero' es igual a la cadena "True"
+        if genero == "True":
+            # Entonces asignamos "Masculino" a la variable 'generoTexto'
+            generoTexto = "Masculino"
+        else:
+            # En cualquier otro caso, asignamos "Femenino"
+            generoTexto = "Femenino"
         return (f"{nombre} {ap1} {ap2}",generoTexto,carne,correo,notasStr,notaFinal,estado) # estado, notaFinal, notasOriginales, correo, carne, genero, nombreCompleto
     except ValueError:
         print(f"Error procesando fila: {fila}")
@@ -438,8 +477,22 @@ def calcularEstadisticas(estudiantesProcesados):
     - Retorna tupla con (total, aprobados, reposicion, reprobados)
     """
     total = len(estudiantesProcesados)
-    aprobados = sum(1 for e in estudiantesProcesados if e[6] == "Aprobado")
-    reposicion = sum(1 for e in estudiantesProcesados if e[6] == "Reposición")
+    # Inicializar contador para estudiantes aprobados
+    aprobados = 0
+    # Recorremos cada estudiante en la lista 'estudiantesProcesados'
+    for e in estudiantesProcesados:
+        # Verificar si el estado del estudiante (posición 6 en la lista) es "Aprobado"
+        if e[6] == "Aprobado":
+            # Incrementar el contador de aprobados en 1
+            aprobados += 1
+    # Inicializar contador para estudiantes en reposición
+    reposicion = 0
+    # Recorremos cada estudiante nuevamente para contar los que están en "Reposición"
+    for e in estudiantesProcesados:
+        # Verificar si el estado es "Reposición"
+        if e[6] == "Reposición":
+            # Incrementar el contador de reposición en 1
+            reposicion += 1
     reprobados = total - aprobados - reposicion
     return total, aprobados, reposicion, reprobados
 
@@ -555,8 +608,18 @@ def parsearNotasAplazados(notasStr):
     - Retorna una tupla de 3 floats con las notas o False si hay error.
     """
     try:
+        # Eliminar los paréntesis '(' y ')' que puedan estar al inicio o al final de la cadena 'notasStr'
         notasStr = notasStr.strip('()')
-        partes = [p.strip() for p in notasStr.split(',')]
+        # Crear una lista vacía para almacenar las partes limpias de la cadena
+        partes = []
+        # Dividir la cadena 'notasStr' en subcadenas usando la coma como separador
+        notas = notasStr.split(',')
+        # Recorremos cada subcadena obtenida después de la división
+        for p in notas:
+            # Eliminar los espacios en blanco al inicio y al final de la subcadena
+            notasLimpias = p.strip()
+            # Agregar la subcadena limpia a la lista 'partes'
+            partes.append(notasLimpias)
         return tuple(map(float, partes[:3]))
     except (ValueError, AttributeError):
         return False
@@ -570,7 +633,14 @@ def calcularAplazos(notas):
     Salidas:
     - Retorna tupla con (cantidad de aplazos, lista de notas de aplazos).
     """
-    notasAplazos = [nota for nota in notas if nota < 70]
+    # Crear una lista vacía para almacenar las notas que son menores a 70 (aplazos)
+    notasAplazos = []
+    # Recorrer cada nota en la lista 'notas'
+    for nota in notas:
+        # Verificar si la nota es menor que 70
+        if nota < 70:
+            # Si es menor, agregarla a la lista de notas aplazadas
+            notasAplazos.append(nota)
     return len(notasAplazos), notasAplazos
 
 def crearTuplaEstudiante(fila, notas, numAplazos):
@@ -617,6 +687,16 @@ def procesarEstudiantes(filas):
                 cantidadAplazos3 += 1
             todasNotasAplazos.extend(notasAplazos)
             estudiantes.append(estudiante)
+        # Verificamos si la lista 'todasNotasAplazos' no está vacía
+    if todasNotasAplazos:
+        # Si tiene elementos, asignar la nota mínima de la lista a 'notaMin'
+        notaMin = min(todasNotasAplazos)
+        # Asignar la nota máxima de la lista a 'notaMax'
+        notaMax = max(todasNotasAplazos) 
+    else:
+    # Si la lista está vacía, asignar 0 a ambas variables para evitar errores
+        notaMax = 0
+        notaMin = 0
     notaMin = min(todasNotasAplazos) if todasNotasAplazos else 0
     notaMax = max(todasNotasAplazos) if todasNotasAplazos else 0
     return (estudiantes,totalEstudiantes,cantidadAplazos2,cantidadAplazos3,notaMin,notaMax)
@@ -682,12 +762,15 @@ def generarTextoEstadisticas(resultados):
     Salidas:
     - Retorna lista de strings con las estadísticas formateadas.
     """
-    return [f"Total de estudiantes en BD: {resultados[1]}",
+    listaResultado = [f"Total de estudiantes en BD: {resultados[1]}",
     f"Estudiantes con 2 aplazos: {resultados[2]} ({(resultados[2]/resultados[1]*100):.1f}%)",
     f"Estudiantes con 3 aplazos: {resultados[3]} ({(resultados[3]/resultados[1]*100):.1f}%)",
-    f"Nota más baja en aplazos: {resultados[4]:.1f}",
-    f"Nota más alta en aplazos: {resultados[5]:.1f}" if resultados[5] < 70 
-    else "No hay notas de aplazos (todas >=70)"]
+    f"Nota más baja en aplazos: {resultados[4]:.1f}",]
+    if resultados[5] < 70:
+        listaResultado.append(f"Nota más alta en aplazos: {resultados[5]:.1f}")
+    else:
+        listaResultado.append("No hay notas de aplazos (todas >=70)")
+    return listaResultado
 
 def generarReportePdf(resultados, nombreSalida):
     """
@@ -747,7 +830,14 @@ def calcularEstado(notas):
     - Retorna "Error en nota" si hay problemas al procesar.
     """
     try:
-        numeros = [n.strip() for n in notas.split(',')]
+        partes = notas.split(',')
+        numeros = []
+        # Recorremos cada parte
+        for n in partes:
+            # Eliminar espacios en blanco al inicio y final de cada parte
+            limpio = n.strip()
+            # Añadir el número limpio a la lista 
+            numeros.append(limpio)
         notaFinal = float(numeros[-1])
         if notaFinal >= 70:
             return "Aprobado"
@@ -794,7 +884,10 @@ def procesarEstudianteXml(fila):
     - Retorna tupla con (añoGeneracion, xmlEstudiante).
     - Retorna tupla vacía si hay error en el procesamiento.
     """
-    genero = "Masculino" if fila[3] == "True" else "Femenino"
+    if fila[3] == "True":
+        genero = "Masculino"
+    else:
+        genero = "Femenino"
     try:
         nombre, ap1, ap2, genero, carne, correo, notas = fila
         notasFormateadas = calcularNotas(notas)
@@ -925,7 +1018,14 @@ def aplicarCurva(estudiante, porcentaje):
     try:
         # Procesar las notas de forma segura
         notas_str = estudiante[6].strip("[]()")  # Eliminar corchetes o paréntesis
-        notas = list(map(float, notas_str.split(',')))
+        partes = notas_str.split(',')
+        # Crear lista para notas limpias
+        notas = []
+        # Recorremos cada parte para limpiar espacios y convertir a float
+        for p in partes:
+            limpio = p.strip()
+            numero = float(limpio)
+            notas.append(numero)
         notaFinal = notas[3]  # Asumiendo que la cuarta nota es el índice 3
         return notaFinal + (notaFinal * (porcentaje/100))
     except (IndexError, ValueError) as e:

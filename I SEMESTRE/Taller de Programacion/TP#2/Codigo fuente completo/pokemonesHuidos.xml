@@ -1,0 +1,102 @@
+<Pokemons>
+  <Pokemon id="3">
+    <nombre>venusaur</nombre>
+    <totalEstad>525</totalEstad>
+    </Pokemon>
+  <Pokemon id="4">
+    <nombre>charmander</nombre>
+    <totalEstad>309</totalEstad>
+    </Pokemon>
+  <Pokemon id="5">
+    <nombre>charmeleon</nombre>
+    <totalEstad>405</totalEstad>
+    </Pokemon>
+  <Pokemon id="8">
+    <nombre>wartortle</nombre>
+    <totalEstad>405</totalEstad>
+    </Pokemon>
+  <Pokemon id="10">
+    <nombre>caterpie</nombre>
+    <totalEstad>195</totalEstad>
+    </Pokemon>
+  <Pokemon id="12">
+    <nombre>butterfree</nombre>
+    <totalEstad>395</totalEstad>
+    </Pokemon>
+  <Pokemon id="13">
+    <nombre>weedle</nombre>
+    <totalEstad>195</totalEstad>
+    </Pokemon>
+  <Pokemon id="14">
+    <nombre>kakuna</nombre>
+    <totalEstad>205</totalEstad>
+    </Pokemon>
+  <Pokemon id="18">
+    <nombre>pidgeot</nombre>
+    <totalEstad>479</totalEstad>
+    </Pokemon>
+  <Pokemon id="21">
+    <nombre>spearow</nombre>
+    <totalEstad>262</totalEstad>
+    </Pokemon>
+  <Pokemon id="25">
+    <nombre>pikachu</nombre>
+    <totalEstad>320</totalEstad>
+    </Pokemon>
+  <Pokemon id="28">
+    <nombre>sandslash</nombre>
+    <totalEstad>450</totalEstad>
+    </Pokemon>
+  <Pokemon id="30">
+    <nombre>nidorina</nombre>
+    <totalEstad>365</totalEstad>
+    </Pokemon>
+  <Pokemon id="32">
+    <nombre>nidoran-m</nombre>
+    <totalEstad>273</totalEstad>
+    </Pokemon>
+  <Pokemon id="34">
+    <nombre>nidoking</nombre>
+    <totalEstad>505</totalEstad>
+    </Pokemon>
+  <Pokemon id="35">
+    <nombre>clefairy</nombre>
+    <totalEstad>323</totalEstad>
+    </Pokemon>
+  <Pokemon id="36">
+    <nombre>clefable</nombre>
+    <totalEstad>483</totalEstad>
+    </Pokemon>
+  <Pokemon id="37">
+    <nombre>vulpix</nombre>
+    <totalEstad>299</totalEstad>
+    </Pokemon>
+  <Pokemon id="38">
+    <nombre>ninetales</nombre>
+    <totalEstad>505</totalEstad>
+    </Pokemon>
+  <Pokemon id="39">
+    <nombre>jigglypuff</nombre>
+    <totalEstad>270</totalEstad>
+    </Pokemon>
+  <Pokemon id="40">
+    <nombre>wigglytuff</nombre>
+    <totalEstad>435</totalEstad>
+    </Pokemon>
+  <Pokemon id="41">
+    <nombre>zubat</nombre>
+    <totalEstad>245</totalEstad>
+    </Pokemon>
+  <Pokemon id="45">
+    <nombre>vileplume</nombre>
+    <totalEstad>490</totalEstad>
+    </Pokemon>
+  <Pokemon id="47">
+    <nombre>parasect</nombre>
+    <totalEstad>405</totalEstad>
+    </Pokemon>
+  <Pokemon id="50">
+    <nombre>diglett</nombre>
+    <totalEstad>265</totalEstad>
+    </Pokemon>
+</Pokemons>

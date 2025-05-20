@@ -159,4 +159,4 @@ if isinstance(resultado, tuple):
             diccPoke.update(info)
     imprimirInfoPokemon(diccPoke)
 else:
-    print(resultado)  # Mensaje de error
+    print(resultado)  # Mensaje de 

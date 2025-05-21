@@ -343,7 +343,12 @@ def reporteSedeBuenRendimiento(estudiantes, sedes):
         print(f"{i}. {sede}")
     opcion = int(input("Número de sede: ").strip()) - 1
     sedeElegida = sedes[opcion]
-    buenos = [est for est in estudiantes if est[2][4:6] == sedeElegida[:2] and all(n >= 70 for n in est[4][:3])]
+    buenos = []
+    for est in estudiantes:
+        if est[2][4:6] == sedeElegida[:2]:
+            notas = est[4][:3]
+            if min(notas) >= 70:
+                buenos.append(est)
     print(f"\nEstudiantes con buen rendimiento en la sede {sedeElegida}:")
     for i, est in enumerate(buenos, start=1):
         print(f"{i}. {' '.join(est[0])} - {est[2]}")
@@ -353,7 +358,6 @@ def reporteSedeBuenRendimiento(estudiantes, sedes):
 def salirPrograma():
     print("\nGracias por utilizar el sistema. Que tenga un buen día.\n")
     exit()
-
 
 # ========================================= htmlYcss.py ==============================================
 

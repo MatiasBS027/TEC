@@ -255,6 +255,11 @@ class Pokepad:
             self.textoResultado.set("Ejecutando: Atrapar")
             self.mostrarFeedback("Atrapar")
             ejecutarAtrapar(self)
+
+        elif "3. Pokédex" in opcion:
+            self.textoResultado.set("Ejecutando: Pokédex")
+            self.mostrarFeedback("Pokédex")
+            ejecutarPokedex(self)
         else:
             accion = opcion.split('. ')[1]
             self.textoResultado.set(f"Ejecutando: {accion}")
@@ -563,6 +568,203 @@ def ejecutarAtrapar(pokepad):
     ttk.Button(marcoBotones, text="Atrapar", command=ejecutarCaptura).pack(side="left", padx=10)
     ttk.Button(marcoBotones, text="Limpiar", command=limpiar).pack(side="left", padx=10)
     ttk.Button(marcoBotones, text="Cerrar", command=ventanaAtrapar.destroy).pack(side="left", padx=10)
+
+#==================================== 3. Pokédex ============================
+def ejecutarPokedex(pokePad):
+    """
+    Ventana emergente para mostrar Pokédex con matriz 5x5 de Pokémon
+    """
+    try:
+        # Leer archivo de Pokémon
+        with open("MisPokemon.txt", "r", encoding="utf-8") as archivo:
+            lineas = archivo.readlines()
+            listaPokemones = []
+            for linea in lineas:
+                if linea.strip():
+                    partes = linea.strip().split("^")
+                    listaPokemones.append(partes)
+    except FileNotFoundError:
+        messagebox.showerror("Error", "Archivo MisPokemon.txt no encontrado")
+        return
+
+    # Configuración de ventana (más ancha para mejor visualización)
+    ventanaPokedex = tk.Toplevel(pokePad.ventana)
+    ventanaPokedex.title("Pokédex")
+    ventanaPokedex.geometry("850x700")  # Aumentamos el ancho
+    ventanaPokedex.resizable(False, False)
+
+    # Variables de paginación
+    pokemonesPorPagina = 25
+    totalPaginas = (len(listaPokemones) + pokemonesPorPagina - 1) // pokemonesPorPagina
+    paginaActual = tk.IntVar(value=1)
+
+    # Marco principal
+    marcoPrincipal = ttk.Frame(ventanaPokedex)
+    marcoPrincipal.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # Título
+    titulo = ttk.Label(marcoPrincipal, text="Pokédex", font=("Arial", 20, "bold"))
+    titulo.pack(pady=10)
+
+    # Marco para la matriz (con más espacio)
+    marcoMatriz = ttk.Frame(marcoPrincipal)
+    marcoMatriz.pack(pady=10)
+
+    # Configurar tamaño de celdas
+    for i in range(5):
+        marcoMatriz.rowconfigure(i, weight=1, minsize=120)  # Aumentamos altura mínima
+    for j in range(5):
+        marcoMatriz.columnconfigure(j, weight=1, minsize=150)  # Aumentamos ancho mínimo
+
+    # Marco para controles
+    marcoControles = ttk.Frame(marcoPrincipal)
+    marcoControles.pack(pady=10)
+
+    # Botones de navegación
+    btnAtras = ttk.Button(marcoControles, text="← Atrás")
+    btnAtras.pack(side="left", padx=10)
+
+    lblPagina = ttk.Label(marcoControles, text="Página 1 de 1", font=("Arial", 12))
+    lblPagina.pack(side="left", padx=10)
+
+    btnSiguiente = ttk.Button(marcoControles, text="Siguiente →")
+    btnSiguiente.pack(side="left", padx=10)
+
+    def actualizarPokedex(*args):
+        # Limpiar matriz
+        for widget in marcoMatriz.winfo_children():
+            widget.destroy()
+
+        # Calcular rango de pokémons a mostrar
+        inicio = (paginaActual.get() - 1) * pokemonesPorPagina
+        fin = inicio + pokemonesPorPagina
+        pokemonesPagina = listaPokemones[inicio:fin]
+
+        # Crear matriz 5x5
+        for fila in range(5):
+            for columna in range(5):
+                indice = fila * 5 + columna
+
+                marcoCelda = ttk.Frame(marcoMatriz, relief="ridge", borderwidth=1)
+                marcoCelda.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew")
+
+                # Configurar celda para que el contenido se expanda
+                marcoCelda.columnconfigure(0, weight=1)
+                marcoCelda.rowconfigure(0, weight=1)
+                marcoCelda.rowconfigure(1, weight=0)
+                marcoCelda.rowconfigure(2, weight=0)
+                marcoCelda.rowconfigure(3, weight=0)
+
+                if indice < len(pokemonesPagina):
+                    pokeData = pokemonesPagina[indice]
+                    idPoke = pokeData[0]
+                    nombrePoke = pokeData[1]
+                    
+                    # Verificar estado
+                    if len(pokeData) > 2:
+                        estadoPoke = pokeData[2]
+                    else:
+                        estadoPoke = "h"
+
+                    if estadoPoke.lower() == 'a':
+                        try:
+                            # Obtener datos del pokémon
+                            respuesta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{idPoke}")
+                            if respuesta.status_code == 200:
+                                datosPoke = respuesta.json()
+                                
+                                # Determinar si es shiny
+                                esShiny = random.choice([True, False])
+                                
+                                # Obtener imagen adecuada
+                                if esShiny:
+                                    urlImagen = datosPoke['sprites']['front_shiny']
+                                else:
+                                    urlImagen = datosPoke['sprites']['front_default']
+                                
+                                # Cargar imagen
+                                datosImagen = requests.get(urlImagen).content
+                                imagenPil = Image.open(BytesIO(datosImagen))
+                                imagenPil.thumbnail((100, 100), Image.LANCZOS)
+                                imagenTk = ImageTk.PhotoImage(imagenPil)
+                                
+                                # Marco interno para organizar mejor el contenido
+                                marcoInterior = ttk.Frame(marcoCelda)
+                                marcoInterior.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+                                marcoInterior.columnconfigure(0, weight=1)
+                                
+                                # Mostrar imagen (centrada)
+                                lblImagen = ttk.Label(marcoInterior, image=imagenTk)
+                                lblImagen.image = imagenTk
+                                lblImagen.grid(row=0, column=0, pady=2)
+                                
+                                # Mostrar nombre (con ajuste de texto)
+                                nombreMostrar = nombrePoke.capitalize()
+                                if len(nombreMostrar) > 12:  # Acortar nombres muy largos
+                                    nombreMostrar = nombreMostrar[:10] + "..."
+                                
+                                lblNombre = ttk.Label(marcoInterior, text=nombreMostrar, 
+                                                    wraplength=120, justify="center")
+                                lblNombre.grid(row=1, column=0, pady=2)
+                                
+                                # Mostrar ID
+                                lblId = ttk.Label(marcoInterior, text=f"ID: {idPoke}", 
+                                                font=("Arial", 8))
+                                lblId.grid(row=2, column=0, pady=1)
+                                
+                                # Mostrar si es shiny
+                                if esShiny:
+                                    lblShiny = ttk.Label(marcoInterior, text="¡Shiny!", 
+                                                        foreground="gold", font=("Arial", 8, "bold"))
+                                    lblShiny.grid(row=3, column=0, pady=1)
+                        except Exception as error:
+                            marcoError = ttk.Frame(marcoCelda)
+                            marcoError.grid(row=0, column=0, sticky="nsew")
+                            
+                            lblError = ttk.Label(marcoError, text="Error al cargar", 
+                                            foreground="red")
+                            lblError.pack()
+                            lblNombre = ttk.Label(marcoError, text=nombrePoke.capitalize())
+                            lblNombre.pack()
+                    else:
+                        # Marco para Pokémon no atrapados
+                        marcoNoAtrapado = ttk.Frame(marcoCelda)
+                        marcoNoAtrapado.grid(row=0, column=0, sticky="nsew")
+                        
+                        lblInterrogacion = ttk.Label(marcoNoAtrapado, text="?", 
+                                                font=("Arial", 48))
+                        lblInterrogacion.pack(pady=5)
+                        lblTexto = ttk.Label(marcoNoAtrapado, text="No atrapado")
+                        lblTexto.pack()
+                else:
+                    # Celda vacía
+                    pass
+
+        # Actualizar controles
+        lblPagina.config(text=f"Página {paginaActual.get()} de {totalPaginas}")
+        
+        if paginaActual.get() <= 1:
+            btnAtras.state(["disabled"])
+        else:
+            btnAtras.state(["!disabled"])
+            
+        if paginaActual.get() >= totalPaginas:
+            btnSiguiente.state(["disabled"])
+        else:
+            btnSiguiente.state(["!disabled"])
+
+    # Configurar comandos de botones
+    btnAtras.config(command=lambda: paginaActual.set(paginaActual.get() - 1))
+    btnSiguiente.config(command=lambda: paginaActual.set(paginaActual.get() + 1))
+
+    # Observar cambios en la página actual
+    paginaActual.trace_add("write", actualizarPokedex)
+
+    # Mostrar primera página
+    actualizarPokedex()
+
+#======================  4. Detalle ============================
+
 
 # ==========================
 # EJECUCIÓN PRINCIPAL

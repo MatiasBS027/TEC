@@ -215,6 +215,14 @@ nombreArchivoBD = "BaseDeDatos.csv"
 
 
 def registrarEstudiante(estudiantes, carnetsUsados, correosUsados, sedes, porcentajes):
+    print("Ejemplo de ingreso de datos para registrar un estudiante:")
+    print("Nombre completo: Juan Pérez Rodríguez")
+    print("Género (Masculino/Femenino): Masculino")
+    print("Carné (formato AAAA SS XXXX): 2023011234")
+    print("Correo electrónico: jperez1234@estudiantec.cr")
+    print("Nota 1: 85")
+    print("Nota 2: 90")
+    print("Nota 3: 78")
     nombre = input("Nombre completo: ").strip()
     genero = input("Género (Masculino/Femenino): ").capitalize().strip()
     carne = input("Carné (formato AAAA SS XXXX): ").strip()
@@ -239,6 +247,28 @@ def registrarEstudiante(estudiantes, carnetsUsados, correosUsados, sedes, porcen
 
 
 def generarReporteGenero(estudiantes, porcentajes):
+    # Leer estudiantes desde BasedeDatos.csv
+    estudiantes = []
+    try:
+        with open("BasedeDatos.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.reader(archivo)
+            for fila in lector:
+                if len(fila) >= 7:
+                    # nombre, apellido1, apellido2, genero, carne, correo, notas
+                    nombre = [fila[0], fila[1], fila[2]]
+                    genero = "Masculino" if fila[3] == "True" else "Femenino"
+                    carne = fila[4]
+                    correo = fila[5]
+                    # notas es una cadena, convertir a tupla de floats
+                    notas = fila[6].strip("() ").split(",")
+                    notas = [float(n.strip()) for n in notas]
+                    total = notas[3]  # total ponderado
+                    estudiante = [nombre, genero, carne, correo, (notas[0], notas[1], notas[2], total, total)]
+                    estudiantes.append(estudiante)
+    except FileNotFoundError:
+        print("No se encontró el archivo BasedeDatos.csv")
+        return
+
     hombres = []
     mujeres = []
     for est in estudiantes:
@@ -247,7 +277,7 @@ def generarReporteGenero(estudiantes, porcentajes):
             hombres.append(datos)
         else:
             mujeres.append(datos)
-    
+
     def guardarTexto(nombreArchivo, datos):
         with open(nombreArchivo, "w", encoding="utf-8") as archivo:
             archivo.write("Reporte de " + nombreArchivo.replace(".txt", "") + "\n\n")
@@ -256,7 +286,7 @@ def generarReporteGenero(estudiantes, porcentajes):
                 archivo.write(f"Nota Acta: {item[0]}, Notas: {item[1]}, Nombre: {item[2]}, Carné: {item[3]}, Correo: {item[4]}\n")
             archivo.write(f"\n% Evaluaciones: {porcentajes}\n")
             archivo.write(f"Cantidad de estudiantes: {len(datos)}\n")
-    
+
     guardarTexto("hombres.txt", hombres)
     guardarTexto("mujeres.txt", mujeres)
     print("Archivos 'hombres.txt' y 'mujeres.txt' generados exitosamente.\n")
@@ -317,18 +347,30 @@ Sistema de Gestión Estudiantil TEC
 
 def estadisticaGeneracion(estudiantes):
     resumen = {}
-    for est in estudiantes:
-        anio = est[2][:4]  # Obtener año del carné
-        if anio not in resumen:
-            resumen[anio] = [0, 0, 0, 0]
-        if est[4][-1] >= 70:
-            resumen[anio][0] += 1
-        elif 60 <= est[4][-1] < 70:
-            resumen[anio][1] += 1
-        else:
-            resumen[anio][2] += 1
-        resumen[anio][3] += 1
-    
+    try:
+        with open("BasedeDatos.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.reader(archivo)
+            for fila in lector:
+                if len(fila) >= 7:
+                    carne = fila[4]
+                    anio = carne[:4]
+                    # Notas es una cadena, convertir a lista de floats
+                    notas = fila[6].strip("() ").split(",")
+                    notas = [float(n.strip()) for n in notas]
+                    notaFinal = notas[3]
+                    if anio not in resumen:
+                        resumen[anio] = [0, 0, 0, 0]
+                    if notaFinal >= 70:
+                        resumen[anio][0] += 1
+                    elif 60 <= notaFinal < 70:
+                        resumen[anio][1] += 1
+                    else:
+                        resumen[anio][2] += 1
+                    resumen[anio][3] += 1
+    except FileNotFoundError:
+        print("No se encontró el archivo BasedeDatos.csv")
+        return
+
     print("\n--- ESTADÍSTICA POR GENERACIÓN ---")
     print("Año | Aprobados | Reposición | Reprobados | Total")
     for anio, datos in resumen.items():
@@ -483,19 +525,19 @@ def calcularEstadisticas(estudiantesProcesados):
     total = len(estudiantesProcesados)
     # Inicializar contador para estudiantes aprobados
     aprobados = 0
-    # Recorremos cada estudiante en la lista 'estudiantesProcesados'
+    # Reconoce cada estudiante en la lista 'estudiantesProcesados'
     for e in estudiantesProcesados:
         # Verificar si el estado del estudiante (posición 6 en la lista) es "Aprobado"
         if e[6] == "Aprobado":
             # Incrementar el contador de aprobados en 1
             aprobados += 1
-    # Inicializar contador para estudiantes en reposición
+    # Inicializa el contador para estudiantes en reposición
     reposicion = 0
     # Recorremos cada estudiante nuevamente para contar los que están en "Reposición"
     for e in estudiantesProcesados:
         # Verificar si el estado es "Reposición"
         if e[6] == "Reposición":
-            # Incrementar el contador de reposición en 1
+            # Incrementa el contador de reposición en 1
             reposicion += 1
     reprobados = total - aprobados - reposicion
     return total, aprobados, reposicion, reprobados
@@ -604,28 +646,30 @@ def leerDatosCsv(nombreArchivo):
     
 def parsearNotasAplazados(notasStr):
     """
-    Función:
-    - Convierte un string de notas en formato "(n1, n2, n3)" a una tupla de floats.
-    Entradas:
-    - notasStr: str, cadena con las notas en formato específico.
-    Salidas:
-    - Retorna una tupla de 3 floats con las notas o False si hay error.
+    Esta función toma una cadena de texto con las notas de un estudiante, por ejemplo "(80, 65, 55)",
+    y la convierte en una tupla de tres números decimales (floats).
+    Parámetros:
+    - notasStr: texto con las notas, separado por comas y entre paréntesis.
+    Retorna:
+    - Una tupla con las tres notas como floats, o False si ocurre algún error.
     """
     try:
-        # Eliminar los paréntesis '(' y ')' que puedan estar al inicio o al final de la cadena 'notasStr'
+        # Quitamos los paréntesis al inicio y final, si existen
         notasStr = notasStr.strip('()')
-        # Crear una lista vacía para almacenar las partes limpias de la cadena
+        # Creamos una lista para guardar las notas limpias
         partes = []
-        # Dividir la cadena 'notasStr' en subcadenas usando la coma como separador
+        # Separamos la cadena usando la coma
         notas = notasStr.split(',')
-        # Recorremos cada subcadena obtenida después de la división
+        # Limpiamos cada nota de espacios y la agregamos a la lista
         for p in notas:
-            # Eliminar los espacios en blanco al inicio y al final de la subcadena
             notasLimpias = p.strip()
-            # Agregar la subcadena limpia a la lista 'partes'
             partes.append(notasLimpias)
-        return tuple(map(float, partes[:3]))
-    except (ValueError, AttributeError):
+        # Convertimos las tres primeras notas a float y las devolvemos como tupla
+        nota1 = float(partes[0])
+        nota2 = float(partes[1])
+        nota3 = float(partes[2])
+        return (nota1, nota2, nota3)
+    except (ValueError, AttributeError, IndexError):
         return False
 
 def calcularAplazos(notas):
@@ -691,19 +735,17 @@ def procesarEstudiantes(filas):
                 cantidadAplazos3 += 1
             todasNotasAplazos.extend(notasAplazos)
             estudiantes.append(estudiante)
-        # Verificamos si la lista 'todasNotasAplazos' no está vacía
     if todasNotasAplazos:
-        # Si tiene elementos, asignar la nota mínima de la lista a 'notaMin'
         notaMin = min(todasNotasAplazos)
-        # Asignar la nota máxima de la lista a 'notaMax'
-        notaMax = max(todasNotasAplazos) 
     else:
-    # Si la lista está vacía, asignar 0 a ambas variables para evitar errores
-        notaMax = 0
         notaMin = 0
-    notaMin = min(todasNotasAplazos) if todasNotasAplazos else 0
-    notaMax = max(todasNotasAplazos) if todasNotasAplazos else 0
-    return (estudiantes,totalEstudiantes,cantidadAplazos2,cantidadAplazos3,notaMin,notaMax)
+
+    if todasNotasAplazos:
+        notaMax = max(todasNotasAplazos)
+    else:
+        notaMax = 0
+
+    return (estudiantes, totalEstudiantes, cantidadAplazos2, cantidadAplazos3, notaMin, notaMax)
 
 def crearEstiloTitulo(estilos):
     """

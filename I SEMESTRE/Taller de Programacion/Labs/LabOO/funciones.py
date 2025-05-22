@@ -1,96 +1,162 @@
-#Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
-#fecha de creación 20/05/2025
-#última modificación 20/05/2025 20:00
-#python versión 3.13.2
-import csv
-import pandas as pd
-import random
-import string
-import names
-from Lab O_O import personalidad
-# Lista para almacenar los miembros 
-listaMiembros = []
+# Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
+# Fecha de creación 20/05/2025
+# Última modificación 21/05/2025
+# Python versión 3.13.2
 
-def crearBaseDatos():
-    """
-    base de datos en csv con la información de los usuarios
-    con las celdas con la siguiente información
-    celda1=Nombre completo ("nombre","Apellido1","apellido2")
-    celda2=cedula (9 dígitos, el primero no puede ser 0)
-    celda3=Categoria y personalidad ([número, string])
-    celda4=profesión (string)
-    celda5=estado (activo=true, inactivo=false)
-    """
-    df = pd.DataFrame(columns=["Nombre", "Cedula", "CateYPerso", "Profesion", "Estado"])
-    df.to_csv("BaseDatos.csv", index=False)
-    print("Base de datos creada exitosamente.")
+#importacion
+from archivos import *
+from clase import *
+import re
 
-def insertarMiembro(listaMiembros):
-    """
-    Función que solicita al usuario el número de personas 
-    que tiene el equipo de trabajo y con base a este valor crea los valores
-    ficticios de cada uno cumpliendo con los requisitos de la clase.
+#Funciones
+def buscarCedula():
+    cedula = input("Ingrese la cédula a validar (9 dígitos, primero no 0): ").strip()
+    if re.fullmatch(r"[1-9][0-9]{8}", cedula):
+        return cedula
+    else:
+        print("Cédula inválida. Debe tener 9 dígitos y el primero no puede ser 0.")
+        return
 
-    nombre: Tupla de 3 valores string (“nombre”, “ap1”, “Ap2”) para el registro del nombre completo ficticio
-    cédula: 9 valores numéricos, el primero no puede ser 0
-    cateYPerso: lista de 2 valores [número, string] según especificación
-    profesión: número de la posición aleatoria de la lista de profesiones
-    estado: booleano, True (Activo) o False (Inactivo)
-    """
-    try:
-        cantidadPersonas = int(input("¿Cuántas personas tiene el equipo de trabajo? "))
+def buscarPersona(equipo, cedula):
+    for persona in equipo:
+        if persona.mostrarCedula() == cedula:
+            return persona
+    print(f"No se encontró ninguna persona con la cédula {cedula}.")
+    return None
 
-        listaProfesiones = [
-            "Software Developer", "Analyst", "Engineer", "Game designer", "Web designer", "Designer",
-            "Game programmer", "Webmaster", "Web developer", "Network administrator", "Software Engineer",
-            "Scientist", "Video game developer", "Data Engineer", "Strategist", "Web Application Developer",
-            "Java Developer"
-        ]
-        categoriasPersonalidad = {
-            1: "an",  # Analista
-            2: "di",  # Diplomático
-            3: "ce",  # Centinelas
-            4: "ex"   # Exploradores
-        }
+def insertarMiembro(equipo, cantidad):
+    for i in range(cantidad):
+        persona = generarPersona()
+        equipo.append(persona)
 
-        nuevosMiembros = []
+        nombre = persona.mostrarName()
+        cedula = persona.mostrarCedula()
+        personalidad = persona.mostrarPersonalidad()
+        profesion = persona.mostrarProfesion()
+        estado = persona.mostrarEstado()
 
-        for _ in range(cantidadPersonas):
-            miembro = personalidad()
-            # Nombre ficticio como tupla (nombre, apellido1, apellido2)
-            nombreTupla = (names.get_first_name(), names.get_last_name(), names.get_last_name())
-            miembro.asignarNombre(nombreTupla)
-            # Cédula de 9 dígitos, el primero no puede ser 0
-            cedulaAleatoria = str(random.randint(1, 9)) + ''.join([str(random.randint(0, 9)) for _ in range(8)])
-            miembro.asignarCedula(cedulaAleatoria)
-            # Categoría y personalidad: [número, string]
-            categoriaNum = random.randint(1, 4)
-            inicialesPersonalidad = categoriasPersonalidad[categoriaNum]
-            cateYPerso = [categoriaNum, inicialesPersonalidad]
-            miembro.asignarCateYPerso(cateYPerso)
-            # Profesión: guardar el número de la posición aleatoria
-            profesionIndice = random.randint(0, len(listaProfesiones) - 1)
-            miembro.asignarProfesion(profesionIndice)
-            # Estado: True (Activo) o False (Inactivo)
-            estadoBool = random.choice([True, False])
-            miembro.asignarEstado(estadoBool)
-            listaMiembros.append(miembro)
-            # Para guardar en CSV:
-            nombreCompleto = f"{nombreTupla[0]} {nombreTupla[1]} {nombreTupla[2]}"
-            profesionNombre = listaProfesiones[profesionIndice]
-            estadoStr = "Activo" if estadoBool else "Inactivo"
-            cateYPersoStr = f"[{categoriaNum},\"{inicialesPersonalidad}\"]"
-            nuevosMiembros.append([nombreCompleto, cedulaAleatoria, cateYPersoStr, profesionNombre, estadoStr])
+        nombreCompleto = f"{nombre[0]} {nombre[1]} {nombre[2]}"
+        personalidadStr = f"[{personalidad[0]},\"{personalidad[1]}\"]"
+        print(f"Nombre: {nombreCompleto}, Cédula: {cedula}, Personalidad: {personalidadStr}, Profesión: {profesion}, Estado: {estado}")
 
-        # Guardar en memoria secundaria (agregar al CSV)
-        try:
-            dataFrame = pd.read_csv("BaseDatos.csv")
-        except FileNotFoundError:
-            dataFrame = pd.DataFrame(columns=["Nombre", "Cedula", "CateYPerso", "Profesion", "Estado"])
-        nuevosDataFrame = pd.DataFrame(nuevosMiembros, columns=["Nombre", "Cedula", "CateYPerso", "Profesion", "Estado"])
-        dataFrame = pd.concat([dataFrame, nuevosDataFrame], ignore_index=True)
-        dataFrame.to_csv("BaseDatos.csv", index=False)
+    mensaje = guardarArchivo(equipo)
+    print(mensaje)
 
-        print("Procesamiento total terminado. Los miembros han sido guardados en BaseDatos.csv.")
-    except Exception as error:
-        print(f"Ocurrió un error: {error}")
+def cambiarNombre(equipo, cedula, nuevoNombre):
+    personaEncontrada = buscarPersona(equipo, cedula)
+    if not personaEncontrada:
+        print(f"No se encontró persona con cédula {cedula}.")
+        return
+    partes = nuevoNombre.split()
+    if len(partes) != 3:
+        print("Debe ingresar exactamente 3 palabras: nombre y dos apellidos.")
+        return
+    personaEncontrada.asignarName(tuple(partes))
+    guardarArchivo(equipo)
+    print(f"Nombre actualizado correctamente.")
+
+def eliminarMiembro(equipo, cedula):
+    personaEncontrada = buscarPersona(equipo, cedula)
+    if not personaEncontrada:
+        print(f"No se encontró persona con cédula {cedula}.")
+        return
+    estadoActual = personaEncontrada.mostrarEstado()
+    if estadoActual == "Inactivo":
+        print("La persona ya está eliminada (estado Inactivo). No es posible eliminarla nuevamente.")
+        return
+    personaEncontrada.asignarEstado("Inactivo")
+    guardarArchivo(equipo)
+    print(f"La persona con cédula {cedula} ha sido eliminada.")
+
+def mostrarInfoCompleta(equipo):
+    if not equipo:
+        print("No hay miembros en el equipo para mostrar.")
+        return
+    
+    for idx, persona in enumerate(equipo, start=1):
+        nombre = persona.mostrarName()
+        cedula = persona.mostrarCedula()
+        personalidad = persona.mostrarPersonalidad()
+        profesion = persona.mostrarProfesion()
+        estado = persona.mostrarEstado()
+
+        nombreCompleto = f"{nombre[0]} {nombre[1]} {nombre[2]}"
+        personalidadStr = f"[{personalidad[0]}, \"{personalidad[1]}\"]"
+
+        print(f"Miembro #{idx}:")
+        print(f"  Nombre completo: {nombreCompleto}")
+        print(f"  Cédula: {cedula}")
+        print(f"  Personalidad: {personalidadStr}")
+        print(f"  Profesión: {profesion}")
+        print(f"  Estado: {estado}")
+
+def mostrarCategorias(equipo):
+    categorias = {
+        "1": "Analistas",
+        "2": "Diplomaticos",
+        "3": "Centinelas",
+        "4": "Exploradores"
+    }
+    print("Categorías disponibles:")
+    for num, cate in categorias.items():
+        print(f"{num}. {cate}")
+    opcion = input("Seleccione una categoría por número: ").strip()
+    if opcion not in categorias:
+        print("Opción inválida. Intente nuevamente.")
+        return
+    categoriaElegida = opcion  # Será "1", "2", etc. que coincide con idCategoria
+    print(f"\nMiembros del equipo en la categoría: {categorias[opcion]}\n")
+    miembrosCategoria = []
+    for persona in equipo:
+        personalidad = persona.mostrarPersonalidad()  # [idCategoria, código]
+        if str(personalidad[0]) == categoriaElegida:
+            miembrosCategoria.append(persona)
+    if not miembrosCategoria:
+        print("No se encontraron miembros en esta categoría.")
+        return
+    for id, persona in enumerate(miembrosCategoria, start=1):
+        nombre = persona.mostrarName()
+        cedula = persona.mostrarCedula()
+        personalidad = persona.mostrarPersonalidad()
+        profesion = persona.mostrarProfesion()
+        estado = persona.mostrarEstado()
+        nombreCompleto = f"{nombre[0]} {nombre[1]} {nombre[2]}"
+        personalidadStr = f"[{personalidad[0]}, \"{personalidad[1]}\"]"
+
+        print(f"Miembro #{id}:")
+        print(f"  Nombre completo: {nombreCompleto}")
+        print(f"  Cédula: {cedula}")
+        print(f"  Personalidad: {personalidadStr}")
+        print(f"  Profesión: {profesion}")
+        print(f"  Estado: {estado}")
+
+def mostrarPersonaPorCedula(equipo):
+    while True:
+        print("\n--- Buscar Persona por Cédula ---")
+        print("Digite una cédula válida")
+        cedula = buscarCedula()
+        if not cedula:
+            return
+
+        persona = buscarPersona(equipo, cedula)
+        if not persona:
+            continue  # Si no encuentra, pide otra cédula
+
+        # Mostrar toda la información
+        nombre = persona.mostrarName()
+        cedula = persona.mostrarCedula()
+        personalidad = persona.mostrarPersonalidad()
+        profesion = persona.mostrarProfesion()
+        estado = persona.mostrarEstado()
+
+        nombreCompleto = f"{nombre[0]} {nombre[1]} {nombre[2]}"
+        personalidadStr = f"[{personalidad[0]}, \"{personalidad[1]}\"]"
+
+        print("\n--- Información del Miembro ---")
+        print(f"Nombre Completo : {nombreCompleto}")
+        print(f"Cédula          : {cedula}")
+        print(f"Personalidad    : {personalidadStr}")
+        print(f"Profesión       : {profesion}")
+        print(f"Estado          : {estado}")
+
+        break 

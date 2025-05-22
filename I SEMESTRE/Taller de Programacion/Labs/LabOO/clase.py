@@ -1,3 +1,8 @@
+#Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
+#fecha de creación 20/05/2025
+#última modificación 20/05/2025 20:00
+#python versión 3.13.2
+
 import re
 import names
 import random
@@ -84,33 +89,36 @@ def generarEstado():
 
 
 ###### Programa Principal ######
-personalidad = tipoPersonalidad()
+def generarPersona():
+    persona = tipoPersonalidad()
 
-# Generar nombre aleatorio con dos apellidos
-nombre = names.get_first_name()
-apellido1 = names.get_last_name()
-apellido2 = names.get_last_name()
-vnombre = (nombre, apellido1, apellido2)
-personalidad.asignarName(vnombre)
+    # Generar nombre aleatorio con dos apellidos
+    nombre = names.get_first_name()
+    apellido1 = names.get_last_name()
+    apellido2 = names.get_last_name()
+    vnombre = (nombre, apellido1, apellido2)
+    persona.asignarName(vnombre)
 
-# Generar cédula de 9 dígitos donde el primero no es 0
-primerDigito = random.randint(1, 9)  # Aseguramos que no sea 0
-digitos = []
-for i in range(8):
-    numero = random.randint(0, 9)
-    digitos.append(str(numero))
-restoDigitos = ''.join(digitos)
-vcedula = f"{primerDigito}{restoDigitos}"
-personalidad.asignarCedula(vcedula)
+    # Generar cédula de 9 dígitos donde el primero no es 0
+    primerDigito = random.randint(1, 9)  # Aseguramos que no sea 0
+    digitos = []
+    for i in range(8):
+        numero = random.randint(0, 9)
+        digitos.append(str(numero))
+    restoDigitos = ''.join(digitos)
+    vcedula = f"{primerDigito}{restoDigitos}"
+    persona.asignarCedula(vcedula)
 
-# Generar y asignar personalidad
-vpersonalidad = generarPersonalidad()
-personalidad.asignarPersonalidad(vpersonalidad)
+    # Generar y asignar personalidad
+    vpersonalidad = generarPersonalidad()
+    persona.asignarPersonalidad(vpersonalidad)
 
-# Generar profesión (solo el nombre)
-vprofesion = generarProfesion()
-personalidad.asignarProfesion(vprofesion)
+    # Generar profesión (solo el nombre)
+    vprofesion = generarProfesion()
+    persona.asignarProfesion(vprofesion)
 
-# Asignar estado usando la función externa
-vestado = generarEstado()
-personalidad.asignarEstado(vestado)
+    # Asignar estado usando la función externa
+    vestado = generarEstado()
+    persona.asignarEstado(vestado)
+
+    return persona

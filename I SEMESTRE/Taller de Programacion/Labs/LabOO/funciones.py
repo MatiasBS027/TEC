@@ -116,7 +116,7 @@ def eliminarMiembro(equipo, cedula):
         return
     estadoActual = personaEncontrada.mostrarEstado()
     if estadoActual == "Inactivo":
-        print("La persona ya está eliminada (estado Inactivo). No es posible eliminarla nuevamente.")
+        print("La persona no se encuentra en la lista de activos. No es posible eliminarla.")
         return
     personaEncontrada.asignarEstado("Inactivo")
     guardarArchivo(equipo)

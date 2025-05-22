@@ -9,41 +9,137 @@ import random
 
 
 class tipoPersonalidad:
+    """
+    Clase para representar una persona con tipo de personalidad, nombre, cédula, profesión y estado.
+
+    Atributos:
+    - name (tuple): nombre y apellidos (nombre, apellido1, apellido2).
+    - cedula (str): número de identificación único.
+    - personalidades (list): lista con categoría y abreviatura del tipo de personalidad.
+    - profesion (str): profesión asignada.
+    - estado (str): "Activo" o "Inactivo".
+    """
+
     def __init__(self):
         self.name = ()
         self.cedula = ""
         self.personalidades = []
         self.profesion = ""
-        self.estado = None # Dice que se debe asiganr aleatoriamente
+        self.estado = None  # Se asigna aleatoriamente
 
     def asignarName(self, pname):
+        """
+        Asigna el nombre completo a la persona.
+        Entradas:
+        - pname (tuple): tupla con (nombre, apellido1, apellido2).
+        Salidas:
+        - None
+        """
         self.name = pname
         return
+
     def asignarCedula(self, pcedula):
+        """
+        Asigna la cédula a la persona.
+        Entradas:
+        - pcedula (str): cédula.
+        Salidas:
+        - None
+        """
         self.cedula = pcedula
         return
+
     def asignarPersonalidad(self, ppersonalidad):
+        """
+        Asigna el tipo de personalidad a la persona.
+        Entradas:
+        - ppersonalidad (list): lista con datos de personalidad.
+        Salidas:
+        - None
+        """
         self.personalidades = ppersonalidad
         return
+
     def asignarProfesion(self, pprofesion):
+        """
+        Asigna la profesión a la persona.
+        Entradas:
+        - pprofesion (str): nombre de profesión.
+        Salidas:
+        - None
+        """
         self.profesion = pprofesion
         return
+
     def asignarEstado(self, pestado):
+        """
+        Asigna el estado a la persona.
+        Entradas:
+        - pestado (str): "Activo" o "Inactivo".
+        Salidas:
+        - None
+        """
         self.estado = pestado
         return
     
     def mostrarName(self):
+        """
+        Devuelve el nombre completo.
+        Entradas:
+        - None
+        Salidas:
+        - tuple: nombre completo (nombre, apellido1, apellido2).
+        """
         return self.name
+
     def mostrarCedula(self):
+        """
+        Devuelve la cédula.
+        Entradas:
+        - None
+        Salidas:
+        - str: cédula.
+        """
         return self.cedula
+
     def mostrarPersonalidad(self):
+        """
+        Devuelve la personalidad.
+        Entradas:
+        - None
+        Salidas:
+        - list: datos de personalidad.
+        """
         return self.personalidades
+
     def mostrarProfesion(self):
+        """
+        Devuelve la profesión.
+        Entradas:
+        - None
+        Salidas:
+        - str: profesión.
+        """
         return self.profesion
+
     def mostrarEstado(self):
+        """
+        Devuelve el estado.
+        Entradas:
+        - None
+        Salidas:
+        - str: estado ("Activo" o "Inactivo").
+        """
         return self.estado
 
     def indicarDatos(self):
+        """
+        Devuelve todos los datos de la persona en una tupla.
+        Entradas:
+        - None
+        Salidas:
+        - tuple: (nombre, cédula, personalidad, profesión, estado).
+        """
         return self.name, self.cedula, self.personalidades, self.profesion, self.estado
 
 
@@ -56,14 +152,19 @@ personalidades = {
 }
 
 # Lista de profesiones
-profesiones= "Software Developer,Analyst,Engineer,Game designer,Web designer,Designer,Game programmer," 
-"Webmaster,Web developer,Network administrator,Software Engineer,Scientist,Video game developer,"
+profesiones= "Software Developer,Analyst,Engineer,Game designer,Web designer,Designer,Game programmer," \
+"Webmaster,Web developer,Network administrator,Software Engineer,Scientist,Video game developer," \
 "Data Engineer,Strategist,Web Application Developer,Java Developer"
 listaDeProfesiones = profesiones.split(',')
 
-#Definicion de funciones
-
 def generarPersonalidad():
+    """
+    Genera aleatoriamente una personalidad asignada a una categoría y una abreviatura.
+    Entradas:
+    - None
+    Salidas:
+    - list: [idCategoria (int), abreviatura de personalidad (str)]
+    """
     idCategoria = random.randint(1, 4)
     temp = personalidades[idCategoria]
     tipos = temp[1]
@@ -72,14 +173,27 @@ def generarPersonalidad():
     return resultado
 
 def generarProfesion():
+    """
+    Selecciona aleatoriamente una profesión de la lista predefinida.
+    Entradas:
+    - None
+    Salidas:
+    - str: nombre de la profesión seleccionada.
+    """
     cantidad= len(listaDeProfesiones)
     ultimo = cantidad - 1
     posicion = random.randint(0, ultimo)
     profesionSeleccionada = listaDeProfesiones[posicion]
-    return profesionSeleccionada #Retorna el nombre
+    return profesionSeleccionada
 
 def generarEstado():
-    # Genera aleatoriamente True (Activo) o False (Inactivo)
+    """
+    Genera aleatoriamente un estado "Activo" o "Inactivo".
+    Entradas:
+    - None
+    Salidas:
+    - str: "Activo" o "Inactivo".
+    """
     estado = random.choice([True, False])
     if estado == True:
         estado = "Activo"
@@ -88,8 +202,15 @@ def generarEstado():
     return estado
 
 
-###### Programa Principal ######
 def generarPersona():
+    """
+    Crea un objeto tipoPersonalidad con datos generados aleatoriamente:
+    nombre completo, cédula, personalidad, profesión y estado.
+    Entradas:
+    - None
+    Salidas:
+    - tipoPersonalidad: objeto con datos asignados.
+    """
     persona = tipoPersonalidad()
 
     # Generar nombre aleatorio con dos apellidos

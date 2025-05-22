@@ -10,6 +10,17 @@ import re
 
 #Funciones
 def buscarCedula():
+    """
+    Solicita al usuario ingresar una cédula válida.
+    La cédula debe tener 9 dígitos y el primero no puede ser 0.
+
+    Entradas:
+    - None (input desde consola)
+
+    Salidas:
+    - str: cédula válida si la entrada es correcta.
+    - None: si la cédula es inválida, muestra mensaje y retorna None.
+    """
     cedula = input("Ingrese la cédula a validar (9 dígitos, primero no 0): ").strip()
     if re.fullmatch(r"[1-9][0-9]{8}", cedula):
         return cedula
@@ -18,6 +29,17 @@ def buscarCedula():
         return
 
 def buscarPersona(equipo, cedula):
+    """
+    Busca una persona en el equipo por su cédula.
+
+    Entradas:
+    - equipo (list): lista de objetos tipoPersonalidad.
+    - cedula (str): cédula a buscar.
+
+    Salidas:
+    - tipoPersonalidad: objeto persona encontrada.
+    - None: si no se encuentra la persona, imprime mensaje y retorna None.
+    """
     for persona in equipo:
         if persona.mostrarCedula() == cedula:
             return persona
@@ -25,6 +47,17 @@ def buscarPersona(equipo, cedula):
     return None
 
 def insertarMiembro(equipo, cantidad):
+    """
+    Inserta una cantidad de miembros generados aleatoriamente al equipo,
+    mostrando su información y guardando los datos en archivo.
+
+    Entradas:
+    - equipo (list): lista donde se agregarán los miembros.
+    - cantidad (int): número de miembros a generar e insertar.
+
+    Salidas:
+    - None (imprime información y mensajes).
+    """
     for i in range(cantidad):
         persona = generarPersona()
         equipo.append(persona)
@@ -43,6 +76,17 @@ def insertarMiembro(equipo, cantidad):
     print(mensaje)
 
 def cambiarNombre(equipo, cedula, nuevoNombre):
+    """
+    Cambia el nombre completo (nombre y dos apellidos) de la persona con la cédula dada.
+
+    Entradas:
+    - equipo (list): lista de personas.
+    - cedula (str): cédula de la persona a modificar.
+    - nuevoNombre (str): cadena con tres palabras (nombre y dos apellidos).
+
+    Salidas:
+    - None (imprime mensajes de éxito o error).
+    """
     personaEncontrada = buscarPersona(equipo, cedula)
     if not personaEncontrada:
         print(f"No se encontró persona con cédula {cedula}.")
@@ -56,6 +100,16 @@ def cambiarNombre(equipo, cedula, nuevoNombre):
     print(f"Nombre actualizado correctamente.")
 
 def eliminarMiembro(equipo, cedula):
+    """
+    Cambia el estado de una persona a "Inactivo",.
+
+    Entradas:
+    - equipo (list): lista de personas.
+    - cedula (str): cédula de la persona a eliminar.
+
+    Salidas:
+    - imprime mensajes de éxito o error.
+    """
     personaEncontrada = buscarPersona(equipo, cedula)
     if not personaEncontrada:
         print(f"No se encontró persona con cédula {cedula}.")
@@ -69,6 +123,15 @@ def eliminarMiembro(equipo, cedula):
     print(f"La persona con cédula {cedula} ha sido eliminada.")
 
 def mostrarInfoCompleta(equipo):
+    """
+    Muestra en consola la información completa de todos los miembros del equipo.
+
+    Entradas:
+    - equipo (list): lista de personas.
+
+    Salidas:
+    - None (imprime la información).
+    """
     if not equipo:
         print("No hay miembros en el equipo para mostrar.")
         return
@@ -91,6 +154,15 @@ def mostrarInfoCompleta(equipo):
         print(f"  Estado: {estado}")
 
 def mostrarCategorias(equipo):
+    """
+    Permite al usuario seleccionar una categoría y muestra los miembros del equipo que pertenecen a ella.
+
+    Entradas:
+    - equipo (list): lista de personas.
+
+    Salidas:
+    - None (imprime lista de miembros por categoría o mensajes de error).
+    """
     categorias = {
         "1": "Analistas",
         "2": "Diplomaticos",
@@ -104,7 +176,7 @@ def mostrarCategorias(equipo):
     if opcion not in categorias:
         print("Opción inválida. Intente nuevamente.")
         return
-    categoriaElegida = opcion  # Será "1", "2", etc. que coincide con idCategoria
+    categoriaElegida = opcion  # Será "1", "2", etc.
     print(f"\nMiembros del equipo en la categoría: {categorias[opcion]}\n")
     miembrosCategoria = []
     for persona in equipo:
@@ -131,6 +203,16 @@ def mostrarCategorias(equipo):
         print(f"  Estado: {estado}")
 
 def mostrarPersonaPorCedula(equipo):
+    """
+    Pide al usuario ingresar una cédula válida y muestra la información completa
+    de la persona que coincida con esa cédula.
+
+    Entradas:
+    - equipo (list): lista de personas.
+
+    Salidas:
+    - None (imprime información o mensajes).
+    """
     while True:
         print("\n--- Buscar Persona por Cédula ---")
         print("Digite una cédula válida")
@@ -159,4 +241,4 @@ def mostrarPersonaPorCedula(equipo):
         print(f"Profesión       : {profesion}")
         print(f"Estado          : {estado}")
 
-        break 
+        break

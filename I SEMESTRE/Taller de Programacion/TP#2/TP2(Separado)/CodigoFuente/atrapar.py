@@ -96,7 +96,7 @@ def obtenerInfoPokemon(idPoke):
         datos = respuesta.json()
         idApi = datos['id']
         nombre = datos['name']
-        esShiny = False  # Puedes cambiar a random si deseas
+        esShiny = random.choice([True, False])
         peso = datos['weight']  *10
         altura = datos['height']  *10
         estadisticas = datos['stats']
@@ -160,3 +160,112 @@ if isinstance(resultado, tuple):
     imprimirInfoPokemon(diccPoke)
 else:
     print(resultado)  # Mensaje de 
+
+
+def shinys(diccPoke):
+    shinys = {}
+    for idPoke, datos in diccPoke.items():
+        esShiny = datos[1][0]
+        if esShiny == True:
+            shinys[idPoke] = datos
+    return shinys
+
+def dividirPaginas(lista, tamano):
+    paginas = []
+    inicio = 0
+    while inicio < len(lista):
+        fin = inicio + tamano
+        pagina = lista[inicio:fin]
+        paginas.append(pagina)
+        inicio = fin
+    return paginas
+
+
+def generarHtml(pagina, numeroPagina):
+    nombreArchivo = f"Shinys{numeroPagina}.html"
+
+    archivo = open(nombreArchivo, "w", encoding="utf-8")
+
+    encabezado = """<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokémon Shinys</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #ffcc00; color: black; }
+        tr:nth-child(even) { background-color: #081a41; }
+        img { width: 80px; }
+    </style>
+</head>
+<body>
+    <h1>Lista de Pokémon Shiny</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Shiny</th>
+            <th>Peso (kg)</th>
+            <th>Altura (cm)</th>
+            <th>Estadísticas</th>
+            <th>Total</th>
+            <th>Tipos</th>
+            <th>Imagen</th>
+        </tr>
+"""
+    archivo.write(encabezado)
+    for idPoke, datos in pagina:
+        nombre = datos[0]
+        tupla = datos[1]
+        shiny = tupla[0]
+        peso = tupla[1]
+        altura = tupla[2]
+
+        estadisticas = datos[2]
+        total_stats = estadisticas[0]
+        stats = estadisticas[1]
+        tiposLista = datos[3]
+        tipos = ', '.join(tiposLista)
+        url = datos[4]
+
+        filaHtml = f"""
+        <tr>
+            <td>{idPoke}</td>
+            <td>{nombre}</td>
+            <td>{shiny}</td>
+            <td>{peso}</td>
+            <td>{altura}</td>
+            <td>{stats}</td>
+            <td>{total_stats}</td>
+            <td>{tipos}</td>
+            <td><img src="{url}" alt="{nombre}"></td>
+        </tr>
+"""
+        archivo.write(filaHtml)
+    cierre = """
+    </table>
+</body>
+</html>
+"""
+    archivo.write(cierre)
+    archivo.close()
+
+def generarReportes(diccPoke):
+    shinysFiltrados = shinys(diccPoke)
+    listaShinys = list(shinysFiltrados.items())
+    paginas = dividirPaginas(listaShinys, 100)
+    contador = 1
+    for pagina in paginas:
+        generarHtml(pagina, contador)
+        contador += 1
+    cantidadPaginas = len(paginas)
+    print(f"Se generaron {cantidadPaginas} archivo(s) HTML con Pokémon shiny.")
+
+listaIdAtrapados = listaAtrapados(atrapados)
+diccPoke = {}
+for id in listaIdAtrapados:
+    info = obtenerInfoPokemon(id)
+    if info:
+        diccPoke.update(info)
+
+generarReportes(diccPoke)  

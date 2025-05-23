@@ -159,9 +159,8 @@ def mostrarDetallePokemon(idPokemon):
     
     return ventana
 
-# Para usar el código directamente
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw()  # Ocultar ventana raíz
-    ventanaDetalle = mostrarDetallePokemon(1000)
-    root.mainloop()
+# Programa 
+root = tk.Tk()
+root.withdraw()  # Ocultar ventana raíz
+ventanaDetalle = mostrarDetallePokemon(1000)
+root.mainloop()

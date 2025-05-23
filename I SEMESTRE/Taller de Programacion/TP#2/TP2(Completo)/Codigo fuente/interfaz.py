@@ -430,6 +430,7 @@ def ejecutarAtrapar(pokepad):
                 huidos.append(poke)
         print(f"Pokémon atrapados: {cantidadAtrapados}")
         print(f"Pokémon que huyeron: {cantidadHuyeron}")
+        print("Pokémon atrapados:")
         for idPoke, nombre in atrapados:
             print(f"ID: {idPoke}, Nombre: {nombre}")
         print("Pokémon que huyeron:")
@@ -452,7 +453,7 @@ def ejecutarAtrapar(pokepad):
             datos = respuesta.json()
             idApi = datos['id']
             nombre = datos['name']
-            esShiny = False  # Puedes cambiar a random si deseas
+            esShiny = random.choice([True, False])
             peso = datos['weight']  *10
             altura = datos['height']  *10
             estadisticas = datos['stats']
@@ -499,8 +500,8 @@ def ejecutarAtrapar(pokepad):
             print(f"  [{totalEstad}, {stats}],")
             print(f"  {tipos},")
             print(f"  '{urlImagen}'")
-            print("]")
-            print()
+            print("]\n")
+
 
     def ejecutarCaptura():
         # Habilita el área de resultados para poder escribir en ella.

@@ -6,9 +6,11 @@
 import csv
 import random
 import re
-import smtplib
+import smtplib #para poder hacer el envio de los correos reales facilita la comunicación con un servidor SMTP
 import names
 from email.mime.text import MIMEText
+import smtplib
+from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
@@ -37,10 +39,28 @@ def agregarEstudiantes(writer, lineas, cantidad, anno1, anno2, n1, n2, n3):
     """
     dominioCorreo = "@estudiantec.cr"
     for i in range(cantidad):
-        linea = lineas[i].strip().split(",") if lineas else []
-        nombre = linea[0] if linea else names.get_first_name()
-        apellido1 = linea[1] if linea else names.get_last_name()
-        apellido2 = linea[2] if len(linea) > 2 else names.get_last_name()
+        # Verifica si hay líneas disponibles
+        if lineas:
+            # Obtiene y divide la línea i por comas, eliminando espacios en blanco al inicio y final
+            linea = lineas[i].strip().split(",")
+        else:
+            # Si no hay líneas, se asigna una lista vacía
+            linea = []
+        # Si la línea contiene al menos un elemento, se toma como nombre; de lo contrario, se genera un nombre aleatorio
+        if linea:
+            nombre = linea[0]
+        else:
+            nombre = names.get_first_name()
+        # Si la línea contiene al menos dos elementos, se toma como primer apellido; si no, se genera uno aleatorio
+        if linea:
+            apellido1 = linea[1]
+        else:
+            apellido1 = names.get_last_name()
+        # Si la línea contiene más de dos elementos, se toma el tercer como segundo apellido; de lo contrario, se genera uno aleatorio
+        if len(linea) > 2:
+            apellido2 = linea[2]
+        else:
+            apellido2 = names.get_last_name()
         estado = random.choice([True, False])  # Generar True/False aleatoriamente
         # Generar carné, correo y notas
         carne = generarCarne(random.randint(anno1, anno2))
@@ -68,7 +88,7 @@ def crearBasedeDatos(pCantidad, pPorcentaje, pCantidad2, pPorcentaje2, n1, n2, n
     # Estudiantes del primer recurso
     with open("BasedeDatos.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
-        for _ in range(round(obtenerCantidad(pCantidad, pPorcentaje))):
+        for i in range(round(obtenerCantidad(pCantidad, pPorcentaje))):
             nombre = names.get_first_name()
             apellido1 = names.get_last_name()
             apellido2 = names.get_last_name()
@@ -97,7 +117,8 @@ def obtenerCantidad(cant, porc):
     - int: cantidad calculada de estudiantes.
     """
     porcentajeTotal = 100
-    return round(cant * (porc / porcentajeTotal))
+    porcentaje = round(cant * (porc / porcentajeTotal))
+    return porcentaje
 
 def cargarSedes():
     """
@@ -113,7 +134,10 @@ def cargarSedes():
         with open("sedes.txt", "r", encoding="utf-8") as archivo:
             sedes = archivo.readlines()
         # Generar códigos dinámicamente (01, 02, 03, ...)
-        return [f"{i+1:02}" for i in range(len(sedes))]
+        codigo=[]
+        for i in range(len(sedes)):
+            codigo.append(f"{i+1:02}")
+        return codigo
     except FileNotFoundError:
         print("Error: No se encontró el archivo 'sedes.txt'.")
         return []
@@ -187,15 +211,25 @@ Solicita al usuario la información básica de un estudiante,
 valida el carné y correo, calcula la nota final y el estado,
 y guarda la información en la lista de estudiantes.
 """
+nombreArchivoBD = "BaseDeDatos.csv"
+
 
 def registrarEstudiante(estudiantes, carnetsUsados, correosUsados, sedes, porcentajes):
-    nombre = input("Nombre completo: ")
-    genero = input("Género (Masculino/Femenino): ").capitalize()
-    carne = input("Carné (formato AAAA SS XXXX): ")
-    correo = input("Correo electrónico: ")
-    nota1 = int(input("Nota 1: "))
-    nota2 = int(input("Nota 2: "))
-    nota3 = int(input("Nota 3: "))
+    print("Ejemplo de ingreso de datos para registrar un estudiante:")
+    print("Nombre completo: Juan Pérez Rodríguez")
+    print("Género (Masculino/Femenino): Masculino")
+    print("Carné (formato AAAA SS XXXX): 2023011234")
+    print("Correo electrónico: jperez1234@estudiantec.cr")
+    print("Nota 1: 85")
+    print("Nota 2: 90")
+    print("Nota 3: 78")
+    nombre = input("Nombre completo: ").strip()
+    genero = input("Género (Masculino/Femenino): ").capitalize().strip()
+    carne = input("Carné (formato AAAA SS XXXX): ").strip()
+    correo = input("Correo electrónico: ").strip()
+    nota1 = int(input("Nota 1: ").strip())
+    nota2 = int(input("Nota 2: ").strip())
+    nota3 = int(input("Nota 3: ").strip())
     
     if not re.match(r"^\d{4}(01|02|03)\d{4}$", carne) or carne in carnetsUsados:
         print("Carné inválido o repetido.")
@@ -204,170 +238,164 @@ def registrarEstudiante(estudiantes, carnetsUsados, correosUsados, sedes, porcen
     if not re.match(r"^[a-z]+\d+@estudiantec\.cr$", correo) or correo in correosUsados:
         print("Correo inválido o repetido.")
         return
-    total = (nota1 * porcentajes[0]/100) + (nota2 * porcentajes[1]/100) + (nota3 * porcentajes[2]/100)
+    
+    total = (nota1 * porcentajes[0] / 100) + (nota2 * porcentajes[1] / 100) + (nota3 * porcentajes[2] / 100)
     estudiantes.append([nombre.split(), genero, carne, correo, (nota1, nota2, nota3, total, total)])
     carnetsUsados.append(carne)
     correosUsados.append(correo)
     print("Estudiante registrado exitosamente.")
-# generarReporteGenero
-"""
-Genera dos archivos .txt con los estudiantes separados por género
-ordenados por nota redondeada de mayor a menor.
-"""
+
 
 def generarReporteGenero(estudiantes, porcentajes):
+    # Leer estudiantes desde BasedeDatos.csv
+    estudiantes = []
+    try:
+        with open("BasedeDatos.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.reader(archivo)
+            for fila in lector:
+                if len(fila) >= 7:
+                    # nombre, apellido1, apellido2, genero, carne, correo, notas
+                    nombre = [fila[0], fila[1], fila[2]]
+                    genero = "Masculino" if fila[3] == "True" else "Femenino"
+                    carne = fila[4]
+                    correo = fila[5]
+                    # notas es una cadena, convertir a tupla de floats
+                    notas = fila[6].strip("() ").split(",")
+                    notas = [float(n.strip()) for n in notas]
+                    total = notas[3]  # total ponderado
+                    estudiante = [nombre, genero, carne, correo, (notas[0], notas[1], notas[2], total, total)]
+                    estudiantes.append(estudiante)
+    except FileNotFoundError:
+        print("No se encontró el archivo BasedeDatos.csv")
+        return
+
     hombres = []
     mujeres = []
     for est in estudiantes:
-        datos = (est[8], est[4], est[5], est[6], est[0], est[2], est[3])
-        if est[1] == 'M':
+        datos = (est[4][-1], est[4], ' '.join(est[0]), est[2], est[3])
+        if est[1] == 'Masculino':
             hombres.append(datos)
         else:
             mujeres.append(datos)
-
-    def guardarWord(nombreArchivo, datos):
-        doc = Document()
-        doc.add_heading(f"Reporte de {nombreArchivo.replace('.docx', '')}", 0)
-        datos.sort(reverse=True)
-        for d in datos:
-            linea = f"Nota Acta: {d[0]}, Notas: {d[1]}, {d[2]}, {d[3]}, Nombre: {d[4]}, Carné: {d[5]}, Correo: {d[6]}"
-            doc.add_paragraph(linea)
-        doc.add_paragraph(f"\n% Evaluaciones: {porcentajes}")
-        doc.add_paragraph(f"Cantidad de estudiantes: {len(datos)}")
-        doc.save(nombreArchivo)
-
-    guardarWord("hombres.docx", hombres)
-    guardarWord("mujeres.docx", mujeres)
-    print("\nArchivos 'hombres.docx' y 'mujeres.docx' generados exitosamente.\n")
-    hombres = []
-    mujeres = []
-    for est in estudiantes:
-        linea = f"Nota Acta: {est[8]}, Notas: {est[4]}, {est[5]}, {est[6]}, Nombre: {est[0]}, Carné: {est[2]}, Correo: {est[3]}"
-        if est[1] == 'M':
-            hombres.append([est[8], linea])
-        else:
-            mujeres.append([est[8], linea])
 
     def guardarTexto(nombreArchivo, datos):
         with open(nombreArchivo, "w", encoding="utf-8") as archivo:
             archivo.write("Reporte de " + nombreArchivo.replace(".txt", "") + "\n\n")
             datos.sort(reverse=True)
             for item in datos:
-                archivo.write(item[1] + "\n")
-            archivo.write("\n% Evaluaciones: " + str(porcentajes) + "\n")
-            archivo.write("Cantidad de estudiantes: " + str(len(datos)) + "\n")
+                archivo.write(f"Nota Acta: {item[0]}, Notas: {item[1]}, Nombre: {item[2]}, Carné: {item[3]}, Correo: {item[4]}\n")
+            archivo.write(f"\n% Evaluaciones: {porcentajes}\n")
+            archivo.write(f"Cantidad de estudiantes: {len(datos)}\n")
 
     guardarTexto("hombres.txt", hombres)
     guardarTexto("mujeres.txt", mujeres)
-    print("\nArchivos 'hombres.txt' y 'mujeres.txt' generados exitosamente.\n")
+    print("Archivos 'hombres.txt' y 'mujeres.txt' generados exitosamente.\n")
 
-
-# enviarCorreosReposicion
-"""
-Envía un correo real a cada estudiante que debe ir a reposición usando un servidor SMTP local.
-"""
 
 def enviarCorreosReposicion(estudiantes):
-    """
-    Envía un correo real a cada estudiante que debe ir a reposición usando un servidor SMTP local.
-    """
-    print("\n--- ENVÍO DE CORREOS DE REPOSICIÓN ---")
-    
-    # Configuración del servidor SMTP local
-    smtp_server = "localhost"
-    smtp_port = 25  # Puerto estándar para servidores SMTP locales
+    remitente = "tuCorreo@gmail.com"
+    contrasena = "tuContrasenaAplicacion" 
+    """se debe agregar el correo del que se enviarán los correos de reposición  
+    para que funcione correctamente, si no es así se debe usar otro import y usar el localhost"""
+
+    try:
+        servidor = smtplib.SMTP("smtp.gmail.com", 587)
+        servidor.starttls()
+        servidor.login(remitente, contrasena)
+    except smtplib.SMTPAuthenticationError:
+        print("Error: Fallo en la autenticación. Verifica el correo o la contraseña de aplicación.")
+        return
+
+    print("\n--- ENVIANDO CORREOS A ESTUDIANTES EN REPOSICIÓN ---")
+    enviados = 0
 
     for estudiante in estudiantes:
-        # Verificar si el estudiante debe ir a reposición
-        if estudiante[6][4] >= 60 and estudiante[6][4] < 70:  # Nota final entre 60 y 69
-            destinatario = estudiante[5]  # Correo del estudiante
-            asunto = "Notificación de Reposición"
-            cuerpo = (
-                f"Estimado/a {estudiante[0]} {estudiante[1]} {estudiante[2]},\n\n"
-                f"Debe asistir a la reposición debido a su nota final de {estudiante[6][4]:.2f}.\n"
-                "Por favor, comuníquese con su profesor para más detalles.\n\n"
-                "Saludos cordiales."
-            )
+        notaFinal = estudiante[4][-1]
+        if 60 <= notaFinal < 70:
+            nombreCompleto = " ".join(estudiante[0])
+            correoDestino = estudiante[3]
 
-            # Crear el mensaje de correo
-            mensaje = MIMEMultipart()
-            mensaje["From"] = "no-reply@ejemplo.com"  # Dirección ficticia
-            mensaje["To"] = destinatario
-            mensaje["Subject"] = asunto
-            mensaje.attach(MIMEText(cuerpo, "plain"))
+            mensaje = EmailMessage()
+            mensaje["Subject"] = "Notificación de Reposición"
+            mensaje["From"] = remitente
+            mensaje["To"] = correoDestino
+
+            mensaje.set_content(f"""\
+Estimado(a) {nombreCompleto},
+
+Se le informa que su nota fue de {notaFinal:.2f}, por lo tanto debe presentarse a la reposición.
+
+Día: X
+Hora: Y
+Lugar: Aula correspondiente
+
+Atentamente,
+Sistema de Gestión Estudiantil TEC
+""")
 
             try:
-                # Conectar al servidor SMTP local y enviar el correo
-                with smtplib.SMTP(smtp_server, smtp_port) as server:
-                    server.sendmail(mensaje["From"], destinatario, mensaje.as_string())
-                    print(f"Correo enviado a: {destinatario}")
+                servidor.send_message(mensaje)
+                print(f"Correo enviado a {correoDestino}")
+                enviados += 1
             except Exception as e:
-                print(f"Error al enviar correo a {destinatario}: {e}")
+                print(f"Error al enviar a {correoDestino}: {e}")
 
-    print("Todos los correos han sido enviados correctamente.\n")
+    servidor.quit()
+    print(f"\nCorreos enviados correctamente. Total enviados: {enviados}\n")
 
-# estadisticaGeneracion
-"""
-Muestra la cantidad de estudiantes por año de carné según su estado.
-"""
+
 
 def estadisticaGeneracion(estudiantes):
-    resumen = []
-    for est in estudiantes:
-        anio = est[2][:4]
-        encontrado = False
-        for fila in resumen:
-            if fila[0] == anio:
-                if est[9] == "Aprobado":
-                    fila[1] += 1
-                elif est[9] == "Reposicion":
-                    fila[2] += 1
-                else:
-                    fila[3] += 1
-                fila[4] += 1
-                encontrado = True
-                break
-        if not encontrado:
-            if est[9] == "Aprobado":
-                resumen.append([anio, 1, 0, 0, 1])
-            elif est[9] == "Reposicion":
-                resumen.append([anio, 0, 1, 0, 1])
-            else:
-                resumen.append([anio, 0, 0, 1, 1])
+    resumen = {}
+    try:
+        with open("BasedeDatos.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.reader(archivo)
+            for fila in lector:
+                if len(fila) >= 7:
+                    carne = fila[4]
+                    anio = carne[:4]
+                    # Notas es una cadena, convertir a lista de floats
+                    notas = fila[6].strip("() ").split(",")
+                    notas = [float(n.strip()) for n in notas]
+                    notaFinal = notas[3]
+                    if anio not in resumen:
+                        resumen[anio] = [0, 0, 0, 0]
+                    if notaFinal >= 70:
+                        resumen[anio][0] += 1
+                    elif 60 <= notaFinal < 70:
+                        resumen[anio][1] += 1
+                    else:
+                        resumen[anio][2] += 1
+                    resumen[anio][3] += 1
+    except FileNotFoundError:
+        print("No se encontró el archivo BasedeDatos.csv")
+        return
 
     print("\n--- ESTADÍSTICA POR GENERACIÓN ---")
     print("Año | Aprobados | Reposición | Reprobados | Total")
-    for fila in resumen:
-        print(fila[0] + " | " + str(fila[1]) + " | " + str(fila[2]) + " | " + str(fila[3]) + " | " + str(fila[4]))
+    for anio, datos in resumen.items():
+        print(f"{anio} | {datos[0]} | {datos[1]} | {datos[2]} | {datos[3]}")
     print()
 
-# reporteSedeBuenRendimiento
-"""
-Lista los estudiantes que sacaron más de 70 en las 3 notas de una sede elegida.
-"""
 
 def reporteSedeBuenRendimiento(estudiantes, sedes):
     print("\n--- REPORTE POR SEDE CON BUEN RENDIMIENTO ---")
     print("Seleccione una sede:")
-    for i in range(len(sedes)):
-        print(str(i+1) + ". " + sedes[i])
-    opcion = int(input("Número de sede: ")) - 1
+    for i, sede in enumerate(sedes, start=1):
+        print(f"{i}. {sede}")
+    opcion = int(input("Número de sede: ").strip()) - 1
     sedeElegida = sedes[opcion]
     buenos = []
     for est in estudiantes:
-        if est[10] == sedeElegida and est[4] >= 70 and est[5] >= 70 and est[6] >= 70:
-            buenos.append(est)
-
-    print("\nEstudiantes con buen rendimiento en la sede " + sedeElegida + ":")
-    for i in range(len(buenos)):
-        print(str(i+1) + ". " + buenos[i][0] + " - " + buenos[i][2])
+        if est[2][4:6] == sedeElegida[:2]:
+            notas = est[4][:3]
+            if min(notas) >= 70:
+                buenos.append(est)
+    print(f"\nEstudiantes con buen rendimiento en la sede {sedeElegida}:")
+    for i, est in enumerate(buenos, start=1):
+        print(f"{i}. {' '.join(est[0])} - {est[2]}")
     print()
 
-
-# salirPrograma
-"""
-Finaliza la ejecución del programa con un mensaje de despedida.
-"""
 
 def salirPrograma():
     print("\nGracias por utilizar el sistema. Que tenga un buen día.\n")
@@ -404,7 +432,11 @@ def filtrarDatosCompletos(datosCrudos):
     Salidas:
     - Retorna lista solo con filas válidas
     """
-    return [fila for fila in datosCrudos if len(fila) >= 7]
+    filtrados = []
+    for fila in datosCrudos:
+        if len(fila)>=7:
+            filtrados.append(fila)
+    return filtrados
 
 def parsearNotasHtmlCsv(notasStr):
     """
@@ -420,7 +452,14 @@ def parsearNotasHtmlCsv(notasStr):
     try:
         # Elimina paréntesis y espacios, luego divide por comas
         notas = notasStr.strip("() ").split(",")
-        notas = [n.strip() for n in notas]
+        # Crear una nueva lista para almacenar las notas sin espacios al principio ni al final
+        notasLimpias = []
+        # Recorrer cada nota en la lista original 'notas'
+        for n in notas:
+            # Eliminar los espacios en blanco alrededor de la nota y agregarla a la nueva lista
+            notasLimpias.append(n.strip())
+        # Reemplazar la lista original con la lista de notas limpias
+        notas = notasLimpias
         return notas, float(notas[3])  # Retorna notas y el promedio
     except (ValueError, IndexError) as e:
         print(f"Error procesando notas: {notasStr} - {str(e)}")
@@ -460,7 +499,13 @@ def procesarEstudianteHtmlCsv(fila):
         if notaFinal is False:
             return False
         estado = determinarEstado(notaFinal)
-        generoTexto = "Masculino" if genero == "True" else "Femenino"
+        # Si 'genero' es igual a la cadena "True"
+        if genero == "True":
+            # Entonces asignamos "Masculino" a la variable 'generoTexto'
+            generoTexto = "Masculino"
+        else:
+            # En cualquier otro caso, asignamos "Femenino"
+            generoTexto = "Femenino"
         return (f"{nombre} {ap1} {ap2}",generoTexto,carne,correo,notasStr,notaFinal,estado) # estado, notaFinal, notasOriginales, correo, carne, genero, nombreCompleto
     except ValueError:
         print(f"Error procesando fila: {fila}")
@@ -478,8 +523,22 @@ def calcularEstadisticas(estudiantesProcesados):
     - Retorna tupla con (total, aprobados, reposicion, reprobados)
     """
     total = len(estudiantesProcesados)
-    aprobados = sum(1 for e in estudiantesProcesados if e[6] == "Aprobado")
-    reposicion = sum(1 for e in estudiantesProcesados if e[6] == "Reposición")
+    # Inicializar contador para estudiantes aprobados
+    aprobados = 0
+    # Reconoce cada estudiante en la lista 'estudiantesProcesados'
+    for e in estudiantesProcesados:
+        # Verificar si el estado del estudiante (posición 6 en la lista) es "Aprobado"
+        if e[6] == "Aprobado":
+            # Incrementar el contador de aprobados en 1
+            aprobados += 1
+    # Inicializa el contador para estudiantes en reposición
+    reposicion = 0
+    # Recorremos cada estudiante nuevamente para contar los que están en "Reposición"
+    for e in estudiantesProcesados:
+        # Verificar si el estado es "Reposición"
+        if e[6] == "Reposición":
+            # Incrementa el contador de reposición en 1
+            reposicion += 1
     reprobados = total - aprobados - reposicion
     return total, aprobados, reposicion, reprobados
 
@@ -587,18 +646,30 @@ def leerDatosCsv(nombreArchivo):
     
 def parsearNotasAplazados(notasStr):
     """
-    Función:
-    - Convierte un string de notas en formato "(n1, n2, n3)" a una tupla de floats.
-    Entradas:
-    - notasStr: str, cadena con las notas en formato específico.
-    Salidas:
-    - Retorna una tupla de 3 floats con las notas o False si hay error.
+    Esta función toma una cadena de texto con las notas de un estudiante, por ejemplo "(80, 65, 55)",
+    y la convierte en una tupla de tres números decimales (floats).
+    Parámetros:
+    - notasStr: texto con las notas, separado por comas y entre paréntesis.
+    Retorna:
+    - Una tupla con las tres notas como floats, o False si ocurre algún error.
     """
     try:
+        # Quitamos los paréntesis al inicio y final, si existen
         notasStr = notasStr.strip('()')
-        partes = [p.strip() for p in notasStr.split(',')]
-        return tuple(map(float, partes[:3]))
-    except (ValueError, AttributeError):
+        # Creamos una lista para guardar las notas limpias
+        partes = []
+        # Separamos la cadena usando la coma
+        notas = notasStr.split(',')
+        # Limpiamos cada nota de espacios y la agregamos a la lista
+        for p in notas:
+            notasLimpias = p.strip()
+            partes.append(notasLimpias)
+        # Convertimos las tres primeras notas a float y las devolvemos como tupla
+        nota1 = float(partes[0])
+        nota2 = float(partes[1])
+        nota3 = float(partes[2])
+        return (nota1, nota2, nota3)
+    except (ValueError, AttributeError, IndexError):
         return False
 
 def calcularAplazos(notas):
@@ -610,7 +681,14 @@ def calcularAplazos(notas):
     Salidas:
     - Retorna tupla con (cantidad de aplazos, lista de notas de aplazos).
     """
-    notasAplazos = [nota for nota in notas if nota < 70]
+    # Crear una lista vacía para almacenar las notas que son menores a 70 (aplazos)
+    notasAplazos = []
+    # Recorrer cada nota en la lista 'notas'
+    for nota in notas:
+        # Verificar si la nota es menor que 70
+        if nota < 70:
+            # Si es menor, agregarla a la lista de notas aplazadas
+            notasAplazos.append(nota)
     return len(notasAplazos), notasAplazos
 
 def crearTuplaEstudiante(fila, notas, numAplazos):
@@ -657,9 +735,17 @@ def procesarEstudiantes(filas):
                 cantidadAplazos3 += 1
             todasNotasAplazos.extend(notasAplazos)
             estudiantes.append(estudiante)
-    notaMin = min(todasNotasAplazos) if todasNotasAplazos else 0
-    notaMax = max(todasNotasAplazos) if todasNotasAplazos else 0
-    return (estudiantes,totalEstudiantes,cantidadAplazos2,cantidadAplazos3,notaMin,notaMax)
+    if todasNotasAplazos:
+        notaMin = min(todasNotasAplazos)
+    else:
+        notaMin = 0
+
+    if todasNotasAplazos:
+        notaMax = max(todasNotasAplazos)
+    else:
+        notaMax = 0
+
+    return (estudiantes, totalEstudiantes, cantidadAplazos2, cantidadAplazos3, notaMin, notaMax)
 
 def crearEstiloTitulo(estilos):
     """
@@ -722,12 +808,15 @@ def generarTextoEstadisticas(resultados):
     Salidas:
     - Retorna lista de strings con las estadísticas formateadas.
     """
-    return [f"Total de estudiantes en BD: {resultados[1]}",
+    listaResultado = [f"Total de estudiantes en BD: {resultados[1]}",
     f"Estudiantes con 2 aplazos: {resultados[2]} ({(resultados[2]/resultados[1]*100):.1f}%)",
     f"Estudiantes con 3 aplazos: {resultados[3]} ({(resultados[3]/resultados[1]*100):.1f}%)",
-    f"Nota más baja en aplazos: {resultados[4]:.1f}",
-    f"Nota más alta en aplazos: {resultados[5]:.1f}" if resultados[5] < 70 
-    else "No hay notas de aplazos (todas >=70)"]
+    f"Nota más baja en aplazos: {resultados[4]:.1f}",]
+    if resultados[5] < 70:
+        listaResultado.append(f"Nota más alta en aplazos: {resultados[5]:.1f}")
+    else:
+        listaResultado.append("No hay notas de aplazos (todas >=70)")
+    return listaResultado
 
 def generarReportePdf(resultados, nombreSalida):
     """
@@ -787,7 +876,14 @@ def calcularEstado(notas):
     - Retorna "Error en nota" si hay problemas al procesar.
     """
     try:
-        numeros = [n.strip() for n in notas.split(',')]
+        partes = notas.split(',')
+        numeros = []
+        # Recorremos cada parte
+        for n in partes:
+            # Eliminar espacios en blanco al inicio y final de cada parte
+            limpio = n.strip()
+            # Añadir el número limpio a la lista 
+            numeros.append(limpio)
         notaFinal = float(numeros[-1])
         if notaFinal >= 70:
             return "Aprobado"
@@ -834,7 +930,10 @@ def procesarEstudianteXml(fila):
     - Retorna tupla con (añoGeneracion, xmlEstudiante).
     - Retorna tupla vacía si hay error en el procesamiento.
     """
-    genero = "Masculino" if fila[3] == "True" else "Femenino"
+    if fila[3] == "True":
+        genero = "Masculino"
+    else:
+        genero = "Femenino"
     try:
         nombre, ap1, ap2, genero, carne, correo, notas = fila
         notasFormateadas = calcularNotas(notas)
@@ -965,7 +1064,14 @@ def aplicarCurva(estudiante, porcentaje):
     try:
         # Procesar las notas de forma segura
         notas_str = estudiante[6].strip("[]()")  # Eliminar corchetes o paréntesis
-        notas = list(map(float, notas_str.split(',')))
+        partes = notas_str.split(',')
+        # Crear lista para notas limpias
+        notas = []
+        # Recorremos cada parte para limpiar espacios y convertir a float
+        for p in partes:
+            limpio = p.strip()
+            numero = float(limpio)
+            notas.append(numero)
         notaFinal = notas[3]  # Asumiendo que la cuarta nota es el índice 3
         return notaFinal + (notaFinal * (porcentaje/100))
     except (IndexError, ValueError) as e:

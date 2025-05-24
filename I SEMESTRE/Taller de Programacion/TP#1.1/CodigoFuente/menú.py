@@ -15,10 +15,7 @@ Propósito:
 def cargarSedes():
     try:
         with open("sedes.txt", "r", encoding="utf-8") as archivo:
-            sedes = []
-            for linea in archivo:
-                if linea.strip():
-                    sedes.append(linea.strip())
+            sedes = [linea.strip() for linea in archivo if linea.strip()]
             if not sedes:
                 print("Error: El archivo 'sedes.txt' está vacío o tiene líneas en blanco.")
                 exit(1)
@@ -118,15 +115,7 @@ def ejecutarFlujoPrincipal(rutaArchivo):
     """
     datosCrudos = leerDatosCsv(rutaArchivo)
     datosFiltrados = filtrarDatosCompletos(datosCrudos)
-    estudiantesProcesados=[]
-    estudiantesProcesados = []
-    for fila in datosFiltrados:
-        # Primero procesamos cada fila
-        estudianteProcesado = procesarEstudianteHtmlCsv(fila)
-        # Luego verificamos si el resultado no es False
-        if estudianteProcesado is not False:
-            # Añadimos el estudiante a la lista de procesados
-            estudiantesProcesados.append(estudianteProcesado)
+    estudiantesProcesados = [e for e in (procesarEstudianteHtmlCsv(fila) for fila in datosFiltrados) if e is not False]
     if not estudiantesProcesados:
         print("No hay datos válidos para procesar")
         return

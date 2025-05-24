@@ -256,12 +256,20 @@ def generarReporteGenero(estudiantes, porcentajes):
                 if len(fila) >= 7:
                     # nombre, apellido1, apellido2, genero, carne, correo, notas
                     nombre = [fila[0], fila[1], fila[2]]
-                    genero = "Masculino" if fila[3] == "True" else "Femenino"
+                    if fila[3] == "True":
+                        genero = "Masculino"
+                    else:
+                        genero = "Femenino"
                     carne = fila[4]
                     correo = fila[5]
                     # notas es una cadena, convertir a tupla de floats
                     notas = fila[6].strip("() ").split(",")
-                    notas = [float(n.strip()) for n in notas]
+                    notasConvertidas = []
+                    for n in notas:
+                        nLimpia = n.strip()
+                        notaFloat = float(nLimpia)
+                        notasConvertidas.append(notaFloat)
+                    notas = notasConvertidas
                     total = notas[3]  # total ponderado
                     estudiante = [nombre, genero, carne, correo, (notas[0], notas[1], notas[2], total, total)]
                     estudiantes.append(estudiante)
@@ -356,7 +364,12 @@ def estadisticaGeneracion(estudiantes):
                     anio = carne[:4]
                     # Notas es una cadena, convertir a lista de floats
                     notas = fila[6].strip("() ").split(",")
-                    notas = [float(n.strip()) for n in notas]
+                    notasConvertidas = []
+                    for n in notas:
+                        nLimpia = n.strip()
+                        nFloat = float(nLimpia)
+                        notasConvertidas.append(nFloat)
+                    notas = notasConvertidas
                     notaFinal = notas[3]
                     if anio not in resumen:
                         resumen[anio] = [0, 0, 0, 0]
@@ -1195,4 +1208,3 @@ def archivo(estudiantes, porcentaje):
             print(f"Se generó correctamente el archivo {nombre}")
         else:
             print(f"Hubo un error al generar {nombre}")
-

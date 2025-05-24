@@ -4,18 +4,19 @@
 # Python 3.13.21
 from procesos import *
 
-
 """
 Propósito:
 - Controlar el menú principal y la navegación entre opciones.
 - Gestionar variables globales para la base de datos y listas de unicidad.
 """
 
-# Variables globales
 def cargarSedes():
     try:
         with open("sedes.txt", "r", encoding="utf-8") as archivo:
-            sedes = [linea.strip() for linea in archivo if linea.strip()]
+            sedes = []
+            for linea in archivo:
+                if linea.strip():
+                    sedes.append(linea.strip())
             if not sedes:
                 print("Error: El archivo 'sedes.txt' está vacío o tiene líneas en blanco.")
                 exit(1)
@@ -23,7 +24,6 @@ def cargarSedes():
     except FileNotFoundError:
         print("Error: No se encontró el archivo 'sedes.txt' en el directorio actual.")
         exit(1)
-
 
 # Listas globales
 estudiantes = []
@@ -115,7 +115,15 @@ def ejecutarFlujoPrincipal(rutaArchivo):
     """
     datosCrudos = leerDatosCsv(rutaArchivo)
     datosFiltrados = filtrarDatosCompletos(datosCrudos)
-    estudiantesProcesados = [e for e in (procesarEstudianteHtmlCsv(fila) for fila in datosFiltrados) if e is not False]
+    estudiantesProcesados=[]
+    estudiantesProcesados = []
+    for fila in datosFiltrados:
+        # Primero procesamos cada fila
+        estudianteProcesado = procesarEstudianteHtmlCsv(fila)
+        # Luego verificamos si el resultado no es False
+        if estudianteProcesado is not False:
+            # Añadimos el estudiante a la lista de procesados
+            estudiantesProcesados.append(estudianteProcesado)
     if not estudiantesProcesados:
         print("No hay datos válidos para procesar")
         return
@@ -131,11 +139,9 @@ def curva():
     porcentaje = obtenerCurvaES()
     if porcentaje is None:
         return
-    
     estudiantes = leerBaseDatos()
     if not estudiantes:
         return
-    
     archivo(estudiantes, porcentaje)
 
 def obtenerCurvaES():
@@ -223,6 +229,5 @@ def menuPrincipal():
                 print("Opción inválida. Intente de nuevo.")
         except Exception as e:
             print(f"Error inesperado: {e}")
-
 
 menuPrincipal()

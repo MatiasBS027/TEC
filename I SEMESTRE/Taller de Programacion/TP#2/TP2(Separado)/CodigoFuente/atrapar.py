@@ -159,8 +159,7 @@ if isinstance(resultado, tuple):
             diccPoke.update(info)
     imprimirInfoPokemon(diccPoke)
 else:
-    print(resultado)  # Mensaje de 
-
+    print(resultado)   
 
 def shinys(diccPoke):
     shinys = {}

@@ -1,71 +1,36 @@
 #Elaborado por Luis Tinoco y Matías Benavides
 #Fecha de creacón 22/05/2025
-#última actualización 24/05/2025 10:54
+#última actualización 27/05/2025
 #python versión 3.13.2
 
 import csv
 from minecraftclass import HerramientaArma, HerramientaArmadura
 from archivo import crearBaseDeDatos
+
 # ==========================
 # Validaciones
 # ==========================
 
 def validarMetal(metal):
-    """
-    Valida si el metal es uno de los permitidos: oro, diamante o hierro.
-    metal: str
-    return: bool
-    """
     return metal.lower() in ["oro", "diamante", "hierro"]
 
 def validarColor(color):
-    """
-    Valida si el color es uno de los permitidos: azul, amarillo o gris.
-    color: str
-    return: bool
-    """
     return color.lower() in ["azul", "amarillo", "gris"]
 
 def validarDano(dano):
-    """
-    Valida si el daño está dentro de los valores permitidos: 7, 8 o 9.
-    dano: int
-    return: bool
-    """
     return dano in [7, 8, 9]
 
 def validarVelocidad(velocidad):
-    """
-    Valida si la velocidad está dentro del rango permitido: 0.1 a 0.3.
-    velocidad: float
-    return: bool
-    """
     return 0.1 <= velocidad <= 0.3
 
 def validarDefensa(defensa):
-    """
-    Valida si la defensa está dentro de los valores permitidos: 4, 5 o 6.
-    defensa: int
-    return: bool
-    """
     return defensa in [4, 5, 6]
 
 # ==========================
-# Crear objetos de clase hija HerramientaArma
+# Crear objetos
 # ==========================
 
 def crearArma(idHerramienta, metal, color, dano, velocidad):
-    """
-    Crea un objeto de tipo HerramientaArma con los parámetros dados.
-    Valida cada atributo antes de asignarlo.
-    idHerramienta: str
-    metal: str
-    color: str
-    daño: int
-    velocidad: float
-    return: HerramientaArma
-    Lanza ValueError si algún atributo no es válido.
-    """
     arma = HerramientaArma()
     arma.asignarIdHerramienta(idHerramienta)
     arma.asignarDurabilidad()
@@ -92,21 +57,7 @@ def crearArma(idHerramienta, metal, color, dano, velocidad):
 
     return arma
 
-# ==========================
-# Crear objetos de clase hija HerramientaArmadura
-# ==========================
-
 def crearArmadura(idHerramienta, metal, color, defensa):
-    """
-    Crea un objeto de tipo HerramientaArmadura con los parámetros dados.
-    Valida cada atributo antes de asignarlo.
-    idHerramienta: str
-    metal: str
-    color: str
-    defensa: int
-    return: HerramientaArmadura
-    Lanza ValueError si algún atributo no es válido.
-    """
     armadura = HerramientaArmadura()
     armadura.asignarIdHerramienta(idHerramienta)
     armadura.asignarDurabilidad()
@@ -129,39 +80,10 @@ def crearArmadura(idHerramienta, metal, color, defensa):
     return armadura
 
 # ==========================
-# Mostrar cualquier objeto
+# Guardar en archivo
 # ==========================
 
-def mostrarObjeto(objeto):
-    """
-    Muestra los datos de un objeto, ya sea HerramientaArma o HerramientaArmadura.
-    objeto: instancia de HerramientaArma o HerramientaArmadura
-    """
-    if isinstance(objeto, HerramientaArma):
-        print("Tipo: Arma")
-        print(f"ID: {objeto.mostrarIdHerramienta()}")
-        print(f"Durabilidad: {objeto.mostrarDurabilidad()}")
-        print(f"Metal: {objeto.mostrarMetal()}")
-        print(f"Color: {objeto.mostrarColor()}")
-        print(f"Daño: {objeto.mostrarDano()}")
-        print(f"Velocidad de ataque: {objeto.mostrarVelocidadAtaque()}")
-    
-    elif isinstance(objeto, HerramientaArmadura):
-        print("Tipo: Armadura")
-        print(f"ID: {objeto.mostrarIdHerramienta()}")
-        print(f"Durabilidad: {objeto.mostrarDurabilidad()}")
-        print(f"Metal: {objeto.mostrarMetal()}")
-        print(f"Color: {objeto.mostrarColor()}")
-        print(f"Defensa: {objeto.mostrarDefensa()}")
-    
-    else:
-        print(">> Objeto desconocido.")
 def guardarEnBaseDatos(archivo, objeto):
-    """
-    Guarda los datos de un objeto en la base de datos CSV.
-    archivo: str, nombre del archivo CSV.
-    objeto: instancia de HerramientaArma o HerramientaArmadura
-    """
     with open(archivo, 'a', newline='') as file:
         writer = csv.writer(file)
         if isinstance(objeto, HerramientaArma):
@@ -172,7 +94,8 @@ def guardarEnBaseDatos(archivo, objeto):
                 objeto.mostrarColor(),
                 objeto.mostrarDano(),
                 objeto.mostrarVelocidadAtaque(),
-                ""  # Defensa vacía para armas
+                "",
+                "activo"
             ])
             print("Arma guardada exitosamente.")
         elif isinstance(objeto, HerramientaArmadura):
@@ -181,8 +104,143 @@ def guardarEnBaseDatos(archivo, objeto):
                 objeto.mostrarDurabilidad(),
                 objeto.mostrarMetal(),
                 objeto.mostrarColor(),
-                "",  # Daño vacío para armaduras
-                "",  # Velocidad vacía para armaduras
-                objeto.mostrarDefensa()
+                "",
+                "",
+                objeto.mostrarDefensa(),
+                "activo"
             ])
             print("Armadura guardada exitosamente.")
+
+# ==========================
+# Mostrar objeto
+# ==========================
+
+def mostrarObjeto(objeto):
+    if isinstance(objeto, HerramientaArma):
+        print("Tipo: Arma")
+        print(f"ID: {objeto.mostrarIdHerramienta()}")
+        print(f"Durabilidad: {objeto.mostrarDurabilidad()}")
+        print(f"Metal: {objeto.mostrarMetal()}")
+        print(f"Color: {objeto.mostrarColor()}")
+        print(f"Daño: {objeto.mostrarDano()}")
+        print(f"Velocidad de ataque: {objeto.mostrarVelocidadAtaque()}")
+    elif isinstance(objeto, HerramientaArmadura):
+        print("Tipo: Armadura")
+        print(f"ID: {objeto.mostrarIdHerramienta()}")
+        print(f"Durabilidad: {objeto.mostrarDurabilidad()}")
+        print(f"Metal: {objeto.mostrarMetal()}")
+        print(f"Color: {objeto.mostrarColor()}")
+        print(f"Defensa: {objeto.mostrarDefensa()}")
+    else:
+        print(">> Objeto desconocido.")
+
+# ==========================
+# Funciones nuevas
+# ==========================
+
+def mostrarTodo(baseDatos):
+    with open(baseDatos, 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        print("\n--- INVENTARIO ACTUAL ---")
+        for row in reader:
+            if row[7] == 'activo':
+                tipo = "Arma" if row[5] != '' else "Armadura"
+                if tipo == "Arma":
+                    print(f"Tipo: {tipo} | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
+                else:
+                    print(f"Tipo: {tipo} | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Defensa: {row[6]}")
+
+def buscarPorID(baseDatos, idHerramienta):
+    with open(baseDatos, 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            if row[0] == idHerramienta and row[7] == 'activo':
+                tipo = "Arma" if row[5] != '' else "Armadura"
+                print(f"\n>> Herramienta encontrada")
+                if tipo == "Arma":
+                    print(f"Tipo: {tipo} | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
+                else:
+                    print(f"Tipo: {tipo} | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Defensa: {row[6]}")
+                return
+    print(">> ID no encontrado o herramienta eliminada.")
+
+def mostrarArmasPorMetal(baseDatos, metal):
+    if not validarMetal(metal):
+        print("Metal inválido.")
+        return
+
+    with open(baseDatos, 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        encontrado = False
+        print(f"\n--- ARMAS DE {metal.upper()} ---")
+        for row in reader:
+            if row[2].lower() == metal.lower() and row[5] != '' and row[7] == 'activo':
+                print(f"ID: {row[0]}, Durabilidad: {row[1]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
+                encontrado = True
+        if not encontrado:
+            print("No se encontraron armas de ese metal.")
+
+def desgastarArmaPorID(baseDatos, idHerramienta):
+    actualizado = []
+    encontrado = False
+    with open(baseDatos, 'r') as file:
+        reader = csv.reader(file)
+        encabezado = next(reader)
+        for row in reader:
+            if row[0] == idHerramienta and row[5] != '' and row[7] == 'activo':
+                nueva_durabilidad = int(row[1]) - 25
+                if nueva_durabilidad <= 0:
+                    print("Durabilidad llegó a 0. El arma ha sido eliminada.")
+                    row[7] = 'eliminado'
+                else:
+                    print(f"Durabilidad actualizada: {nueva_durabilidad}")
+                    row[1] = str(nueva_durabilidad)
+                encontrado = True
+            actualizado.append(row)
+
+    if not encontrado:
+        return False
+
+    with open(baseDatos, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(encabezado)
+        writer.writerows(actualizado)
+
+    return True
+
+def eliminarPorID(baseDatos, idHerramienta):
+    actualizado = []
+    eliminado = False
+    with open(baseDatos, 'r') as file:
+        reader = csv.reader(file)
+        encabezado = next(reader)
+        for row in reader:
+            if row[0] == idHerramienta and row[7] == 'activo':
+                row[7] = 'eliminado'
+                eliminado = True
+            actualizado.append(row)
+
+    with open(baseDatos, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(encabezado)
+        writer.writerows(actualizado)
+
+    return eliminado
+
+
+def mostrarEliminados(baseDatos):
+    with open(baseDatos, 'r', newline='') as file:
+        reader = csv.reader(file)
+        next(reader)  # Salta encabezado
+        eliminados = [row for row in reader if row[7].strip().lower() == 'eliminado']
+
+    print("\n--- HERRAMIENTAS ELIMINADAS ---")
+    if eliminados:
+        for row in eliminados:
+            tipo = "Arma" if row[5].strip() != '' else "Armadura"
+            print(f"Tipo: {tipo} | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}")
+    else:
+        print("No hay herramientas eliminadas registradas.")

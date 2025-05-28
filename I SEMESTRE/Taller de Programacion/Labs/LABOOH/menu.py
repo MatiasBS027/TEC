@@ -1,11 +1,24 @@
 #Elaborado por Luis Tinoco y Matías Benavides
 #Fecha de creación 24/05/2025
-#última actualización 24/05/2025
+#última actualización 27/05/2025
 #python versión 3.13.2
 
 from funciones import *
 import csv
 from archivo import crearBaseDeDatos, mostrarHerramientas
+
+
+def obtenerActivas(nombreArchivo):
+    idsActivas = set()
+    try:
+        with open(nombreArchivo, 'r', newline='') as archivo:
+            lector = csv.reader(archivo)
+            for fila in lector:
+                if len(fila) > 0 and fila[-1].strip().lower() == "activo":
+                    idsActivas.add(fila[0].strip())
+    except FileNotFoundError:
+        pass  # Si no existe el archivo, no hay IDs
+    return idsActivas
 
 # ==========================
 # ES
@@ -14,13 +27,13 @@ def herramientaEs():
     idHerramienta = input("Ingrese el ID de la herramienta: ")
     
     while True:
-        metal = input("Ingrese el tipo de metal (oro, diamante, hierro): ")
+        metal = input("Ingrese el tipo de metal (oro, diamante, hierro): ").lower()
         if validarMetal(metal):
             break
         print("Metal inválido. Intente de nuevo.")
     
     while True:
-        color = input("Ingrese el color (azul, amarillo, gris): ")
+        color = input("Ingrese el color (azul, amarillo, gris): ").lower()
         if validarColor(color):
             break
         print("Color inválido. Intente de nuevo.")
@@ -31,159 +44,123 @@ def herramientaEs():
 # Crear arma
 # ==========================
 
-def crearArmaMenu():
+def crearArmaMenu(baseDatos):
+    idsActivas = obtenerActivas(baseDatos)
+    
+    while True:
+        idHerramienta = input("Ingrese el ID de la herramienta: ").strip()
+        if idHerramienta in idsActivas:
+            print(f"Error: El ID '{idHerramienta}' ya está registrado. Intente otro.")
+        else:
+            break
+    while True:
+        metal = input("Ingrese el tipo de metal (oro, diamante, hierro): ").lower()
+        if validarMetal(metal):
+            break
+        print("Metal inválido. Intente de nuevo.")
+    while True:
+        color = input("Ingrese el color (azul, amarillo, gris): ").lower()
+        if validarColor(color):
+            break
+        print("Color inválido. Intente de nuevo.")
     while True:
         try:
-            idHerramienta, metal, color = herramientaEs()
-            
-            while True:
-                try:
-                    dano = int(input("Ingrese el daño (7, 8, 9): "))
-                    if validarDano(dano):
-                        break
-                    else:
-                        print("Daño inválido. Intente de nuevo.")
-                except ValueError:
-                    print("Ingrese un número entero válido.")
-            
-            while True:
-                try:
-                    velocidad = float(input("Ingrese la velocidad de ataque (0.1 a 0.3): "))
-                    if validarVelocidad(velocidad):
-                        break
-                    else:
-                        print("Velocidad inválida. Intente de nuevo.")
-                except ValueError:
-                    print("Ingrese un número decimal válido.")
-            
-            arma = crearArma(idHerramienta, metal, color, dano, velocidad)
-            mostrarObjeto(arma)
-            guardarEnBaseDatos("BaseDatos.csv", arma)  # Guardar en base de datos
-            break  # salir del ciclo si se creó exitosamente
-        except ValueError as error:
-            print(f"Error: {error}. Intente de nuevo.\n")
+            dano = int(input("Ingrese el daño (7, 8, 9): "))
+            if validarDano(dano):
+                break
+            print("Daño inválido.")
+        except ValueError:
+            print("Debe ingresar un número entero válido.")
+    while True:
+        try:
+            velocidad = float(input("Ingrese la velocidad de ataque (0.1 a 0.3): "))
+            if validarVelocidad(velocidad):
+                break
+            print("Velocidad inválida.")
+        except ValueError:
+            print("Debe ingresar un número decimal válido.")
+    arma = crearArma(idHerramienta, metal, color, dano, velocidad)
+    mostrarObjeto(arma)
+    guardarEnBaseDatos(baseDatos, arma)
 
 # ==========================
 # Crear armadura
 # ==========================
 
-def crearArmaduraMenu():
+def crearArmaduraMenu(baseDatos):
+    idsActivas = obtenerActivas(baseDatos)
+    while True:
+        idHerramienta = input("Ingrese el ID de la herramienta: ").strip()
+        if idHerramienta in idsActivas:
+            print(f"Error: El ID '{idHerramienta}' ya está registrado. Intente otro.")
+        else:
+            break
+    while True:
+        metal = input("Ingrese el tipo de metal (oro, diamante, hierro): ").lower()
+        if validarMetal(metal):
+            break
+        print("Metal inválido. Intente de nuevo.")
+    while True:
+        color = input("Ingrese el color (azul, amarillo, gris): ").lower()
+        if validarColor(color):
+            break
+        print("Color inválido. Intente de nuevo.")
     while True:
         try:
-            idHerramienta, metal, color = herramientaEs()
-            
-            while True:
-                try:
-                    defensa = int(input("Ingrese la defensa (4, 5, 6): "))
-                    if validarDefensa(defensa):
-                        break
-                    else:
-                        print("Defensa inválida. Intente de nuevo.")
-                except ValueError:
-                    print("Ingrese un número entero válido.")
-            
-            armadura = crearArmadura(idHerramienta, metal, color, defensa)
-            mostrarObjeto(armadura)
-            guardarEnBaseDatos("BaseDatos.csv", armadura)  # Guardar en base de datos
-            break  # salir del ciclo si se creó exitosamente
-        except ValueError as error:
-            print(f"Error: {error}. Intente de nuevo.\n")
+            defensa = int(input("Ingrese la defensa (4, 5, 6): "))
+            if validarDefensa(defensa):
+                break
+            print("Defensa inválida.")
+        except ValueError:
+            print("Debe ingresar un número entero válido.")
+    armadura = crearArmadura(idHerramienta, metal, color, defensa)
+    mostrarObjeto(armadura)
+    guardarEnBaseDatos(baseDatos, armadura)
+
 
 # ==========================
-# Submenú de búsqueda
+# Desgastar arma por ID
 # ==========================
-"""
-se agregó este submenú de busqueda por decisión de los estudiantes ya que las instrucciones no solicitaban
-que se mostrara de esta forma la información sin embargo se consideró que es más practico y mejor
-"""
-def subMenuBusqueda(baseDatos):
-    while True:
-        print("\n=== SUBMENÚ DE BÚSQUEDA ===")
-        print("1. Búsqueda por tipo (arma/armadura)")
-        print("2. Búsqueda por ID")
-        print("3. Mostrar todas")
-        print("4. Volver al menú principal")
-        opcion = input("Seleccione una opción: ")
-        
-        if opcion == "1":
-            print("1. Mostrar armas")
-            print("2. Mostrar armaduras")
-            tipo = input("Seleccione el tipo: ")
-            with open(baseDatos, 'r') as file:
-                reader = csv.reader(file)
-                next(reader)
-                encontrado = False
-                if tipo == "1":
-                    print("\n--- ARMAS ---")
-                    for row in reader:
-                        if len(row) == 7 and row[5] != '' and row[6] == '':
-                            print(f"Tipo: Arma | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
-                            encontrado = True
-                    if not encontrado:
-                        print("No hay armas registradas.")
-                elif tipo == "2":
-                    print("\n--- ARMADURAS ---")
-                    for row in reader:
-                        if len(row) == 7 and row[5] == '' and row[6] != '':
-                            print(f"Tipo: Armadura | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Defensa: {row[6]}")
-                            encontrado = True
-                    if not encontrado:
-                        print("No hay armaduras registradas.")
-                else:
-                    print("Opción inválida.")
-        
-        elif opcion == "2":
-            idBuscar = input("Ingrese el ID de la herramienta a buscar: ")
-            encontrada = False
-            with open(baseDatos, 'r') as file:
-                reader = csv.reader(file)
-                next(reader)
-                for row in reader:
-                    if len(row) == 7 and row[0] == idBuscar:
-                        if row[5] != '' and row[6] == '':
-                            print(f"Tipo: Arma | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
-                        elif row[5] == '' and row[6] != '':
-                            print(f"Tipo: Armadura | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Defensa: {row[6]}")
-                        encontrada = True
-                        break
-            if not encontrada:
-                print("id no encontrada o incorrecta")
-        
-        elif opcion == "3":
-            armas = []
-            armaduras = []
-            with open(baseDatos, 'r') as file:
-                reader = csv.reader(file)
-                next(reader)
-                for row in reader:
-                    if len(row) == 7 and row[5] != '' and row[6] == '':
-                        armas.append(row)
-                    elif len(row) == 7 and row[5] == '' and row[6] != '':
-                        armaduras.append(row)
-            print("\n--- ARMAS ---")
-            if armas:
-                for row in armas:
-                    print(f"Tipo: Arma | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Velocidad: {row[5]}")
-            else:
-                print("No hay armas registradas.")
-            print("\n--- ARMADURAS ---")
-            if armaduras:
-                for row in armaduras:
-                    print(f"Tipo: Armadura | ID: {row[0]}, Durabilidad: {row[1]}, Metal: {row[2]}, Color: {row[3]}, Daño: {row[4]}, Defensa: {row[6]}")
-            else:
-                print("No hay armaduras registradas.")
-        
-        elif opcion == "4":
-            break
+
+def desgastarArma():
+    idBuscar = input("Ingrese el ID del arma a desgastar: ")
+    if desgastarArmaPorID("BaseDatos.csv", idBuscar):
+        print("Desgaste realizado correctamente.")
+    else:
+        print("No se encontró el arma o ya está eliminada.")
+
+# ==========================
+# Eliminar herramienta por ID con confirmación
+# ==========================
+
+def eliminarEquipo():
+    idBuscar = input("Ingrese el ID del equipo a eliminar: ")
+    confirmar = input(f"¿Está seguro que desea eliminar la herramienta con ID {idBuscar}? (s/n): ")
+    if confirmar.lower() == 's':
+        if eliminarPorID("BaseDatos.csv", idBuscar):
+            print("Herramienta eliminada exitosamente.")
         else:
-            print("Opción inválida. Intente de nuevo.")
+            print("ID no encontrado o ya eliminado.")
+    else:
+        print("Cancelado por el usuario.")
 
 # ==========================
-# Función principal
+# Mostrar herramientas por metal
+# ==========================
+
+def mostrarPorMetal():
+    print("Metales disponibles: oro, diamante, hierro")
+    metal = input("Ingrese el metal: ").lower()
+    if validarMetal(metal):
+        mostrarArmasPorMetal("BaseDatos.csv", metal)
+    else:
+        print("Metal no válido.")
+
+# ==========================
+# Menú principal
 # ==========================
 
 def main():
-    # Crear la base de datos solo si no existe
     baseDatos = "BaseDatos.csv"
     try:
         with open(baseDatos, 'r'):
@@ -193,22 +170,35 @@ def main():
 
     while True:
         print("\n===== MENÚ PRINCIPAL =====")
-        print("1. Crear arma")
-        print("2. Crear armadura")
-        print("3. Buscar herramientas")
-        print("4. Salir")
+        print("1. Registrar un arma")
+        print("2. Registrar una armadura")
+        print("3. Desgastar un arma por ID")
+        print("4. Eliminar equipo por ID")
+        print("5. Mostrar todas las herramientas")
+        print("6. Mostrar armas por metal")
+        print("7. Mostrar herramientas eliminadas")
+        print("8. Salir")
+        
         opcion = input("Seleccione una opción: ")
+        
         if opcion == "1":
-            crearArmaMenu()
+            crearArmaMenu(baseDatos)
         elif opcion == "2":
-            crearArmaduraMenu()
+            crearArmaduraMenu(baseDatos)
         elif opcion == "3":
-            subMenuBusqueda(baseDatos)
+            desgastarArma()
         elif opcion == "4":
+            eliminarEquipo()
+        elif opcion == "5":
+            mostrarTodo(baseDatos)
+        elif opcion == "6":
+            mostrarPorMetal()
+        elif opcion == "7":
+            mostrarEliminados("BaseDatos.csv")
+        elif opcion == "8":
             print("Saliendo del programa...")
             break
         else:
             print("Opción inválida. Intente de nuevo.")
 
 main()
-

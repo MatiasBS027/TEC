@@ -147,20 +147,6 @@ def imprimirInfoPokemon(diccPoke):
         print("]")
         print()
 
-resultado = atraparPokeES()
-if isinstance(resultado, tuple):
-    atrapados, huidos = resultado
-    print("Proceso de captura completado.")
-    listaIdAtrapados = listaAtrapados(atrapados)
-    diccPoke = {}
-    for id in listaIdAtrapados:
-        info = obtenerInfoPokemon(id)
-        if info:
-            diccPoke.update(info)
-    imprimirInfoPokemon(diccPoke)
-else:
-    print(resultado)   
-
 def shinys(diccPoke):
     shinys = {}
     for idPoke, datos in diccPoke.items():
@@ -193,7 +179,7 @@ def generarHtml(pagina, numeroPagina):
         table { border-collapse: collapse; width: 100%; }
         th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
         th { background-color: #ffcc00; color: black; }
-        tr:nth-child(even) { background-color: #081a41; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
         img { width: 80px; }
     </style>
 </head>
@@ -260,11 +246,26 @@ def generarReportes(diccPoke):
     cantidadPaginas = len(paginas)
     print(f"Se generaron {cantidadPaginas} archivo(s) HTML con Pokémon shiny.")
 
-listaIdAtrapados = listaAtrapados(atrapados)
-diccPoke = {}
-for id in listaIdAtrapados:
-    info = obtenerInfoPokemon(id)
-    if info:
-        diccPoke.update(info)
+resultado = atraparPokeES()
+if isinstance(resultado, tuple):
+    atrapados, huidos = resultado
+    print("Proceso de captura completado.")
+    listaIdAtrapados = listaAtrapados(atrapados)
+    diccPoke = {}
+    for id in listaIdAtrapados:
+        info = obtenerInfoPokemon(id)
+        if info:
+            diccPoke.update(info)
+    imprimirInfoPokemon(diccPoke)
 
-generarReportes(diccPoke)  
+    # Ahora generamos reportes aquí
+    if diccPoke:
+        shinysFiltrados = shinys(diccPoke)
+        if shinysFiltrados:
+            generarReportes(diccPoke)
+        else:
+            print("No se encontraron Pokémon shiny para generar reportes HTML.")
+    else:
+        print("No hay datos de Pokémon para generar reportes.")
+else:
+    print(resultado)

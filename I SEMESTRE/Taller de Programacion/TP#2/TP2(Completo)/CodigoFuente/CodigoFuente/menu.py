@@ -277,6 +277,14 @@ class Pokepad:
             self.textoResultado.set("Ejecutando: esShiny")
             self.mostrarFeedback("esShiny")
             ejecutarEsShiny(self)
+        elif "9. Convertidor" in opcion:
+            self.textoResultado.set("Ejecutando: Convertidor")
+            self.mostrarFeedback("Convertidor")
+            ejecutarConvertidor(self)
+        elif "11. Virus" in opcion:
+            self.textoResultado.set("Ejecutando: Virus")
+            self.mostrarFeedback("Virus")
+            ejecutarVirus(self)
         elif "12. Agregar" in opcion:
             self.textoResultado.set("Ejecutando: Agregar")
             self.mostrarFeedback("Agregar")

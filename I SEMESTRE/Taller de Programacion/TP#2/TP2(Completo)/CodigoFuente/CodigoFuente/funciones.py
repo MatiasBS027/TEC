@@ -226,7 +226,7 @@ def ejecutarAtrapar(pokepad):
                 idApi: [
                     nombre,
                     (esShiny, peso, altura),
-                    [totalEstats, statsTupla],
+                    [totalEstad, statsTupla],
                     tipos,
                     urlImagen
                 ]
@@ -443,12 +443,12 @@ permite controlar datos desde Excel, facilitando así la revisión en tiempo rea
 botón se activa una ventana con mensaje de confirmación y ya. 
 """
 
-def ejecutarDescarga(pokepad):
+def ejecutarDescarga(pokePad):
     """
     Ventana emergente para descargar los Pokémon a un archivo CSV.
     Muestra un mensaje de confirmación y guarda los datos en un archivo.
     """
-    ventanaDescarga = tk.Toplevel(pokepad.ventana)
+    ventanaDescarga = tk.Toplevel(pokePad.ventana)
     ventanaDescarga.title("Descargar Pokémon")
     ventanaDescarga.geometry("300x200")
 
@@ -456,19 +456,40 @@ def ejecutarDescarga(pokepad):
         try:
             rutaBase = os.path.dirname(os.path.abspath(__file__))
             rutaArchivo = os.path.join(rutaBase, "MisPokemon.csv")
-            with open(rutaArchivo, "w", encoding="utf-8") as file:
-                file.write("ID,Nombre,Estado\n")  # Encabezados del CSV
-                with open("MisPokemon.txt", "r", encoding="utf-8") as pokemonFile:
-                    for line in pokemonFile:
-                        if line.strip():  # Ignorar líneas vacías
-                            partes = line.strip().split("^")
-                            if len(partes) == 3:
-                                idPoke, nombre, estado = partes
-                                file.write(f"{idPoke},{nombre},{estado}\n")
+            rutaDiccionario = os.path.join(rutaBase, "DiccionarioPokemon.txt")
+            with open(rutaArchivo, "w", encoding="utf-8") as archivoCsv:
+                # Encabezados del CSV
+                archivoCsv.write("id,nombre,shiny,peso,altura,total,ps,a,d,ae,de,v,tipos,url,estado\n")
+                # Leer DiccionarioPokemon.txt para obtener toda la información
+                if not os.path.exists(rutaDiccionario):
+                    messagebox.showerror("Error", "No se encontró DiccionarioPokemon.txt. Genere el diccionario primero.")
+                    return
+                # Leer estados desde MisPokemon.txt
+                estados = {}
+                with open(os.path.join(rutaBase, "MisPokemon.txt"), "r", encoding="utf-8") as misPokemon:
+                    for linea in misPokemon:
+                        partes = linea.strip().split("^")
+                        if len(partes) == 3:
+                            estados[partes[0]] = partes[2]
+                # Leer y escribir toda la info
+                with open(rutaDiccionario, "r", encoding="utf-8") as diccionario:
+                    for linea in diccionario:
+                        partes = linea.strip().split("^")
+                        if len(partes) == 6:
+                            idPoke = partes[0]
+                            nombre = partes[1]
+                            esShiny, peso, altura = eval(partes[2])
+                            total, stats = eval(partes[3])
+                            tipos = eval(partes[4])
+                            url = partes[5]
+                            estado = estados.get(idPoke, "")
+                            tiposStr = "|".join(tipos) if isinstance(tipos, (list, tuple)) else str(tipos)
+                            statsStr = ",".join(str(s) for s in stats)
+                            archivoCsv.write(f"{idPoke},{nombre},{esShiny},{peso},{altura},{total},{statsStr},{tiposStr},{url},{estado}\n")
             messagebox.showinfo("Éxito", f"Pokémon guardados en:\n{rutaArchivo}")
             ventanaDescarga.destroy()
-        except Exception as e:
-            messagebox.showerror("Error", f"No se pudo guardar el archivo: {e}")
+        except Exception as error:
+            messagebox.showerror("Error", f"No se pudo guardar el archivo: {error}")
 
     def confirmarDescarga():
         if messagebox.askyesno("Confirmar descarga", "¿Deseas descargar los Pokémon a un archivo CSV?"):
@@ -641,48 +662,12 @@ def ejecutarHTML(pokepad):
         try:
             respuesta = requests.get(url, timeout=8)
             datos = respuesta.json()
-
             idApi = datos['id']
             nombre = datos['name']
-            esShiny = random.choice([True, False])
-            peso = datos['weight'] * 10  # en gramos
-            altura = datos['height'] * 10  # en centímetros
-
-            # Estadísticas ordenadas
-            statsOrden = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
-            statsValores = []
-            for statNombre in statsOrden:
-                for stat in datos['stats']:
-                    if stat['stat']['name'] == statNombre:
-                        statsValores.append(stat['base_stat'])
-                        break
-
+            estadisticas = datos['stats']
+            statsValores = [stat['base_stat'] for stat in estadisticas]
             totalEstats = sum(statsValores)
-            statsTupla = tuple(statsValores)
-
-            # Obtener los tipos del Pokémon desde la estructura de datos
-            tipos = []
-            for tipo_info in datos['types']:
-                tipo_nombre = tipo_info['type']['name']
-                tipos.append(tipo_nombre)
-            tipos = tuple(tipos)  # Convertimos la lista a una tupla para que sea inmutable
-
-            # Determinar la URL de la imagen según si el Pokémon es shiny o no
-            if esShiny:
-                urlImagen = datos['sprites']['front_shiny']
-            else:
-                urlImagen = datos['sprites']['front_default']
-
-            return {
-                idApi: [
-                    nombre,
-                    (esShiny, peso, altura),
-                    [totalEstats, statsTupla],
-                    tipos,
-                    urlImagen
-                ]
-            }
-
+            return (idApi, nombre, totalEstats)
         except Exception as e:
             print(f"Error al obtener info de Pokémon {idPoke}: {e}")
             return None
@@ -970,6 +955,194 @@ def generarDiccionarioPokemon():
             except Exception as e:
                 print(f"Error al obtener info de Pokémon {idPoke}: {e}")
 #========================= 9. Convertidor ==========================
+"""
+convierte de diccionario a matriz y guarda en la memoria secundaria
+con el siguiente formato
+[
+    [
+    id, nombre, [esShiny, peso, altura], 
+    [totalE, [PS,A,D,AE,DE,V]],
+    ["listaDeTipos","listaDeTipos"],
+    url
+    ]
+]
+al dar click al botón se activa una ventana con mensaje de confirmación y muestra en el shell
+la estructura creada
+"""
+def ejecutarConvertidor(pokepad):
+    """
+    Ventana emergente para convertir DiccionarioPokemon.txt a una estructura de matriz.
+    Muestra un mensaje de confirmación y la estructura en el shell.
+    """
+    ventanaConvertidor = tk.Toplevel(pokepad.ventana)
+    ventanaConvertidor.title("Convertir Diccionario a Matriz")
+    ventanaConvertidor.geometry("300x200")
+
+    def convertir():
+        generarDiccionarioPokemon()  # Asegurarse de que el diccionario esté actualizado
+        rutaBase = os.path.dirname(os.path.abspath(__file__))
+        rutaDiccionario = os.path.join(rutaBase, "DiccionarioPokemon.txt")
+        matriz = []
+
+        try:
+            with open(rutaDiccionario, "r", encoding="utf-8") as file:
+                for line in file:
+                    partes = line.strip().split("^")
+                    if len(partes) == 6:
+                        idPoke = int(partes[0])
+                        nombre = partes[1]
+                        esShiny, peso, altura = eval(partes[2])
+                        totalEstats, statsTupla = eval(partes[3])
+                        tipos = eval(partes[4])
+                        urlImagen = partes[5]
+                        matriz.append([
+                            idPoke,
+                            nombre,
+                            [esShiny, peso, altura],
+                            [totalEstats, statsTupla],
+                            tipos,
+                            urlImagen
+                        ])
+            print(matriz)  # Mostrar la matriz en el shell
+            messagebox.showinfo("Éxito", "Conversión completada. Ver la terminal o shell para detalles.")
+            ventanaConvertidor.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo convertir: {e}")
+
+    ttk.Button(ventanaConvertidor, text="Convertir", command=convertir).pack(pady=20)
+
+#========================= 11. Virus ==========================
+"""
+el virus masivo requiere saber:
+    A) si se aumenta o si disminuye
+    B) el porcentaje
+Las estadísticas de todo el diccionari. Luego de obtenida la información, afecte todo el diciconario
+según corresponda en las estadísticas. Al dar click al botón se activa una ventana de confirmación
+y muestra en el shell la estructura cambiada.
+'todo se hará mediante botones de radio para cada opción, y un campo de texto para el porcentaje como 
+numero entero.
+y botones para ejecutar, limpiar y salir.'
+"""
+def ejecutarVirus(pokePad):
+    """
+    Ventana emergente para aplicar un "virus" que afecta las estadísticas de los Pokémon.
+    Permite aumentar o disminuir las estadísticas según un porcentaje ingresado.
+    Modifica el archivo DiccionarioPokemon.txt en disco.
+    """
+    ventanaVirus = tk.Toplevel(pokePad.ventana)
+    ventanaVirus.title("Aplicar Virus a estadística de los Pokémons")
+    ventanaVirus.geometry("480x420")
+    ventanaVirus.minsize(480, 420)
+
+    ventanaVirus.columnconfigure(0, weight=1)
+    ventanaVirus.rowconfigure(4, weight=1)
+
+    ttk.Label(ventanaVirus, text="Seleccione la acción del virus:").grid(row=0, column=0, pady=(20, 10), padx=20, sticky="ew")
+
+    accionVirus = tk.StringVar(value="aumentar")
+    frameRadios = ttk.Frame(ventanaVirus)
+    frameRadios.grid(row=1, column=0, pady=5, padx=30, sticky="w")
+    ttk.Radiobutton(frameRadios, text="Aumentar Estadísticas", variable=accionVirus, value="aumentar").pack(anchor=tk.W, pady=2)
+    ttk.Radiobutton(frameRadios, text="Disminuir Estadísticas", variable=accionVirus, value="disminuir").pack(anchor=tk.W, pady=2)
+
+    ttk.Label(ventanaVirus, text="Ingrese el porcentaje (número entero):").grid(row=2, column=0, pady=(20, 5), padx=20, sticky="ew")
+    entradaPorcentajeVirus = ttk.Entry(ventanaVirus)
+    entradaPorcentajeVirus.grid(row=3, column=0, pady=5, padx=30, sticky="ew")
+
+    areaResultadoVirus = tk.Text(ventanaVirus, height=12, width=60, state="disabled")
+    areaResultadoVirus.grid(row=4, column=0, pady=20, padx=20, sticky="nsew")
+
+    frameBotonesVirus = ttk.Frame(ventanaVirus)
+    frameBotonesVirus.grid(row=5, column=0, pady=(0, 20), sticky="ew")
+    frameBotonesVirus.columnconfigure((0, 1, 2), weight=1)
+
+    def ejecutarCapturaVirus():
+        try:
+            porcentajeStr = entradaPorcentajeVirus.get()
+            if not porcentajeStr.isdigit():
+                messagebox.showerror("Error", "Debe escriba solamente números donde se solicita el porcentaje")
+                return
+            porcentaje = int(porcentajeStr)
+            if not (0 <= porcentaje <= 100):
+                raise ValueError("El porcentaje debe estar entre 0 y 100.")
+
+            rutaBase = os.path.dirname(os.path.abspath(__file__))
+            rutaDiccionario = os.path.join(rutaBase, "DiccionarioPokemon.txt")
+            diccionarioPokemon = {}
+            with open(rutaDiccionario, "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    partes = linea.strip().split("^")
+                    if len(partes) == 6:
+                        idPoke = int(partes[0])
+                        nombre = partes[1]
+                        esShiny, peso, altura = eval(partes[2])
+                        totalEstadisticas, tuplaEstadisticas = eval(partes[3])
+                        tipos = eval(partes[4])
+                        urlImagen = partes[5]
+                        diccionarioPokemon[idPoke] = [
+                            nombre,
+                            (esShiny, peso, altura),
+                            [totalEstadisticas, tuplaEstadisticas],
+                            tipos,
+                            urlImagen
+                        ]
+            for idPoke, datos in diccionarioPokemon.items():
+                nombre = datos[0]
+                esShiny, peso, altura = datos[1]
+                totalEstadisticas, tuplaEstadisticas = datos[2]
+                tipos = datos[3]
+                urlImagen = datos[4]
+                if accionVirus.get() == "aumentar":
+                    porcentajeAjuste = 1 + (porcentaje / 100)
+                else:
+                    porcentajeAjuste = 1 - (porcentaje / 100)
+                estadisticasAjustadas = []
+                for stat in tuplaEstadisticas:
+                    estadisticasAjustadas.append(int(stat * porcentajeAjuste))
+                estadisticasAjustadas = tuple(estadisticasAjustadas)
+                totalEstadisticasAjustadas = sum(estadisticasAjustadas)
+                diccionarioPokemon[idPoke] = [
+                    nombre,
+                    (esShiny, peso, altura),
+                    [totalEstadisticasAjustadas, estadisticasAjustadas],
+                    tipos,
+                    urlImagen
+                ]
+            with open(rutaDiccionario, "w", encoding="utf-8") as archivo:
+                for idPoke, datos in diccionarioPokemon.items():
+                    nombre = datos[0]
+                    esShiny, peso, altura = datos[1]
+                    totalEstadisticas, tuplaEstadisticas = datos[2]
+                    tipos = datos[3]
+                    urlImagen = datos[4]
+                    archivo.write(f"{idPoke}^{nombre}^{(esShiny, peso, altura)}^{[totalEstadisticas, tuplaEstadisticas]}^{tipos}^{urlImagen}\n")
+            areaResultadoVirus.config(state="normal")
+            areaResultadoVirus.delete(1.0, tk.END)
+            areaResultadoVirus.insert(tk.END, "Estructura de Pokémon después del virus:\n")
+            for idPoke, datos in diccionarioPokemon.items():
+                nombre = datos[0]
+                esShiny, peso, altura = datos[1]
+                totalEstadisticas, tuplaEstadisticas = datos[2]
+                tipos = datos[3]
+                urlImagen = datos[4]
+                areaResultadoVirus.insert(tk.END, f"{idPoke}: [{nombre}, ({esShiny}, {peso}, {altura}), [{totalEstadisticas}, {tuplaEstadisticas}], {tipos}, '{urlImagen}']\n")
+        except ValueError as ve:
+            messagebox.showerror("Error", str(ve))
+        except Exception as e:
+            messagebox.showerror("Error", f"Ocurrió un error: {e}")
+        finally:
+            areaResultadoVirus.config(state="disabled")
+
+    def limpiarVirus():
+        entradaPorcentajeVirus.delete(0, tk.END)
+        areaResultadoVirus.config(state="normal")
+        areaResultadoVirus.delete("1.0", tk.END)
+        areaResultadoVirus.config(state="disabled")
+
+    ttk.Button(frameBotonesVirus, text="Ejecutar Virus", command=ejecutarCapturaVirus).grid(row=0, column=0, padx=15, sticky="ew")
+    ttk.Button(frameBotonesVirus, text="Limpiar", command=limpiarVirus).grid(row=0, column=1, padx=15, sticky="ew")
+    ttk.Button(frameBotonesVirus, text="Cerrar", command=ventanaVirus.destroy).grid(row=0, column=2, padx=15, sticky="ew")
+    
 
 #========================= 12. Agregar Pokemon ==========================
 def ejecutarAgregar(pokepad):
@@ -1093,5 +1266,3 @@ def ejecutarAgregar(pokepad):
             messagebox.showerror("Error", str(ve))
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error: {e}")
-
-    ttk.Button(ventanaAgregar, text="Agregar", command=agregar).pack(pady=15)

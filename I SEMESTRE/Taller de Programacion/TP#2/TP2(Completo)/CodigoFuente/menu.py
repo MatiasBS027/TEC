@@ -281,6 +281,10 @@ class Pokepad:
             self.textoResultado.set("Ejecutando: Convertidor")
             self.mostrarFeedback("Convertidor")
             ejecutarConvertidor(self)
+        elif "10. Desconvertidor" in opcion:
+            self.textoResultado.set("Ejecutando: Desconvertidor")
+            self.mostrarFeedback("Desconvertidor")
+            ejecutarDesconvertidor(self)
         elif "11. Virus" in opcion:
             self.textoResultado.set("Ejecutando: Virus")
             self.mostrarFeedback("Virus")
@@ -302,5 +306,4 @@ class Pokepad:
 # ==========================
 # EJECUCIÓN PRINCIPAL
 # ==========================
-if __name__ == "__main__":
-    app = Pokepad()
+app = Pokepad()

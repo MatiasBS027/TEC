@@ -856,8 +856,6 @@ def generarReportePdf(resultados, nombreSalida):
         elementos.append(Paragraph(texto, estiloEstadisticas))
     doc.build(elementos)
 
-
-
 # ==================== XML.py ====================
 
 def leerCsv(archivoCsv):

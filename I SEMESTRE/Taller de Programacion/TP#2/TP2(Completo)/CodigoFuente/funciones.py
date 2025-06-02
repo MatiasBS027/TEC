@@ -353,8 +353,8 @@ def ejecutarPokedex(pokePad):
     porPagina = filas * columnas
     paginaActual = [0]
 
-    URL_INTERROGACION = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Question_Mark.svg/120px-Question_Mark.svg.png"
-    interrogacionPil = Image.open(BytesIO(requests.get(URL_INTERROGACION).content))
+    INTERROGACION = "interrogacion.png"
+    interrogacionPil = Image.open(INTERROGACION)
     interrogacionPil.thumbnail((90, 90), Image.LANCZOS)
     interrogacionImg = ImageTk.PhotoImage(interrogacionPil)
 
@@ -1282,14 +1282,14 @@ def ejecutarDesconvertidor(pokepad):
                     if len(partes) == 6:
                         id_pokemon = int(partes[0])
                         nombre = partes[1]
-                        shiny_peso_altura = eval(partes[2])  # (esShiny, peso, altura)
+                        shiny,peso,altura = eval(partes[2])  # (esShiny, peso, altura)
                         estadisticas = eval(partes[3])       # [totalEstad, (PS, A, D, AE, DE, V)]
                         tipos = eval(partes[4])              # ("tipo1", "tipo2") o ("tipo1",)
                         url = partes[5]
 
                         nuevo_diccionario[id_pokemon] = [
                             nombre,
-                            shiny_peso_altura,
+                            shiny,peso,altura,
                             estadisticas,
                             tipos,
                             url

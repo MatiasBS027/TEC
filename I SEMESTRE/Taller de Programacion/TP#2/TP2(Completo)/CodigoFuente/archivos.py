@@ -3,6 +3,17 @@ import random
 import requests
 
 def guardarPokemon(pokemonInfo):
+    """
+    Funcionamiento:
+    Guarda la información de un Pokémon en los archivos 'MisPokemon.txt' y 'DiccionarioPokemon.txt'.
+
+    Entradas:
+    - pokemonInfo: Diccionario con la información del Pokémon (id, nombre, esShiny, peso, altura, stats, tipos, imagen).
+
+    Salidas:
+    - Ninguna (guarda datos en archivos).
+    """
+    
     rutaBase = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(rutaBase, "MisPokemon.txt"), "a", encoding="utf-8") as archivo:
         archivo.write(f"{pokemonInfo['id']}^{pokemonInfo['nombre']}^a\n")
@@ -18,6 +29,16 @@ def guardarPokemon(pokemonInfo):
         )
 
 def pokemonYaExiste(idPoke):
+    """
+    Funcionamiento:
+    Verifica si un Pokémon con el ID dado ya existe en el archivo 'MisPokemon.txt'.
+
+    Entradas:
+    - idPoke: ID del Pokémon a verificar.
+
+    Salidas:
+    - True si el Pokémon ya existe, False en caso contrario.
+    """
     ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), "MisPokemon.txt")
     if os.path.exists(ruta):
         with open(ruta, "r", encoding="utf-8") as archivo:
@@ -28,6 +49,16 @@ def pokemonYaExiste(idPoke):
     return False
 
 def obtenerDatosPokemon(idPoke):
+    """
+    Funcionamiento:
+    Obtiene los datos de un Pokémon desde la API de PokeAPI y los organiza en un diccionario.
+
+    Entradas:
+    - idPoke: ID del Pokémon a consultar.
+
+    Salidas:
+    - Diccionario con los datos del Pokémon (id, nombre, esShiny, peso, altura, stats, tipos, imagen) o None si falla.
+    """
     respuesta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{idPoke}", timeout=10)
     if respuesta.status_code != 200:
         return None
@@ -70,6 +101,18 @@ def leerDiccionario():
     return diccPoke
 
 def guardarResultados(atrapados, huidos, rutaBase):
+    """
+    Funcionamiento:
+    Actualiza el estado de los Pokémon en 'MisPokemon.txt' según si fueron atrapados o huyeron.
+
+    Entradas:
+    - atrapados: Lista de tuplas (id, nombre) de Pokémon atrapados.
+    - huidos: Lista de tuplas (id, nombre) de Pokémon huidos.
+    - rutaBase: Ruta base donde se encuentran los archivos.
+
+    Salidas:
+    - True si se guardó correctamente, False si hubo error.
+    """
     try:
         rutaArchivo = os.path.join(rutaBase, "MisPokemon.txt")
         lineasNuevas = []
@@ -101,6 +144,16 @@ def guardarResultados(atrapados, huidos, rutaBase):
         return False
 
 def generarDiccionarioPokemon():
+    """
+    Funcionamiento:
+    Genera el archivo 'DiccionarioPokemon.txt' con la información detallada de los Pokémon atrapados.
+
+    Entradas:
+    - Ninguna (lee 'MisPokemon.txt' para obtener los Pokémon atrapados).
+
+    Salidas:
+    - Ninguna (genera o actualiza el archivo 'DiccionarioPokemon.txt').
+    """
     rutaBase = os.path.dirname(os.path.abspath(__file__))
     rutaMisPokemon = os.path.join(rutaBase, "MisPokemon.txt")
     rutaDiccionario = os.path.join(rutaBase, "DiccionarioPokemon.txt")
@@ -148,8 +201,14 @@ def generarDiccionarioPokemon():
 
 def leerPokemonesDisponibles():
     """
-    Lee el archivo MisPokemon.txt y retorna una lista de tuplas (id, nombre)
-    de los Pokémon que están disponibles para atrapar (no atrapados ni huidos).
+    Funcionamiento:
+    Lee el archivo 'MisPokemon.txt' y retorna una lista de Pokémon que están disponibles para atrapar.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - Lista de tuplas (id, nombre) de Pokémon disponibles.
     """
     rutaBase = os.path.dirname(os.path.abspath(__file__))
     rutaArchivo = os.path.join(rutaBase, "MisPokemon.txt")

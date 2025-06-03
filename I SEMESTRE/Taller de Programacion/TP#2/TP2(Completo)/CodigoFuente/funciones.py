@@ -26,13 +26,16 @@ import os  # Manejo de rutas y archivos
 
 def obtenerInfoPokemon(idPoke, esShiny=False, soloBasico=False):
     """
-    Obtiene la información del Pokémon de la API.
-    Args:
-        idPoke: ID del Pokémon
-        esShiny: Si True, devuelve la imagen shiny
-        soloBasico: Si True, solo devuelve (id, nombre, totalEstats)
-    Returns:
-        Diccionario con la información del Pokémon o tupla si soloBasico
+    Funcionamiento:
+    Obtiene la información de un Pokémon desde la API de PokeAPI y la retorna en un diccionario o tupla.
+
+    Entradas:
+    - idPoke: ID del Pokémon a consultar.
+    - esShiny: Booleano, si es True retorna la imagen shiny.
+    - soloBasico: Booleano, si es True retorna solo (id, nombre, totalEstats).
+
+    Salidas:
+    - Diccionario con la información del Pokémon, o tupla si soloBasico es True.
     """
     url = f"https://pokeapi.co/api/v2/pokemon/{idPoke}"
     try:
@@ -76,6 +79,16 @@ def obtenerInfoPokemon(idPoke, esShiny=False, soloBasico=False):
         return None
 
 def buscarHuidos():
+    """
+    Funcionamiento:
+    Busca y retorna una lista de Pokémon que han huido, leyendo el archivo 'MisPokemon.txt'.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - Lista de tuplas (id, nombre) de Pokémon huidos.
+    """
     pokemonesHuidos = []
     try:
         rutaBase = os.path.dirname(os.path.abspath(__file__))
@@ -96,6 +109,17 @@ def buscarHuidos():
     return pokemonesHuidos
 
 def dividirPaginas(lista, tamano):
+    """
+    Funcionamiento:
+    Divide una lista en sublistas (páginas) de tamaño especificado.
+
+    Entradas:
+    - lista: Lista a dividir.
+    - tamano: Tamaño de cada página.
+
+    Salidas:
+    - Lista de páginas (listas).
+    """
     paginas = []
     inicio = 0
     while inicio < len(lista):
@@ -111,17 +135,14 @@ def dividirPaginas(lista, tamano):
 
 def ejecutarBusqueda(pokepad):
     """
-        Ventana emergente para buscar pokémon y guardar resultados en un archivo.
-        Si el usuario selecciona la opción 1, 
-        se abrirá una ventana emergente donde
-        se le solicitará la cantidad de pokemon que desea buscar,
-        Función para solicitar cantidad de pokemon que se extraeran de Pokeapi, mientras estase a >0 y < pokeapi arroja
-        estos pokemon se extraeran de la página  "PokeAPI: https://pokeapi.co/" y dependiendo la cantidad solicitada por el usuario se guardará en un archivo .txt llamado 
-        "Mis Pokemones.txt"
-        todo esto mediante una caja de texto con el siguiente formato:
-        -título "busqueda de pokémons"
-        -texto "cantidad de pokémons deseada": -celda para escribir la cantidad de pokémons deseada
-        -botón "buscar" - botón "Limpiar"
+        Funcionamiento:
+        Muestra una ventana para buscar y guardar una cantidad de Pokémon aleatorios en 'MisPokemon.txt'.
+
+        Entradas:
+        - pokepad: Instancia principal de la interfaz.
+
+        Salidas:
+        - Ninguna (guarda datos en archivo y muestra mensajes).
     """
     ventanaEmergente = tk.Toplevel(pokepad.ventana)
     ventanaEmergente.title("Búsqueda de Pokémon")
@@ -180,8 +201,15 @@ def ejecutarBusqueda(pokepad):
 
 def ejecutarAtrapar(pokepad):
     """
-    Ventana emergente para atrapar Pokémon según porcentaje indicado por el usuario.
-    Incluye generación automática del diccionario si no existe.
+    Funcionamiento:
+    Muestra una ventana para atrapar Pokémon según un porcentaje indicado por el usuario.
+    Actualiza los archivos y genera el diccionario.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (actualiza archivos y muestra mensajes).
     """
     rutaBase = os.path.dirname(os.path.abspath(__file__))
     rutaDiccionario = os.path.join(rutaBase, "DiccionarioPokemon.txt")
@@ -256,6 +284,16 @@ def ejecutarAtrapar(pokepad):
 # 3 Pokédex
 # ##################################################
 def ejecutarPokedex(pokePad):
+    """
+    Funcionamiento:
+    Muestra una ventana con la Pokédex, permitiendo navegar entre páginas de Pokémon.
+
+    Entradas:
+    - pokePad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (muestra ventana con Pokédex).
+    """
     ventanaPokedex = tk.Toplevel()
     ventanaPokedex.title("Pokédex")
     ventanaPokedex.configure(bg="white")
@@ -408,11 +446,15 @@ imagenPokemon = None  # Variable global para mantener referencia a la imagen
 
 def cargarImagen(label, url):
     """
-    Carga la imagen del Pokémon desde la URL en un label.
-    
-    Args:
-        label: Label donde se mostrará la imagen
-        url: URL de la imagen del Pokémon
+    Funcionamiento:
+    Carga una imagen desde una URL y la muestra en un label de Tkinter.
+
+    Entradas:
+    - label: Label de Tkinter donde se mostrará la imagen.
+    - url: URL de la imagen.
+
+    Salidas:
+    - Ninguna (actualiza el label).
     """
     global imagenPokemon
     try:
@@ -425,7 +467,18 @@ def cargarImagen(label, url):
 
 def cargarPokemon(idPokemon, nombre, entradas, imagen, esShiny=False):
     """
-    Carga los datos del Pokémon desde la API y actualiza la interfaz.
+    Funcionamiento:
+    Carga los datos de un Pokémon y actualiza los campos de la interfaz gráfica.
+
+    Entradas:
+    - idPokemon: ID del Pokémon.
+    - nombre: Label para el nombre.
+    - entradas: Diccionario de entradas de la interfaz.
+    - imagen: Label para la imagen.
+    - esShiny: Booleano, si es True muestra la imagen shiny.
+
+    Salidas:
+    - Ninguna (actualiza la interfaz).
     """
     try:
         datosPokemon = obtenerInfoPokemon(idPokemon, esShiny)
@@ -459,10 +512,15 @@ def cargarPokemon(idPokemon, nombre, entradas, imagen, esShiny=False):
 
 def mostrarDetallePokemon(idPokemon, esShiny):
     """
-    Muestra una ventana con los detalles del Pokémon.
-    Args:
-        idPokemon: ID del Pokémon a mostrar
-        esShiny: Booleano que indica si es shiny
+    Funcionamiento:
+    Muestra una ventana con los detalles de un Pokémon específico.
+
+    Entradas:
+    - idPokemon: ID del Pokémon.
+    - esShiny: Booleano, si es True muestra la imagen shiny.
+
+    Salidas:
+    - Ventana de detalle de Pokémon.
     """
     ventana = tk.Toplevel()
     ventana.title("Detalle del Pokémon")
@@ -520,8 +578,14 @@ botón se activa una ventana con mensaje de confirmación y ya.
 
 def ejecutarDescarga(pokePad):
     """
-    Ventana emergente para descargar los Pokémon a un archivo CSV.
-    Muestra un mensaje de confirmación y guarda los datos en un archivo.
+    Funcionamiento:
+    Muestra una ventana para descargar los Pokémon a un archivo CSV.
+
+    Entradas:
+    - pokePad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (genera archivo CSV y muestra mensajes).
     """
     ventanaDescarga = tk.Toplevel(pokePad.ventana)
     ventanaDescarga.title("Descargar Pokémon")
@@ -591,7 +655,14 @@ def ejecutarDescarga(pokePad):
 
 def ejecutarXML(pokepad):
     """
-    Ventana emergente para exportar los Pokémon huidos a un archivo XML.
+    Funcionamiento:
+    Muestra una ventana para exportar los Pokémon huidos a un archivo XML.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (genera archivo XML y muestra mensajes).
     """
     ventanaXML = tk.Toplevel(pokepad.ventana)
     ventanaXML.title("Exportar Pokémon huidos a XML")
@@ -645,8 +716,14 @@ def ejecutarXML(pokepad):
 # ##################################################
 def ejecutarHTML(pokepad):
     """
-    Ventana emergente para generar un archivo HTML con los Pokémon huidos.
-    Muestra un mensaje de confirmación y genera el archivo HTML.
+    Funcionamiento:
+    Muestra una ventana para generar archivos HTML con los Pokémon huidos.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (genera archivos HTML y muestra mensajes).
     """
     ventanaHTML = tk.Toplevel(pokepad.ventana)
     ventanaHTML.title("Generar HTML de Pokémon Huidos")
@@ -735,8 +812,14 @@ def ejecutarHTML(pokepad):
 # ##################################################
 def ejecutarEsShiny(pokepad):
     """
-    Ventana emergente para generar archivos HTML con los Pokémon shiny.
-    Genera automáticamente DiccionarioPokemon.txt antes de mostrar la ventana.
+    Funcionamiento:
+    Muestra una ventana para generar archivos HTML con los Pokémon shiny.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (genera archivos HTML y muestra mensajes).
     """
     ventanaShiny = tk.Toplevel(pokepad.ventana)
     ventanaShiny.title("Generar HTML de Pokémon Shiny")
@@ -860,8 +943,14 @@ la estructura creada
 """
 def ejecutarConvertidor(pokepad):
     """
-    Ventana emergente para convertir DiccionarioPokemon.txt a una estructura de matriz.
-    Muestra un mensaje de confirmación y la estructura en el shell.
+    Funcionamiento:
+    Muestra una ventana para convertir el diccionario de Pokémon a una matriz y mostrarla en el shell.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (muestra la matriz en el shell y mensajes en ventana).
     """
     ventanaConvertidor = tk.Toplevel(pokepad.ventana)
     ventanaConvertidor.title("Convertir Diccionario a Matriz")
@@ -905,8 +994,14 @@ def ejecutarConvertidor(pokepad):
 # ##################################################
 def ejecutarDesconvertidor(pokepad):
     """
-    Lee el archivo DiccionarioPokemon.txt, convierte su contenido a un diccionario
-    con la estructura especificada, y lo guarda en la variable global diccionarioPokemon.
+    Funcionamiento:
+    Muestra una ventana para convertir el archivo DiccionarioPokemon.txt a un diccionario en memoria.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (actualiza variable global y muestra mensajes).
     """
     ventanaDesconvertidor = tk.Toplevel(pokepad.ventana)
     ventanaDesconvertidor.title("Desconvertir Matriz a Diccionario")
@@ -968,9 +1063,14 @@ y botones para ejecutar, limpiar y salir.'
 """
 def ejecutarVirus(pokePad):
     """
-    Ventana emergente para aplicar un "virus" que afecta las estadísticas de los Pokémon.
-    Permite aumentar o disminuir las estadísticas según un porcentaje ingresado.
-    Modifica el archivo DiccionarioPokemon.txt en disco.
+    Funcionamiento:
+    Muestra una ventana para aplicar un "virus" que aumenta o disminuye las estadísticas de todos los Pokémon según un porcentaje.
+
+    Entradas:
+    - pokePad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (modifica archivo y muestra mensajes).
     """
     ventanaVirus = tk.Toplevel(pokePad.ventana)
     ventanaVirus.title("Aplicar Virus a estadística de los Pokémons")
@@ -1093,7 +1193,14 @@ def ejecutarVirus(pokePad):
 
 def ejecutarAgregar(pokepad):
     """
-    Permite agregar un nuevo Pokémon al diccionario si su ID no está registrado aún.
+    Funcionamiento:
+    Muestra una ventana para agregar un nuevo Pokémon por ID si no existe.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (agrega Pokémon y muestra mensajes).
     """
     ventanaAgregar = tk.Toplevel(pokepad.ventana)
     ventanaAgregar.title("Agregar Pokémon")
@@ -1117,6 +1224,18 @@ def ejecutarAgregar(pokepad):
     ttk.Button(marcoBotones, text="Cancelar", command=ventanaAgregar.destroy).grid(row=0, column=1, padx=5)
 
 def manejarAgregarPokemon(entradaID, infoLabel, ventanaAgregar):
+    """
+    Funcionamiento:
+    Maneja la lógica para agregar un Pokémon desde la ventana de agregar.
+
+    Entradas:
+    - entradaID: Campo de entrada del ID.
+    - infoLabel: Label para mostrar mensajes.
+    - ventanaAgregar: Ventana de agregar Pokémon.
+
+    Salidas:
+    - Ninguna (agrega Pokémon y muestra mensajes).
+    """
     def mostrarMensaje(label, texto, color):
         label.config(text=texto, foreground=color)
     try:
@@ -1163,6 +1282,16 @@ que indicó el usuario. Para ello pueden crear la estrategia que gusten, claro e
 cumple el 100% de los requerimientos con calidad.  
 """
 def ejecutarCreditos(pokepad):
+    """
+    Funcionamiento:
+    Muestra una ventana con los créditos de los creadores del programa.
+
+    Entradas:
+    - pokepad: Instancia principal de la interfaz.
+
+    Salidas:
+    - Ninguna (muestra ventana de créditos).
+    """
     ventanaCréditos = tk.Toplevel(pokepad.ventana)
     ventanaCréditos.title("Créditos")
     ventanaCréditos.geometry("350x320")

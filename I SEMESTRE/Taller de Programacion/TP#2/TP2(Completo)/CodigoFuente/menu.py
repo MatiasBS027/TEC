@@ -44,8 +44,14 @@ class Pokepad:
 
     def configurarVentana(self):
         """
-        Configuración inicial de la ventana principal:
-        - Título, tamaño, icono, paleta de colores y fondo.
+        Funcionamiento:
+        Configura la ventana principal de la aplicación, incluyendo título, tamaño, icono, paleta de colores y fondo.
+
+        Entradas:
+        - Ninguna (usa atributos de la clase).
+
+        Salidas:
+        - Ninguna (modifica la ventana principal).
         """
         self.ventana.title("Poképad Ventana principal")
         self.ventana.geometry("700x600")
@@ -76,8 +82,14 @@ class Pokepad:
 
     def obtenerIcono(self):
         """
-        Intenta cargar un icono para la ventana.
-        Retorna la ruta si existe, sino None.
+        Funcionamiento:
+        Intenta cargar el icono de la ventana principal si el archivo existe.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ruta del icono si existe, None en caso contrario.
         """
         rutaIcono = "pokeball.ico"
         if os.path.exists(rutaIcono):
@@ -86,8 +98,14 @@ class Pokepad:
 
     def cargarFondo(self):
         """
-        Carga y muestra la imagen de fondo en la ventana principal.
-        Si falla, usa un color sólido de fondo.
+        Funcionamiento:
+        Carga y muestra la imagen de fondo en la ventana principal. Si falla, usa un color sólido.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (modifica la ventana principal).
         """
         try:
             url = "https://i.pinimg.com/736x/20/72/bf/2072bf31916fe07aa69fed32a9319372.jpg"
@@ -101,8 +119,14 @@ class Pokepad:
 
     def cargarImagenTitulo(self):
         """
-        Descarga y ajusta la imagen del título Poképad.
-        Retorna un objeto PhotoImage listo para usar en un Label.
+        Funcionamiento:
+        Descarga y ajusta la imagen del título Poképad para mostrarla en la interfaz.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Objeto PhotoImage listo para usar en un Label, o None si falla.
         """
         try:
             url = "https://static.wikia.nocookie.net/ultimate-pokemon-fanon/images/c/ca/Pok%C3%A9Pad.PNG/revision/latest?cb=20150206145041"
@@ -122,7 +146,14 @@ class Pokepad:
 
     def cargarEstilos(self):
         """
+        Funcionamiento:
         Configura los estilos visuales de los widgets usando ttk.Style.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (modifica estilos globales de la interfaz).
         """
         estilo = ttk.Style()
         
@@ -149,11 +180,14 @@ class Pokepad:
 
     def crearWidgets(self):
         """
-        Crea todos los elementos de la interfaz:
-        - Marco principal
-        - Título con imagen
-        - Botones de menú
-        - Área de resultados
+        Funcionamiento:
+        Crea y organiza todos los elementos de la interfaz: marco principal, título, botones de menú y área de resultados.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (agrega widgets a la ventana principal).
         """
         # Marco principal para contener los widgets 
         self.marcoPrincipal = ttk.Frame(self.ventana)
@@ -169,8 +203,14 @@ class Pokepad:
 
     def mostrarTitulo(self):
         """
-        Muestra el título con la imagen del Poképad en la parte superior.
-        Si no se puede cargar la imagen, muestra solo el texto.
+        Funcionamiento:
+        Muestra el título con la imagen del Poképad en la parte superior de la ventana.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (agrega widgets al marco principal).
         """
         marcoTitulo = ttk.Frame(self.marcoPrincipal)
         marcoTitulo.pack(pady=10)
@@ -190,7 +230,14 @@ class Pokepad:
 
     def crearAreaResultado(self):
         """
+        Funcionamiento:
         Crea el área de resultados donde se muestran mensajes y feedback de acciones.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (agrega un label al marco principal).
         """
         self.textoResultado = tk.StringVar(value="Seleccione una opción")
         lblResultado = ttk.Label(
@@ -203,8 +250,14 @@ class Pokepad:
 
     def crearBotones(self):
         """
-        Crea la matriz de botones del menú principal.
-        Cada botón ejecuta una acción diferente según la opción seleccionada.
+        Funcionamiento:
+        Crea la matriz de botones del menú principal, cada uno asociado a una acción diferente.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Ninguna (agrega botones al marco principal).
         """
         marcoBotones = ttk.Frame(self.marcoPrincipal)
         marcoBotones.pack(fill='none', expand=False)  
@@ -241,9 +294,14 @@ class Pokepad:
 
     def accionBoton(self, opcion):
         """
-        Maneja las acciones de los botones del menú.
-        Si la opción es 'Salir', pregunta confirmación y cierra la ventana.
-        Para otras opciones, muestra el nombre de la acción en el área de resultados.
+        Funcionamiento:
+        Maneja las acciones de los botones del menú. Ejecuta la función correspondiente según la opción seleccionada.
+
+        Entradas:
+        - opcion: Texto de la opción seleccionada.
+
+        Salidas:
+        - Ninguna (ejecuta funciones y actualiza el área de resultados).
         """
         if "14" in opcion:
             if messagebox.askyesno("Salir", "¿Está seguro que desea salir?"):
@@ -304,7 +362,14 @@ class Pokepad:
 
     def mostrarFeedback(self, accion):
         """
+        Funcionamiento:
         Muestra feedback visual de la acción ejecutada en el área de resultados.
+
+        Entradas:
+        - accion: Nombre de la acción ejecutada.
+
+        Salidas:
+        - Ninguna (actualiza el área de resultados).
         """
         self.ventana.after(100, lambda: self.textoResultado.set(f"seleccionó: {accion}"))
 # ==========================

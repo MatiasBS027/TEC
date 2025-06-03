@@ -184,9 +184,9 @@ class Pokepad:
         else:
             # Fallback a texto si no se pudo cargar la imagen
             ttk.Label(marcoTitulo, 
-                     text="Poképad", 
-                     font=('Helvetica', 16, 'bold'),
-                     foreground=self.colores['texto']).pack()
+                    text="Poképad", 
+                    font=('Helvetica', 16, 'bold'),
+                    foreground=self.colores['texto']).pack()
 
     def crearAreaResultado(self):
         """
@@ -293,6 +293,10 @@ class Pokepad:
             self.textoResultado.set("Ejecutando: Agregar")
             self.mostrarFeedback("Agregar")
             ejecutarAgregar(self)
+        elif "13. Créditos" in opcion:
+            self.textoResultado.set("Ejecutando: Créditos")
+            self.mostrarFeedback("Créditos")
+            ejecutarCreditos(self)
         else:
             accion = opcion.split('. ')[1]
             self.textoResultado.set(f"Ejecutando: {accion}")

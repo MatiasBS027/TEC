@@ -24,18 +24,16 @@ import os  # Manejo de rutas y archivos
 # FUNCIONES UTILITARIAS UNIFICADAS
 # ==========================
 
-def obtenerInfoPokemon(idPoke):
+def obtenerInfoPokemon(idPoke, esShiny=False, soloBasico=False):
     """
     Obtiene la información del Pokémon de la API.
     Args:
         idPoke: ID del Pokémon
-        esShinyRandom: Si True, elige shiny aleatorio (para XML)
-        soloBasico: Si True, solo devuelve (id, nombre, totalEstats) (para HTML)
+        esShiny: Si True, devuelve la imagen shiny
+        soloBasico: Si True, solo devuelve (id, nombre, totalEstats)
     Returns:
         Diccionario con la información del Pokémon o tupla si soloBasico
     """
-    esShinyRandom=False
-    soloBasico=False
     url = f"https://pokeapi.co/api/v2/pokemon/{idPoke}"
     try:
         respuesta = requests.get(url, timeout=8)
@@ -58,14 +56,8 @@ def obtenerInfoPokemon(idPoke):
         tipos = tuple(tiposLista)
         if soloBasico:
             return (idApi, nombre, totalEstats)
-        if esShinyRandom:
-            esShiny = random.choice([True, False])
-            peso = datos['weight'] * 10
-            altura = datos['height'] * 10
-        else:
-            esShiny = False
-            peso = datos['weight']
-            altura = datos['height']
+        peso = datos['weight']
+        altura = datos['height']
         if esShiny:
             urlImagen = datos['sprites']['front_shiny']
         else:
@@ -431,12 +423,12 @@ def cargarImagen(label, url):
     except Exception as e:
         print(f"Error al cargar la imagen: {e}")
 
-def cargarPokemon(idPokemon, nombre, entradas, imagen):
+def cargarPokemon(idPokemon, nombre, entradas, imagen, esShiny=False):
     """
     Carga los datos del Pokémon desde la API y actualiza la interfaz.
     """
     try:
-        datosPokemon = obtenerInfoPokemon(idPokemon)
+        datosPokemon = obtenerInfoPokemon(idPokemon, esShiny)
         if datosPokemon:
             for id, datos in datosPokemon.items():
                 nombre.config(text=datos[0].capitalize())
@@ -505,7 +497,7 @@ def mostrarDetallePokemon(idPokemon, esShiny):
     tk.Button(marcoContenido, text="Regresar", command=ventana.destroy).pack(pady=10)
 
     # Elimina la función anidada cargarPokemon y usa la global
-    cargarPokemon(idPokemon, nombrePokemon, entradas, imagenLabel)
+    cargarPokemon(idPokemon, nombrePokemon, entradas, imagenLabel, esShiny)
 
     ventana.update_idletasks()
     ancho = ventana.winfo_width()

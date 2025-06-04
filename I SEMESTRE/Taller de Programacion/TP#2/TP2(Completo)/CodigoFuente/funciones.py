@@ -692,7 +692,7 @@ def ejecutarXML(pokepad):
             return
         diccPokemones = {}
         for idPoke, _ in huidos:
-            info = obtenerInfoPokemon(idPoke, esShinyRandom=True)
+            info = obtenerInfoPokemon(idPoke, esShiny=random.choice([True, False]))
             if info:
                 diccPokemones.update(info)
         if diccPokemones:
@@ -814,12 +814,6 @@ def ejecutarEsShiny(pokepad):
     """
     Funcionamiento:
     Muestra una ventana para generar archivos HTML con los Pokémon shiny.
-
-    Entradas:
-    - pokepad: Instancia principal de la interfaz.
-
-    Salidas:
-    - Ninguna (genera archivos HTML y muestra mensajes).
     """
     ventanaShiny = tk.Toplevel(pokepad.ventana)
     ventanaShiny.title("Generar HTML de Pokémon Shiny")
@@ -879,9 +873,9 @@ def ejecutarEsShiny(pokepad):
                 tiposLista = datos[3]
                 tiposStr = ""
                 for i, tipo in enumerate(tiposLista):
-                    tiposStr += tipo
-                    if i < len(tiposLista) - 1:
+                    if i > 0:
                         tiposStr += ", "
+                    tiposStr += tipo
                 url = datos[4]
                 filaHtml = f"""
             <tr>
@@ -904,25 +898,26 @@ def ejecutarEsShiny(pokepad):
     """
             archivo.write(cierre)
 
-        def generarReportes():
-            diccPoke = leerDiccionario()
-            shinysFiltrados = shinys(diccPoke)
-            listaShinys = list(shinysFiltrados.items())
-            if not listaShinys:
-                messagebox.showinfo("Sin shinys", "No hay Pokémon shiny en el diccionario.")
-                ventanaShiny.destroy()
-                return
-            paginas = dividirPaginas(listaShinys, 100)
-            for idx, pagina in enumerate(paginas, start=1):
-                generarHtml(pagina, idx)
-            messagebox.showinfo("Éxito", f"Se generaron {len(paginas)} archivo(s) HTML con Pokémon shiny.")
+    # Mueve estas funciones FUERA de generarHtml
+    def generarReportes():
+        diccPoke = leerDiccionario()
+        shinysFiltrados = shinys(diccPoke)
+        listaShinys = list(shinysFiltrados.items())
+        if not listaShinys:
+            messagebox.showinfo("Sin shinys", "No hay Pokémon shiny en el diccionario.")
             ventanaShiny.destroy()
+            return
+        paginas = dividirPaginas(listaShinys, 100)
+        for idx, pagina in enumerate(paginas, start=1):
+            generarHtml(pagina, idx)
+        messagebox.showinfo("Éxito", f"Se generaron {len(paginas)} archivo(s) HTML con Pokémon shiny.")
+        ventanaShiny.destroy()
 
-        def confirmarShiny():
-            if messagebox.askyesno("Confirmar generación", "¿Quiere generar el HTML de los pokémons shiny?"):
-                generarReportes()
+    def confirmarShiny():
+        if messagebox.askyesno("Confirmar generación", "¿Quiere generar el HTML de los pokémons shiny?"):
+            generarReportes()
 
-        ttk.Button(ventanaShiny, text="Generar HTML", command=confirmarShiny).pack(pady=20)
+    ttk.Button(ventanaShiny, text="Generar HTML", command=confirmarShiny).pack(pady=20)
 
 # ##################################################
 # 9  Convertidor

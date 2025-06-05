@@ -263,31 +263,26 @@ class Pokepad:
         marcoBotones.pack(fill='none', expand=False)  
         # Opciones del menú (pares de botones por fila)
         opciones = [
-            ["1. Búsqueda", "8. esShiny"],
-            ["2. Atrapar", "9. Convertidor"],
-            ["3. Pokédex", "10. Desconvertidor"],
-            ["4. Detalle", "11. Virus"],
-            ["5. Descarga", "12. Agregar"],
-            ["6. XML", "13. Créditos"],
-            ["7. HTML Desc", "14. Salir"]
+            ["1. Búsqueda", "7. esShiny"],
+            ["2. Atrapar", "8. Convertidor"],
+            ["3. Pokédex", "9. Desconvertidor"],
+            ["4. Descarga", "10. Virus"],
+            ["5. XML", "11. Agregar"],
+            ["6. HTML Desc", "12. Créditos"],
+            ["13. Salir",]
         ]
+
         
-        for fila, (opcionIzquierda, opcionDerecha) in enumerate(opciones):
-            ttk.Button(
-                marcoBotones,
-                text=opcionIzquierda,
-                style='Pokepad.TButton',
-                command=lambda o=opcionIzquierda: self.accionBoton(o),
-                width=14  
-            ).grid(row=fila, column=0, padx=2, pady=2, sticky='ew')
-            
-            ttk.Button(
-                marcoBotones,
-                text=opcionDerecha,
-                style='Pokepad.TButton',
-                command=lambda o=opcionDerecha: self.accionBoton(o),
-                width=14
-            ).grid(row=fila, column=1, padx=2, pady=2, sticky='ew')
+        for fila, filaOpciones in enumerate(opciones):
+            for columna, texto in enumerate(filaOpciones):
+                ttk.Button(
+                    marcoBotones,
+                    text=texto,
+                    style='Pokepad.TButton',
+                    command=lambda o=texto: self.accionBoton(o),
+                    width=14
+                ).grid(row=fila, column=columna, padx=2, pady=2, sticky='ew')
+
         
         marcoBotones.columnconfigure(0, weight=1)
         marcoBotones.columnconfigure(1, weight=1)
@@ -303,7 +298,8 @@ class Pokepad:
         Salidas:
         - Ninguna (ejecuta funciones y actualiza el área de resultados).
         """
-        if "14" in opcion:
+        
+        if "13" in opcion:
             if messagebox.askyesno("Salir", "¿Está seguro que desea salir?"):
                 self.ventana.destroy()
         elif "1. Búsqueda" in opcion:
@@ -314,44 +310,43 @@ class Pokepad:
             self.textoResultado.set("Ejecutando: Atrapar")
             self.mostrarFeedback("Atrapar")
             ejecutarAtrapar(self)
-
         elif "3. Pokédex" in opcion:
             self.textoResultado.set("Ejecutando: Pokédex")
             self.mostrarFeedback("Pokédex")
             ejecutarPokedex(self)
-        elif "5. Descarga" in opcion:
+        elif "4. Descarga" in opcion:
             self.textoResultado.set("Ejecutando: Descarga")
             self.mostrarFeedback("Descarga")
             ejecutarDescarga(self)
-        elif "6. XML" in opcion:
+        elif "5. XML" in opcion:
             self.textoResultado.set("Ejecutando: XML")
             self.mostrarFeedback("XML")
             ejecutarXML(self)
-        elif "7. HTML Desc" in opcion:
+        elif "6. HTML Desc" in opcion:
             self.textoResultado.set("Ejecutando: HTML Desc")
             self.mostrarFeedback("HTML Desc")
             ejecutarHTML(self)
-        elif "8. esShiny" in opcion:
+        elif "7. esShiny" in opcion:
             self.textoResultado.set("Ejecutando: esShiny")
             self.mostrarFeedback("esShiny")
             ejecutarEsShiny(self)
-        elif "9. Convertidor" in opcion:
+        elif "8. Convertidor" in opcion:
             self.textoResultado.set("Ejecutando: Convertidor")
             self.mostrarFeedback("Convertidor")
             ejecutarConvertidor(self)
-        elif "10. Desconvertidor" in opcion:
+        elif "9. Desconvertidor" in opcion:
             self.textoResultado.set("Ejecutando: Desconvertidor")
             self.mostrarFeedback("Desconvertidor")
             ejecutarDesconvertidor(self)
-        elif "11. Virus" in opcion:
+        elif "10. Virus" in opcion:
             self.textoResultado.set("Ejecutando: Virus")
             self.mostrarFeedback("Virus")
             ejecutarVirus(self)
-        elif "12. Agregar" in opcion:
+        elif "11. Agregar" in opcion:
             self.textoResultado.set("Ejecutando: Agregar")
             self.mostrarFeedback("Agregar")
             ejecutarAgregar(self)
-        elif "13. Créditos" in opcion:
+        elif "12. Créditos" in opcion:
             self.textoResultado.set("Ejecutando: Créditos")
             self.mostrarFeedback("Créditos")
             ejecutarCreditos(self)
@@ -359,6 +354,8 @@ class Pokepad:
             accion = opcion.split('. ')[1]
             self.textoResultado.set(f"Ejecutando: {accion}")
             self.mostrarFeedback(accion)
+
+
 
     def mostrarFeedback(self, accion):
         """

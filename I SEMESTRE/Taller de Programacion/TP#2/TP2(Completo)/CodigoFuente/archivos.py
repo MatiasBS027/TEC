@@ -147,10 +147,8 @@ def generarDiccionarioPokemon():
     """
     Funcionamiento:
     Genera el archivo 'DiccionarioPokemon.txt' con la información detallada de los Pokémon atrapados.
-
     Entradas:
     - Ninguna (lee 'MisPokemon.txt' para obtener los Pokémon atrapados).
-
     Salidas:
     - Ninguna (genera o actualiza el archivo 'DiccionarioPokemon.txt').
     """

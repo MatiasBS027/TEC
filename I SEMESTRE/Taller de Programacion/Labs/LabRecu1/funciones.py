@@ -3,6 +3,7 @@
 #última actualización 4/06/2025
 #python versión 3.13.2
 
+
 def decodeBinary(binario):
     if binario == 0:
         return 0
@@ -23,3 +24,20 @@ def cantPrimosRango(inicio, fin):
             return 1 + cantPrimosRango(inicio + 1, fin)
         else:
             return cantPrimosRango(inicio + 1, fin)
+    
+def contarDigitos(n):
+    """
+    Cuenta la cantidad de dígitos de un número entero positivo n.
+    """
+    if n < 10:
+        return 1
+    else:
+        return 1 + contarDigitos(n // 10)
+
+def sumaDivisores(n, divisor=1):
+    if divisor >= n:
+        return 0
+    if n % divisor == 0:
+        return divisor + sumaDivisores(n, divisor + 1)
+    else:
+        return sumaDivisores(n, divisor + 1)

@@ -15,7 +15,7 @@ def obtenerSumCuadradosAUX(m,n):
     elif m == n:
         return m**2
     else:
-        return obtenerSumCuadrados(m+1,n) + m**2
+        return obtenerSumCuadrados(m, n, 0)
 
 
 print(obtenerSumCuadradosAUX(4,7))
@@ -31,11 +31,11 @@ def obtenerParesImparesAUX(n):
     return obtenerParesImpares(abs(n), 0, 0)
 
 # Pruebas
-print(obtenerParesImparesAUX(3214))     # (2, 2)
-print(obtenerParesImparesAUX(-18006))   # (4, 1)
-print(obtenerParesImparesAUX(0))        # (1, 0)
-print(obtenerParesImparesAUX(1))        # (0, 1)
-print(obtenerParesImparesAUX("abc"))    # ()
+print(obtenerParesImparesAUX(3214))     
+print(obtenerParesImparesAUX(-18006))  
+print(obtenerParesImparesAUX(0))        
+print(obtenerParesImparesAUX(1))        
+print(obtenerParesImparesAUX("abc"))    
 
 #========================Reto 4. Validar binario.  . ========================
 print("\n=========================Reto 4. Validar binario. =========================")
@@ -55,7 +55,7 @@ def contarBisiestosAUX(a,b):
     if a > b or a <= 0 or b <= 0:
         return "El año inicial debe ser debe ser menor que el año final."
     else:
-        return contarBisiestos(a,b)
+        return contarBisiestos(a,b,0)
 
 
 print(contarBisiestosAUX(1500,1836))

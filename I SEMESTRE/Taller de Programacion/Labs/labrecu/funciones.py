@@ -19,11 +19,10 @@ ejemplos de uso
 55
 """
 
-def obtenerSumCuadrados(m,n):
-    if m == n:
-        return m**2
-    else:
-        return obtenerSumCuadrados(m+1,n) + m**2
+def obtenerSumCuadrados(m, n, acc):
+    if m > n:
+        return acc
+    return obtenerSumCuadrados(m + 1, n, acc + m ** 2)
 
 
 #========================Reto 3. Obtener cantidad de pares e impares. ========================
@@ -96,12 +95,11 @@ Algunas corridas ejemplo son las siguientes:
 >>>>contarBisiestos (2023, 2020) Devuelve: El año inicial debe ser debe ser menor que el año final. 
 """
 
-def contarBisiestos(a, b):
+def contarBisiestos(a, b, acc):
     if a > b:
-        return 0
+        return acc
+    if (a % 4 == 0 and (a % 100 != 0 or a % 400 == 0)):
+        return contarBisiestos(a + 1, b, acc + 1)
     else:
-        if (a % 4 == 0 and (a % 100 != 0 or a % 400 == 0)):
-            return 1 + contarBisiestos(a + 1, b)
-        else:
-            return contarBisiestos(a + 1, b)
+        return contarBisiestos(a + 1, b, acc)
 

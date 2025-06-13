@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import messagebox
 import os
 from PIL import Image, ImageTk 
+from funciones import *
 
 rutaListaAnimales = "listaAnimales.txt"
 
@@ -30,13 +31,12 @@ tk.Label(tituloFrame, text="✨ Zooinventario", font=("Arial", 14, "bold")).pack
 
 def accionBoton(numero):
     if numero == 1:
+        ventanaObtenerLista()  
+    elif numero == 2:
         botones[2]['state'] = 'normal'
         for i in range(3, 9):
             botones[i]['state'] = 'disabled'
-    elif numero == 2:
-        for i in range(1, 9):
-            botones[i]['state'] = 'normal'
-    messagebox.showinfo("Acción", f"Presionaste opción {numero}")
+        messagebox.showinfo("Acción", "Función para crear inventario (pendiente de implementar).")
 
 def cerrarAplicacion():
     ventana.destroy()
@@ -61,9 +61,52 @@ for texto in etiquetas:
     indice += 1
 
 def verificarEstadoArchivo():
-    botones[1]['state'] = 'normal'
-    for i in range(2, 9):
-        botones[i]['state'] = 'disabled'
+    if os.path.exists("nombresAnimales.txt"):
+        botones[1]['state'] = 'disabled'
+        botones[2]['state'] = 'normal'
+        for i in range(3, 9):
+            botones[i]['state'] = 'disabled'
+    else:
+        botones[1]['state'] = 'normal'
+        for i in range(2, 9):
+            botones[i]['state'] = 'disabled'
+
+
+def ventanaObtenerLista():
+    ventanaLista = tk.Toplevel(ventana)
+    ventanaLista.title("Obtener lista de animales")
+    ventanaLista.geometry("300x180")
+    ventanaLista.resizable(False, False)
+    
+    # Frame principal
+    framePrincipal = tk.Frame(ventanaLista)
+    framePrincipal.pack(pady=20, padx=20, fill='both', expand=True)
+    
+    # Etiqueta e instrucción
+    tk.Label(framePrincipal, 
+            text="Ingrese la cantidad de nombres de animales\na obtener de Wikipedia:",
+            justify='center').pack(pady=10)
+    
+    # Entrada para la cantidad
+    entradaCantidad = tk.Entry(framePrincipal, width=10, justify='center')
+    entradaCantidad.pack(pady=5)
+    entradaCantidad.focus_set()  # Poner el foco en la entrada
+    
+    # Frame para botones
+    frameBotones = tk.Frame(framePrincipal)
+    frameBotones.pack(pady=10)
+    
+    # Botón Confirmar
+    tk.Button(frameBotones, text="Confirmar", 
+            command=lambda: obtenerListaES(entradaCantidad.get(), ventanaLista)).pack(side=tk.LEFT, padx=5)
+    
+    # Botón Cancelar
+    tk.Button(frameBotones, text="Cancelar", 
+            command=ventanaLista.destroy).pack(side=tk.LEFT, padx=5)
+    
+    # Vincular la tecla Enter al botón Confirmar
+    ventanaLista.bind('<Return>', lambda e: obtenerListaES(entradaCantidad.get(), ventanaLista))
+
 
 verificarEstadoArchivo()
 ventana.mainloop()

@@ -27,49 +27,79 @@ imagenTk = ImageTk.PhotoImage(imagen)
 imagen = tk.Label(tituloFrame, image=imagenTk)
 imagen.pack(side=tk.LEFT, padx=5)
 
-tk.Label(tituloFrame, text="✨ Zooinventario", font=("Arial", 14, "bold")).pack(side=tk.LEFT, padx=10)
+tk.Label(tituloFrame, text="Zooinventario", font=("Arial", 14, "bold")).pack(side=tk.LEFT, padx=10)
 
 def accionBoton(numero):
     if numero == 1:
-        ventanaObtenerLista()  
+        ventanaObtenerLista()
+        if 2 in botones:
+            botones[2]['state'] = 'normal'
     elif numero == 2:
-        botones[2]['state'] = 'normal'
-        for i in range(3, 9):
-            botones[i]['state'] = 'disabled'
         crearInventarioDesdeInterfaz(ventana)
+        verificarEstadoArchivo()  
+    elif numero == 4:
+        mostrarEstadisticaPorEstado()
 
 def cerrarAplicacion():
     ventana.destroy()
 
 botones = {}
-
 etiquetas = [
     "1. Obtener lista",
     "2. Crear inventario",
     "3. Mostrar inventario",
-    "4. Estadística * estado",
+    "4. Estadística por estado",
     "5. Crear HTML",
     "6. Generar PDF",
     "7. Generar .csv",
     "8. Búsqueda por orden"]
 
-indice = 1
+i = 1
 for texto in etiquetas:
-    boton = tk.Button(ventana, text=texto, width=30, command=lambda n=indice: accionBoton(n))
-    boton.pack(pady=2)
-    botones[indice] = boton
-    indice += 1
+    if i == 1:
+        estado = 'normal'
+    else:
+        estado = 'disabled'
+    botones[i] = tk.Button(ventana, text=texto, width=25, state=estado, command=lambda n=i: accionBoton(n))
+    botones[i].pack(pady=2)
+    i += 1
 
 def verificarEstadoArchivo():
     if os.path.exists("nombresAnimales.txt"):
-        botones[1]['state'] = 'disabled'
-        botones[2]['state'] = 'normal'
-        for i in range(3, 9):
-            botones[i]['state'] = 'disabled'
+        try:
+            botones[1]['state'] = 'disabled'
+        except:
+            pass
+        if os.path.exists("inventario.txt"):
+            try:
+                botones[2]['state'] = 'disabled'
+            except:
+                pass
+            for i in range(3, 9):
+                try:
+                    botones[i]['state'] = 'normal'
+                except:
+                    pass
+        else:
+            try:
+                botones[2]['state'] = 'normal'
+            except:
+                pass
+            for i in range(3, 9):
+                try:
+                    botones[i]['state'] = 'disabled'
+                except:
+                    pass
     else:
-        botones[1]['state'] = 'normal'
+        try:
+            botones[1]['state'] = 'normal'
+        except:
+            pass
         for i in range(2, 9):
-            botones[i]['state'] = 'disabled'
+            try:
+                botones[i]['state'] = 'disabled'
+            except:
+                pass
 
 
 def ventanaObtenerLista():

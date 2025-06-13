@@ -181,6 +181,12 @@ class Animal:
         self.mostrarCalificacion()
         self.mostrarOrdenYPeso()
 
+    def asignarEstado(self, estado):
+        self.__info[0] = estado
+
+    def asignarPeso(self, peso):
+        self.__info[3] = peso
+
 #=======================1. obtener lista =========================
 """
     instrucciones:Programe lo necesario para que Gemini pida a Wikipedia n nombres comunes de animales y 
@@ -290,8 +296,7 @@ def pedirDatosAnimalAGemini(nombreComun):
         f"Dame la siguiente información del animal '{nombreComun}' en español, "
         "en formato JSON con las claves: nombre_cientifico, url_imagen, orden. "
         "El orden debe ser 'c' para carnívoro, 'h' para herbívoro, 'o' para omnívoro. "
-        "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}"
-    )
+        "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}")
     genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
     modelo = GenerativeModel('gemini-1.5-flash')
     try:
@@ -304,20 +309,26 @@ def pedirDatosAnimalAGemini(nombreComun):
             raise e
     if not texto:
         raise ValueError("Respuesta vacía de Gemini")
-    # Extraer solo el JSON de la respuesta
+    # Extraer JSON 
     inicio = texto.find('{')
     fin = texto.rfind('}')
     if inicio != -1 and fin != -1 and fin > inicio:
         jsonTexto = texto[inicio:fin+1]
+        if texto.strip().startswith('['):
+            try:
+                lista = json.loads(texto)
+                if isinstance(lista, list) and len(lista) > 0:
+                    return lista[0]
+            except Exception:
+                pass  
+            # Extraer primer objeto de la lista manualmente
+            primerObjeto = texto[texto.find('{'):texto.find('}')+1]
+            return json.loads(primerObjeto)
+        else:
+            return json.loads(jsonTexto)
     else:
         print(f"Respuesta inesperada de Gemini para '{nombreComun}': {texto}")
         raise ValueError("No se encontró JSON válido en la respuesta de Gemini.")
-    try:
-        datos = json.loads(jsonTexto)
-    except Exception as e:
-        print(f"Respuesta inesperada de Gemini para '{nombreComun}': {jsonTexto}")
-        raise e
-    return datos
 
 def crearAnimal(nombreComun, datos):
     nombreCientifico = datos.get("nombre_cientifico", "Desconocido")
@@ -369,39 +380,94 @@ def cargarInventario(archivo="inventario.txt"):
     if not os.path.exists(archivo):
         return []
     inventario = []
-    with open(archivo, "r", encoding="utf-8") as f:
-        for linea in f:
+    with open(archivo, "r", encoding="utf-8") as file:
+        for linea in file:
+            linea = linea.strip()
+            if not linea:
+                continue
             try:
-                partes = linea.strip().split("],")
-                nombres = partes[0].strip()[1:]  
-                info = partes[1].split("],")[0].strip()[1:]  
-                url = partes[2].strip()
-                if url.startswith("'"):
-                    url = url[1:]
-                if url.endswith("']"):
-                    url = url[:-2]
-                elif url.endswith("'"):
-                    url = url[:-1]
-                # Procesar nombres
-                nombres = nombres.split(",")
-                nombreComun = nombres[0].strip().strip("'").strip('"')
-                nombreCientifico = nombres[1].strip().strip("'").strip('"')
-                # Procesar info
-                info = info.split(",")
-                estado = int(info[0].strip())
-                calificacion = int(info[1].strip())
-                orden = info[2].strip().strip("'").strip('"')
-                peso = float(info[3].strip())
+                iniNombres = linea.find('(')
+                finNombres = linea.find(')')
+                nombresStr = linea[iniNombres + 1:finNombres]
+                nombresSplit = nombresStr.split(',')
+                nombreComun = nombresSplit[0].strip().strip("'")
+                nombreCientifico = nombresSplit[1].strip().strip("'")
 
+                iniInfo = linea.find('[', finNombres)
+                finInfo = linea.find(']', iniInfo)
+                infoStr = linea[iniInfo + 1:finInfo]
+                infoSplit = infoStr.split(',')
+                estado = int(infoSplit[0].strip().strip("'"))
+                calificacion = int(infoSplit[1].strip().strip("'"))
+                orden = infoSplit[2].strip().strip("'")
+                peso = float(infoSplit[3].strip().strip("'"))
+
+                urlIni = linea.find("'", finInfo)
+                urlFin = linea.rfind("'")
+                if urlIni != -1 and urlFin != -1 and urlFin > urlIni:
+                    url = linea[urlIni + 1:urlFin]
+                else:
+                    url = ""
                 animal = Animal(nombreComun, nombreCientifico, url, orden)
-                # Asignar los valores leídos usando los métodos existentes
-                animal.asignarEstadoAleatorio() 
+                animal.asignarEstado(estado)
                 animal.asignarCalificacion(calificacion)
-                animal.asignarOrdenYPeso(orden)  
-
+                animal.asignarOrdenYPeso(orden)
+                animal.asignarPeso(peso)
                 inventario.append(animal)
-            except Exception as e:
+            except Exception as error:
+                print(f"Error cargando línea: {error}")
                 continue
     return inventario
 
-# ...existing code...
+#=======================4. Estadistica por Estado =========================
+def mostrarEstadisticaPorEstado():
+    inventario = cargarInventario()
+    if not inventario:
+        messagebox.showerror("Error", "No hay inventario cargado.")
+        return
+    estados = {
+        1: "Vivo",
+        2: "Enfermo",
+        3: "Traslado",
+        4: "Muerto en museo",
+        5: "Muerto"}
+    conteo = {}
+    for k in estados:
+        conteo[k] = 0
+    for animal in inventario:
+        estado = animal.obtenerEstado()
+        if estado in conteo:
+            conteo[estado] += 1
+    total = 0
+    for valor in conteo.values():
+        total += valor
+    porcentajes = {}
+    for k in conteo:
+        if total > 0:
+            porcentaje = conteo[k] * 100 // total
+        else:
+            porcentaje = 0
+        porcentajes[k] = porcentaje
+
+    # Crear ventana
+    ventanaEst = tk.Toplevel()
+    ventanaEst.title("Estadística por estado")
+    ventanaEst.resizable(False, False)
+
+    tk.Label(ventanaEst, text="Estadística por estado", font=("Arial", 12)).grid(row=0, column=0, columnspan=3, pady=8)
+    tk.Label(ventanaEst, text="").grid(row=1, column=0)  # Espacio
+    tk.Label(ventanaEst, text="", width=10).grid(row=2, column=0)
+    tk.Label(ventanaEst, text="Cant", width=6).grid(row=2, column=1)
+    tk.Label(ventanaEst, text="Porc", width=6).grid(row=2, column=2)
+    fila = 3
+    for k in estados:
+        tk.Label(ventanaEst, text=estados[k], anchor="w", width=16).grid(row=fila, column=0, sticky="w")
+        tk.Entry(ventanaEst, width=5, justify="center", state="readonly", 
+                readonlybackground="white", fg="black", 
+                font=("Arial", 10), 
+                textvariable=tk.StringVar(value=str(conteo[k]))).grid(row=fila, column=1)
+        tk.Entry(ventanaEst, width=5, justify="center", state="readonly", 
+                readonlybackground="white", fg="black", 
+                font=("Arial", 10), 
+                textvariable=tk.StringVar(value=str(porcentajes[k]))).grid(row=fila, column=2)
+        fila += 1

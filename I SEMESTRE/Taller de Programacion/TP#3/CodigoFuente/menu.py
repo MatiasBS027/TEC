@@ -36,7 +36,7 @@ def accionBoton(numero):
         botones[2]['state'] = 'normal'
         for i in range(3, 9):
             botones[i]['state'] = 'disabled'
-        messagebox.showinfo("Acción", "Función para crear inventario (pendiente de implementar).")
+        crearInventarioDesdeInterfaz(ventana)
 
 def cerrarAplicacion():
     ventana.destroy()

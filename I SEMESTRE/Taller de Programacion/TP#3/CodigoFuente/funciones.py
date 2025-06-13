@@ -11,6 +11,7 @@ import google.generativeai as genai  # Se usa para configurar la API de Gemini
 from google.generativeai import GenerativeModel  # Se usa para crear un modelo generativo como 'gemini-pro'
 from PIL import Image, ImageTk  # Se usa para manejar imágenes
 # puede ser necesario usar 'pip install -U google-generativeai' para actualizar la biblioteca gemini v1
+import json
 
 """
 Clase Animal que representa un objeto del inventario del zoológico.
@@ -180,7 +181,6 @@ class Animal:
         self.mostrarCalificacion()
         self.mostrarOrdenYPeso()
 
-
 #=======================1. obtener lista =========================
 """
     instrucciones:Programe lo necesario para que Gemini pida a Wikipedia n nombres comunes de animales y 
@@ -210,7 +210,7 @@ def obtenernombresAnimales(cantidad):
         genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
-        prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones."
+        prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono').\n\n"
         respuesta = modelo.generate_content(prompt)
         
         texto = respuesta.text.strip()
@@ -261,6 +261,147 @@ def obtenerListaES(cantidadTexto, ventana):
         print("Nombres obtenidos:")
         for i, nombre in enumerate(nombres, 1):
             print(f"{i}. {nombre}")
-            
+        
+        ventana.destroy()  
+
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo obtener la lista de animales: {str(e)}")
+
+#=======================2. Crear Inventario =========================
+def leerNombresAnimales():
+    nombres = []
+    if not os.path.exists("nombresAnimales.txt"):
+        return nombres
+    with open("nombresAnimales.txt", "r", encoding="utf-8") as f:
+        for linea in f:
+            nombre = linea.strip()
+            if nombre != "":
+                nombres.append(nombre)
+    return nombres
+
+def seleccionarNombresAleatorios(nombres, cantidad):
+    if len(nombres) < cantidad:
+        return []
+    seleccionados = random.sample(nombres, cantidad)
+    return seleccionados
+
+def pedirDatosAnimalAGemini(nombreComun):
+    prompt = (
+        f"Dame la siguiente información del animal '{nombreComun}' en español, "
+        "en formato JSON con las claves: nombre_cientifico, url_imagen, orden. "
+        "El orden debe ser 'c' para carnívoro, 'h' para herbívoro, 'o' para omnívoro. "
+        "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}"
+    )
+    genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
+    modelo = GenerativeModel('gemini-1.5-flash')
+    try:
+        respuesta = modelo.generate_content(prompt)
+        texto = respuesta.text.strip()
+    except Exception as e:
+        if "429" in str(e):
+            raise RuntimeError("Has superado el límite de peticiones de Gemini. Intenta más tarde.")
+        else:
+            raise e
+    if not texto:
+        raise ValueError("Respuesta vacía de Gemini")
+    # Extraer solo el JSON de la respuesta
+    inicio = texto.find('{')
+    fin = texto.rfind('}')
+    if inicio != -1 and fin != -1 and fin > inicio:
+        jsonTexto = texto[inicio:fin+1]
+    else:
+        print(f"Respuesta inesperada de Gemini para '{nombreComun}': {texto}")
+        raise ValueError("No se encontró JSON válido en la respuesta de Gemini.")
+    try:
+        datos = json.loads(jsonTexto)
+    except Exception as e:
+        print(f"Respuesta inesperada de Gemini para '{nombreComun}': {jsonTexto}")
+        raise e
+    return datos
+
+def crearAnimal(nombreComun, datos):
+    nombreCientifico = datos.get("nombre_cientifico", "Desconocido")
+    urlImagen = datos.get("url_imagen", "")
+    orden = datos.get("orden", "o")
+    animal = Animal(nombreComun, nombreCientifico, urlImagen, orden)
+    return animal
+
+def crearInventarioDesdeInterfaz(ventana):
+    nombres = leerNombresAnimales()
+    if len(nombres) < 20:
+        messagebox.showerror("Error", "No hay suficientes nombres en el archivo.")
+        return
+
+    seleccionados = seleccionarNombresAleatorios(nombres, 20)
+    print("Nombres seleccionados para el inventario:")
+    for nombre in seleccionados:
+        print(nombre)
+
+    inventario = []
+    for nombre in seleccionados:
+        try:
+            datos = pedirDatosAnimalAGemini(nombre)
+            animal = crearAnimal(nombre, datos)
+            inventario.append(animal)
+        except Exception as e:
+            print(f"Error obteniendo datos de '{nombre}': {e}")
+            animal = Animal(nombre, "Desconocido", "", "o")
+            inventario.append(animal)
+
+    guardarInventario(inventario)  # Guardar en archivo
+    messagebox.showinfo("Éxito", "Inventario de 20 animales creado correctamente.")
+    ventana.destroy()
+    return inventario
+
+def guardarInventario(inventario, archivo="inventario.txt"):
+    with open(archivo, "w", encoding="utf-8") as f:
+        for animal in inventario:
+            nombres = animal.obtenerNombres()
+            info = [
+                animal.obtenerEstado(),
+                animal.obtenerCalificacion(),
+                animal.obtenerOrdenYPeso()[0],
+                animal.obtenerOrdenYPeso()[1]]
+            url = animal.obtenerUrl()
+            f.write(f"{[nombres, info, url]}\n")
+
+def cargarInventario(archivo="inventario.txt"):
+    if not os.path.exists(archivo):
+        return []
+    inventario = []
+    with open(archivo, "r", encoding="utf-8") as f:
+        for linea in f:
+            try:
+                partes = linea.strip().split("],")
+                nombres = partes[0].strip()[1:]  
+                info = partes[1].split("],")[0].strip()[1:]  
+                url = partes[2].strip()
+                if url.startswith("'"):
+                    url = url[1:]
+                if url.endswith("']"):
+                    url = url[:-2]
+                elif url.endswith("'"):
+                    url = url[:-1]
+                # Procesar nombres
+                nombres = nombres.split(",")
+                nombreComun = nombres[0].strip().strip("'").strip('"')
+                nombreCientifico = nombres[1].strip().strip("'").strip('"')
+                # Procesar info
+                info = info.split(",")
+                estado = int(info[0].strip())
+                calificacion = int(info[1].strip())
+                orden = info[2].strip().strip("'").strip('"')
+                peso = float(info[3].strip())
+
+                animal = Animal(nombreComun, nombreCientifico, url, orden)
+                # Asignar los valores leídos usando los métodos existentes
+                animal.asignarEstadoAleatorio() 
+                animal.asignarCalificacion(calificacion)
+                animal.asignarOrdenYPeso(orden)  
+
+                inventario.append(animal)
+            except Exception as e:
+                continue
+    return inventario
+
+# ...existing code...

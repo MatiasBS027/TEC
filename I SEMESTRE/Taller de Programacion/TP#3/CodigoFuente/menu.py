@@ -42,10 +42,10 @@ def accionBoton(numero):
             mostrarInventarioES()
         else:
             messagebox.showwarning("Advertencia", "Debes crear primero el inventario (opción 2).")
-
-
     elif numero == 4:
         mostrarEstadisticaPorEstado()
+    elif numero == 5:
+        crearHtmlInventario()
 
 def cerrarAplicacion():
     ventana.destroy()

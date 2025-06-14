@@ -12,9 +12,11 @@ from google.generativeai import GenerativeModel  # Se usa para crear un modelo g
 from PIL import Image, ImageTk  # Se usa para manejar imágenes
 # puede ser necesario usar 'pip install -U google-generativeai' para actualizar la biblioteca gemini v1
 import json
+import ast
 import io
-import ast # se usa para poder evaluar la lista del archivo
 import urllib.request
+
+
 """
 Clase Animal que representa un objeto del inventario del zoológico.
 Cada animal posee:
@@ -215,9 +217,7 @@ from google.generativeai import GenerativeModel
 
 def obtenernombresAnimales(cantidad):
     try:
-        genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI") 
-        #esta es la api key de gemini es creada personal y unicamente para la tp (que no se filtre) porque se debió pedir en la pagina de gemini
-        #porque se necesita usar esa llave para poder usar la api de gemini 
+        genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
         prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono').\n\n"
@@ -422,36 +422,35 @@ def cargarInventario(archivo="inventario.txt"):
                 print(f"Error cargando línea: {error}")
                 continue
     return inventario
-
 #=======================3. Mostrar inventario =========================
 """
 instrucciones:crear una ventana 4 en 4 animales para ver el inventario
 y para calificarlos. Dado obligfatoriamente son 20 y se mostrarán 4 por ventana,
 debe tenerse 5 visualizaciones para moverse hacia adelante y hacia atras del inventario.
-Aquí es dónde usted debe calificar al animal, pero 
-validando que pueda calificarlo según el estado. Vaya 
-a la definición de la clase y siga instrucciones. Llame al 
-método correspondiente para modificar, no solicite 
-confirmación. 
-Claro estamos que en la funcionalidad 2 se guardó el URL 
-que proporciona Wikipedia en cada objeto, pero… dado el 
-estado fue aleatorio, use ello para mostrar aquí la 
-imagen según se indica. Por lo visto, estos 4 animales 
-están en estado “vivo”… 
+Aquí es dónde usted debe calificar al animal, pero
+validando que pueda calificarlo según el estado. Vaya
+a la definición de la clase y siga instrucciones. Llame al
+método correspondiente para modificar, no solicite
+confirmación.
+Claro estamos que en la funcionalidad 2 se guardó el URL
+que proporciona Wikipedia en cada objeto, pero… dado el
+estado fue aleatorio, use ello para mostrar aquí la
+imagen según se indica. Por lo visto, estos 4 animales
+están en estado “vivo”…
 
 ejemplo:
-_______________________________________________________
-estado                  |   imagen que mostrar
-1.vivo                  |   muestre la imagen del url extraido de wikipedia
-2.enfermo               |   una ambulancia
-3.trasladado(a otro zoo)| una ambulancia
-4.muerto en museo       |   Un simbolo de museo
-5.muerto                |   una calavera
 
-Los diferentes símbolos representan los emojis para calificarlo. Siga las 
-limitantes de la definición de la clase indicadas arriba. Considere que al calificarse el emoji 
-debe mostrarse por alguna estrategia como marcado al dar clic y ser la correcta calificación 
-según el estado.  
+estado | imagen que mostrar
+1.vivo | muestre la imagen del url extraido de wikipedia
+2.enfermo | una ambulancia
+3.trasladado(a otro zoo)| una ambulancia
+4.muerto en museo | Un simbolo de museo
+5.muerto | una calavera
+
+Los diferentes símbolos representan los emojis para calificarlo. Siga las
+limitantes de la definición de la clase indicadas arriba. Considere que al calificarse el emoji
+debe mostrarse por alguna estrategia como marcado al dar clic y ser la correcta calificación
+según el estado.
 
 """
 imagenesPorEstado = {
@@ -461,8 +460,7 @@ imagenesPorEstado = {
     5: "calavera.png"
 }
 
-# Cargar la lista del inventario desde el archivo de texto
-def cargarInventario():
+def cargarMostrarInventario():
     inventario = []
     with open("inventario.txt", "r", encoding="utf-8") as archivo:
         for linea in archivo:
@@ -475,8 +473,6 @@ def cargarInventario():
                     print(" Error al leer una línea, se omitió:", linea)
     return inventario
 
-
-# Cargar la imagen ya sea desde internet o desde un archivo local
 def cargarImagen(desdeUrlOArchivo):
     try:
         if desdeUrlOArchivo.startswith("http"):
@@ -485,16 +481,14 @@ def cargarImagen(desdeUrlOArchivo):
             imagen = Image.open(io.BytesIO(datosImagen))
         else:
             imagen = Image.open(desdeUrlOArchivo)
-
         imagenRedimensionada = imagen.resize((120, 120))
         imagenConvertida = ImageTk.PhotoImage(imagenRedimensionada)
         return imagenConvertida
     except:
         return None
 
-# Función principal que muestra el inventario en la ventana
 def mostrarInventarioES():
-    listaAnimales = cargarInventario()
+    listaAnimales = cargarMostrarInventario()
     paginaMostrada = [0]  # Para manejar la navegación
 
     ventana = tk.Toplevel()
@@ -633,10 +627,6 @@ def mostrarInventarioES():
 
     mostrarPagina()
 
-
-
-
-
 #=======================4. Estadistica por Estado =========================
 def mostrarEstadisticaPorEstado():
     inventario = cargarInventario()
@@ -689,3 +679,103 @@ def mostrarEstadisticaPorEstado():
                 font=("Arial", 10), 
                 textvariable=tk.StringVar(value=str(porcentajes[k]))).grid(row=fila, column=2)
         fila += 1
+
+#=======================5. HTML =========================
+def clasificarAnimalesPorOrden(inventario):
+    ordenes = {'o': [], 'c': [], 'h': []}
+    for animal in inventario:
+        orden = animal.obtenerOrdenYPeso()[0]
+        if orden in ordenes:
+            ordenes[orden].append(animal)
+    return ordenes
+
+def contarAnimalesPorOrden(ordenes):
+    conteo = {'o': 0, 'c': 0, 'h': 0}
+    for clave in ordenes:
+        conteo[clave] = len(ordenes[clave])
+    return conteo
+
+def generarFilasTablaHtml(ordenes, ordenNombre):
+    filas = ""
+    for clave in ['o', 'c', 'h']:
+        animales = ordenes[clave]
+        cantidad = len(animales)
+        indice = 0
+        for animal in animales:
+            peso = animal.obtenerOrdenYPeso()[1]
+            nombre = animal.obtenerNombres()[0]
+            if indice == 0:
+                filas += (
+                    f"        <tr>\n"
+                    f"            <td rowspan='{cantidad}'>{ordenNombre[clave]}</td>\n"
+                    f"            <td>{peso:.2f}</td>\n"
+                    f"            <td>{nombre}</td>\n"
+                    f"        </tr>\n"
+                )
+            else:
+                filas += (
+                    f"        <tr>\n"
+                    f"            <td>{peso:.2f}</td>\n"
+                    f"            <td>{nombre}</td>\n"
+                    f"        </tr>\n"
+                )
+            indice += 1
+    return filas
+
+def generarTotalesHtml(conteo):
+    htmlTotales = (
+        f'    <div class="totales">\n'
+        f'        <p>Total de omnívoros: {conteo["o"]}</p>\n'
+        f'        <p>Total de carnívoros: {conteo["c"]}</p>\n'
+        f'        <p>Total de herbívoros: {conteo["h"]}</p>\n'
+        f'    </div>\n'
+    )
+    return htmlTotales
+
+def crearHtmlInventario():
+    inventario = cargarInventario()
+    if not inventario:
+        messagebox.showerror("Error", "No hay inventario para exportar a HTML.")
+        return
+
+    ordenes = clasificarAnimalesPorOrden(inventario)
+    conteo = contarAnimalesPorOrden(ordenes)
+    ordenNombre = {'o': 'Omnívoro', 'c': 'Carnívoro', 'h': 'Herbívoro'}
+
+    htmlInicio = """<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadistica por Orden</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; width: 60%; margin: 30px auto; }
+        th, td { border: 1px solid #888; padding: 8px 12px; text-align: center; }
+        th { background-color: #4CAF50; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        tr:nth-child(odd) { background-color: #ffffff; }
+        caption { font-size: 1.5em; margin-bottom: 10px; }
+        .totales { width: 60%; margin: 20px auto; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Estadisticas Por Orden</caption>
+        <tr>
+            <th>Orden</th>
+            <th>Peso (kg)</th>
+            <th>Nombre común</th>
+        </tr>
+"""
+
+    filasTabla = generarFilasTablaHtml(ordenes, ordenNombre)
+    htmlFin = "    </table>\n"
+    htmlTotales = generarTotalesHtml(conteo)
+    htmlCierre = "</body>\n</html>\n"
+
+    htmlCompleto = htmlInicio + filasTabla + htmlFin + htmlTotales + htmlCierre
+
+    with open("estadisticasPorOrden.html", "w", encoding="utf-8") as f:
+        f.write(htmlCompleto)
+
+    messagebox.showinfo("Éxito", "Archivo 'inventario.html' creado correctamente.")

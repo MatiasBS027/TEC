@@ -12,7 +12,9 @@ from google.generativeai import GenerativeModel  # Se usa para crear un modelo g
 from PIL import Image, ImageTk  # Se usa para manejar imágenes
 # puede ser necesario usar 'pip install -U google-generativeai' para actualizar la biblioteca gemini v1
 import json
-
+import io
+import ast # se usa para poder evaluar la lista del archivo
+import urllib.request
 """
 Clase Animal que representa un objeto del inventario del zoológico.
 Cada animal posee:
@@ -213,7 +215,9 @@ from google.generativeai import GenerativeModel
 
 def obtenernombresAnimales(cantidad):
     try:
-        genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
+        genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI") 
+        #esta es la api key de gemini es creada personal y unicamente para la tp (que no se filtre) porque se debió pedir en la pagina de gemini
+        #porque se necesita usar esa llave para poder usar la api de gemini 
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
         prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono').\n\n"
@@ -418,6 +422,220 @@ def cargarInventario(archivo="inventario.txt"):
                 print(f"Error cargando línea: {error}")
                 continue
     return inventario
+
+#=======================3. Mostrar inventario =========================
+"""
+instrucciones:crear una ventana 4 en 4 animales para ver el inventario
+y para calificarlos. Dado obligfatoriamente son 20 y se mostrarán 4 por ventana,
+debe tenerse 5 visualizaciones para moverse hacia adelante y hacia atras del inventario.
+Aquí es dónde usted debe calificar al animal, pero 
+validando que pueda calificarlo según el estado. Vaya 
+a la definición de la clase y siga instrucciones. Llame al 
+método correspondiente para modificar, no solicite 
+confirmación. 
+Claro estamos que en la funcionalidad 2 se guardó el URL 
+que proporciona Wikipedia en cada objeto, pero… dado el 
+estado fue aleatorio, use ello para mostrar aquí la 
+imagen según se indica. Por lo visto, estos 4 animales 
+están en estado “vivo”… 
+
+ejemplo:
+_______________________________________________________
+estado                  |   imagen que mostrar
+1.vivo                  |   muestre la imagen del url extraido de wikipedia
+2.enfermo               |   una ambulancia
+3.trasladado(a otro zoo)| una ambulancia
+4.muerto en museo       |   Un simbolo de museo
+5.muerto                |   una calavera
+
+Los diferentes símbolos representan los emojis para calificarlo. Siga las 
+limitantes de la definición de la clase indicadas arriba. Considere que al calificarse el emoji 
+debe mostrarse por alguna estrategia como marcado al dar clic y ser la correcta calificación 
+según el estado.  
+
+"""
+imagenesPorEstado = {
+    2: "ambulancia.png",
+    3: "ambulancia.png",
+    4: "museo.png",
+    5: "calavera.png"
+}
+
+# Cargar la lista del inventario desde el archivo de texto
+def cargarInventario():
+    inventario = []
+    with open("inventario.txt", "r", encoding="utf-8") as archivo:
+        for linea in archivo:
+            linea = linea.strip()
+            if linea:
+                try:
+                    elemento = ast.literal_eval(linea)
+                    inventario.append(elemento)
+                except:
+                    print(" Error al leer una línea, se omitió:", linea)
+    return inventario
+
+
+# Cargar la imagen ya sea desde internet o desde un archivo local
+def cargarImagen(desdeUrlOArchivo):
+    try:
+        if desdeUrlOArchivo.startswith("http"):
+            with urllib.request.urlopen(desdeUrlOArchivo) as respuesta:
+                datosImagen = respuesta.read()
+            imagen = Image.open(io.BytesIO(datosImagen))
+        else:
+            imagen = Image.open(desdeUrlOArchivo)
+
+        imagenRedimensionada = imagen.resize((120, 120))
+        imagenConvertida = ImageTk.PhotoImage(imagenRedimensionada)
+        return imagenConvertida
+    except:
+        return None
+
+# Función principal que muestra el inventario en la ventana
+def mostrarInventarioES():
+    listaAnimales = cargarInventario()
+    paginaMostrada = [0]  # Para manejar la navegación
+
+    ventana = tk.Toplevel()
+    ventana.title("Mostrar inventario")
+    ventana.geometry("600x500")
+
+    marcoPrincipal = tk.Frame(ventana)
+    marcoPrincipal.pack(pady=10)
+
+    listaCuadros = []  # Almacena los frames por animal
+
+    def mostrarPagina():
+        for elemento in marcoPrincipal.winfo_children():
+            elemento.destroy()
+
+        listaCuadros.clear()
+
+        inicio = paginaMostrada[0] * 4
+        final = inicio + 4
+        animalesEnPagina = []
+
+        for i in range(inicio, final):
+            animalesEnPagina.append(listaAnimales[i])
+
+        for posicion in range(len(animalesEnPagina)):
+            animal = animalesEnPagina[posicion]
+            nombres = animal[0]
+            datos = animal[1]
+            enlaceImagen = animal[2]
+
+            estado = datos[0]
+            calificacion = datos[1]
+            orden = datos[2]
+            peso = datos[3]
+
+            cuadroAnimal = tk.Frame(marcoPrincipal, bd=2, relief="groove")
+            fila = posicion // 2
+            columna = posicion % 2
+            cuadroAnimal.grid(row=fila, column=columna, padx=10, pady=10)
+
+            if estado == 1:
+                imagen = cargarImagen(enlaceImagen)
+            else:
+                imagenLocal = imagenesPorEstado[estado]
+                imagen = cargarImagen(imagenLocal)
+
+            if imagen is not None:
+                etiquetaImagen = tk.Label(cuadroAnimal, image=imagen)
+                etiquetaImagen.image = imagen
+                etiquetaImagen.pack()
+
+            nombreComun = nombres[0]
+            nombreCientifico = nombres[1]
+
+            tk.Label(cuadroAnimal, text=nombreComun, font=("Arial", 10, "bold")).pack()
+            tk.Label(cuadroAnimal, text=nombreCientifico, font=("Arial", 9)).pack()
+
+            marcoEmojis = tk.Frame(cuadroAnimal)
+            marcoEmojis.pack()
+
+            def aplicarCalificacion(valorEmoji, frame, posicionAnimal):
+                datosAnimal = listaAnimales[inicio + posicionAnimal]
+                estadoActual = datosAnimal[1][0]
+
+                if valorEmoji == 4:
+                    if estadoActual != 2 and estadoActual != 5:
+                        return
+                if valorEmoji == 5:
+                    if estadoActual != 3:
+                        return
+
+                listaAnimales[inicio + posicionAnimal][1][1] = valorEmoji
+                mostrarPagina()
+
+            for valorEmoji in range(1, 6):
+                if valorEmoji == 1:
+                    emoji = "⭕"
+                elif valorEmoji == 2:
+                    emoji = "👍"
+                elif valorEmoji == 3:
+                    emoji = "⭐"
+                elif valorEmoji == 4:
+                    emoji = "😢"
+                elif valorEmoji == 5:
+                    emoji = "😡"
+
+                estadoActual = listaAnimales[inicio + posicion][1][0]
+                esPermitido = False
+
+                if valorEmoji == 4:
+                    if estadoActual == 2:
+                        esPermitido = True
+                    if estadoActual == 5:
+                        esPermitido = True
+                elif valorEmoji == 5:
+                    if estadoActual == 3:
+                        esPermitido = True
+                elif valorEmoji == 1 or valorEmoji == 2 or valorEmoji == 3:
+                    esPermitido = True
+
+                botonEmoji = tk.Button(
+                    marcoEmojis,
+                    text=emoji,
+                    width=3,
+                    command=lambda v=valorEmoji, f=marcoEmojis, i=posicion: aplicarCalificacion(v, f, i)
+                )
+
+                calificacionActual = listaAnimales[inicio + posicion][1][1]
+                if calificacionActual == valorEmoji:
+                    botonEmoji.config(relief="sunken")
+
+                if not esPermitido:
+                    botonEmoji.config(state="disabled")
+
+                botonEmoji.pack(side="left", padx=2)
+
+    def avanzarPagina():
+        paginaLimite = 4
+        if paginaMostrada[0] < paginaLimite:
+            paginaMostrada[0] += 1
+            mostrarPagina()
+
+    def retrocederPagina():
+        if paginaMostrada[0] > 0:
+            paginaMostrada[0] -= 1
+            mostrarPagina()
+
+    marcoNavegacion = tk.Frame(ventana)
+    marcoNavegacion.pack(pady=5)
+
+    botonAtras = tk.Button(marcoNavegacion, text="⬅️", command=retrocederPagina)
+    botonAtras.pack(side="left", padx=10)
+
+    botonSiguiente = tk.Button(marcoNavegacion, text="➡️", command=avanzarPagina)
+    botonSiguiente.pack(side="left", padx=10)
+
+    mostrarPagina()
+
+
+
+
 
 #=======================4. Estadistica por Estado =========================
 def mostrarEstadisticaPorEstado():

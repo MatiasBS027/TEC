@@ -36,7 +36,14 @@ def accionBoton(numero):
             botones[2]['state'] = 'normal'
     elif numero == 2:
         crearInventarioDesdeInterfaz(ventana)
-        verificarEstadoArchivo()  
+        verificarEstadoArchivo()
+    elif numero == 3:
+        if os.path.exists("inventario.txt"):
+            mostrarInventarioES()
+        else:
+            messagebox.showwarning("Advertencia", "Debes crear primero el inventario (opción 2).")
+
+
     elif numero == 4:
         mostrarEstadisticaPorEstado()
 

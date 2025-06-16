@@ -779,3 +779,82 @@ def crearHtmlInventario():
         f.write(htmlCompleto)
 
     messagebox.showinfo("Éxito", "Archivo 'inventario.html' creado correctamente.")
+
+#=======================6. Generar PDF =========================
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+def seccionCalificacionPDF(pdf, animales, titulo, y, mostrarEstado=False):
+    pdf.setFont("Helvetica-BoldOblique", 11)
+    pdf.drawString(40, y, titulo)
+    y -= 15
+    pdf.setFont("Helvetica-Oblique", 9)
+    pdf.drawString(60, y, "Código")
+    pdf.drawString(120, y, "Nombre común")
+    if mostrarEstado:
+        pdf.drawString(220, y, "Estado")
+    y -= 12
+    pdf.setFont("Helvetica", 10)
+    for i, animal in enumerate(animales[:3], 1):
+        pdf.drawString(60, y, f"{i}.")
+        pdf.drawString(80, y, animal.obtenerId())
+        pdf.drawString(120, y, animal.obtenerNombres()[0])
+        if mostrarEstado:
+            estado = animal.obtenerEstado()
+            if estado == 2:
+                estadoStr = "Enfermo"
+            elif estado == 3:
+                estadoStr = "Traslado"
+            elif estado == 4:
+                estadoStr = "Muerto en museo"
+            elif estado == 5:
+                estadoStr = "Muerto"
+            else:
+                estadoStr = ""
+            pdf.drawString(220, y, estadoStr)
+        y -= 12
+    return y - 8
+
+def generarPDFEstadisticaPorCalificacion():
+    inventario = cargarInventario()
+    if not inventario:
+        messagebox.showerror("Error", "No hay inventario para generar PDF.")
+        return
+
+    clasificaciones = {
+        1: "No marcado",
+        2: "Me gusta",
+        3: "Favorito",
+        4: "Me entristece",
+        5: "Me enoja"
+    }
+    animalesPorCalificacion = {k: [] for k in clasificaciones}
+    for animal in inventario:
+        calif = animal.obtenerCalificacion()
+        if calif in animalesPorCalificacion:
+            animalesPorCalificacion[calif].append(animal)
+
+    pdf = canvas.Canvas("estadisticaPorCalificacion.pdf", pagesize=letter)
+    pdf.setTitle("Estadística por Calificación")
+    y = 760
+    pdf.setFont("Helvetica-Bold", 13)
+    pdf.drawString(40, y, "Estadística por Calificación")
+    y -= 30
+
+    y = seccionCalificacionPDF(pdf, animalesPorCalificacion[1], "No marcado", y)
+    y = seccionCalificacionPDF(pdf, animalesPorCalificacion[2], "Me gusta", y)
+    y = seccionCalificacionPDF(pdf, animalesPorCalificacion[3], "Favorito", y)
+    y = seccionCalificacionPDF(pdf, animalesPorCalificacion[4], "Me entristece", y, mostrarEstado=True)
+    y = seccionCalificacionPDF(pdf, animalesPorCalificacion[5], "Me enoja", y, mostrarEstado=True)
+
+    # Totales
+    pdf.setFont("Helvetica-Bold", 11)
+    pdf.drawString(40, y, "Totales:")
+    y -= 15
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(60, y, f"No marcado: {len(animalesPorCalificacion[1])}   Me gusta: {len(animalesPorCalificacion[2])}   Favorito: {len(animalesPorCalificacion[3])}")
+    y -= 12
+    pdf.drawString(60, y, f"Me entristece: {len(animalesPorCalificacion[4])}   Me enoja: {len(animalesPorCalificacion[5])}")
+
+    pdf.save()
+    messagebox.showinfo("Éxito", "PDF generado como 'estadisticaPorCalificacion.pdf'.")

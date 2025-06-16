@@ -35,7 +35,7 @@ def accionBoton(numero):
         if 2 in botones:
             botones[2]['state'] = 'normal'
     elif numero == 2:
-        crearInventarioDesdeInterfaz(ventana)
+        crearInventarioDesdeInterfaz() 
         verificarEstadoArchivo()
     elif numero == 3:
         if os.path.exists("inventario.txt"):
@@ -46,6 +46,8 @@ def accionBoton(numero):
         mostrarEstadisticaPorEstado()
     elif numero == 5:
         crearHtmlInventario()
+    elif numero == 6:
+        generarPDFEstadisticaPorCalificacion()
 
 def cerrarAplicacion():
     ventana.destroy()

@@ -221,7 +221,8 @@ def obtenernombresAnimales(cantidad):
         genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
-        prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono' o 'Gamba').\n\n"
+        prompt = (f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones."
+                "(no me des nombres muy generales como 'mono', 'Gamba', 'ballena', 'gato', 'lagartija' o cosas que no espeficiquen a un animal en particular).\n\n")
         respuesta = modelo.generate_content(prompt)
         
         texto = respuesta.text.strip()
@@ -238,8 +239,6 @@ def obtenernombresAnimales(cantidad):
 
     except Exception as e:
         raise Exception(f"Error al obtener lista de animales: {str(e)}")
-
-
 
 def obtenerListaES(cantidadTexto, ventana):
     # Verificar si el archivo ya existe
@@ -301,7 +300,7 @@ def pedirDatosAnimalAGemini(nombreComun):
     espera=10
     prompt = (
         f"Dame la siguiente información del animal '{nombreComun}' en español, "
-        "en formato JSON con las claves: nombre_cientifico, url_imagen, orden. "
+        "en formato JSON con las claves: nombre_cientifico, url_imagen(formato de png), orden. "
         "El orden debe ser 'c' para carnívoro, 'h' para herbívoro, 'o' para omnívoro. "
         "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}")
     genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
@@ -361,6 +360,7 @@ def crearInventarioDesdeInterfaz(ventana):
             datos = pedirDatosAnimalAGemini(nombre)
             animal = crearAnimal(nombre, datos)
             inventario.append(animal)
+            time.sleep(2)  # Espera para evitar sobrecargar la API
         except Exception as e:
             print(f"Error obteniendo datos de '{nombre}': {e}")
             animal = Animal(nombre, "Desconocido", "", "o")
@@ -368,7 +368,6 @@ def crearInventarioDesdeInterfaz(ventana):
 
     guardarInventario(inventario)  # Guardar en archivo
     messagebox.showinfo("Éxito", "Inventario de 20 animales creado correctamente.")
-    ventana.destroy()
     return inventario
 
 def guardarInventario(inventario, archivo="inventario.txt"):
@@ -827,7 +826,7 @@ def seccionCalificacionPDF(pdf, animales, titulo, y, mostrarEstado=False):
         pdf.drawString(220, y, "Estado")
     y -= 12
     pdf.setFont("Helvetica", 10)
-    for i, animal in enumerate(animales[:3], 1):
+    for i, animal in enumerate(animales, 1):
         pdf.drawString(60, y, f"{i}.")
         pdf.drawString(80, y, animal.obtenerId())
         pdf.drawString(120, y, animal.obtenerNombres()[0])

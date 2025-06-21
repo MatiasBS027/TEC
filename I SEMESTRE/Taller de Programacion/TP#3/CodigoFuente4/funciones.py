@@ -1,8 +1,10 @@
 # Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
 # Fecha de creación: 11/06/2025
-# Última modificación: 11/06/2025 21:15
+# Última modificación: 21/06/2025 21:15
 # Python versión 3.13.2
 
+from clase import Animal  # Importar la clase Animal desde el archivo clase.py
+from archivo import *   
 import tkinter as tk            # Se usa para la interfaz gráfica
 from tkinter import messagebox  # Se usa para mostrar mensajes emergentes al usuario
 import os                       # Se usa para verificar si existe un archivo y manejar rutas del sistema
@@ -16,181 +18,6 @@ import ast
 import io
 import urllib.request
 import time
-
-
-"""
-Clase Animal que representa un objeto del inventario del zoológico.
-Cada animal posee:
-- Un ID único basado en su nombre común.
-- Una tupla con su nombre común y nombre científico.
-- Una URL con la imagen del animal.
-- Una lista con información adicional: estado, calificación, orden y peso.
-"""
-
-class Animal:
-    contadorGlobal = 1  # Atributo de clase para llevar la secuencia de IDs
-
-    def __init__(self, nombreComun, nombreCientifico, url, orden):
-        """
-        Constructor que inicializa un objeto Animal.
-        Se le asigna automáticamente:
-        - Un ID según la convención: primera y última letra del nombre + número secuencial.
-        - Un estado aleatorio (entre 1 y 5).
-        - Un peso aleatorio según el orden del animal.
-        """
-        self.__id = self.crearId(nombreComun)
-        self.__nombres = (nombreComun, nombreCientifico)
-        self.__url = url
-        self.__info = [0, 1, '', 0.0]  # [estado, calificación, orden, peso]
-        self.asignarEstadoAleatorio()
-        self.asignarOrdenYPeso(orden)
-
-    # =================== ID ===================
-    def crearId(self, nombre):
-        """
-        Crea un ID basado en la primera y última letra del nombre común,
-        más un número secuencial no repetido.
-        """
-        nombre = nombre.strip().lower()
-        primera = nombre[0]
-        ultima = nombre[-1]
-        codigo = f"{primera}{ultima}{Animal.contadorGlobal:02}"
-        Animal.contadorGlobal += 1
-        return codigo
-
-    def obtenerId(self):
-        return self.__id
-
-    def mostrarId(self):
-        print(self.__id)
-
-    # =================== Nombres ===================
-    def asignarNombres(self, nombreComun, nombreCientifico):
-        """
-        Asigna una nueva tupla de nombres al animal.
-        """
-        self.__nombres = (nombreComun, nombreCientifico)
-
-    def obtenerNombres(self):
-        return self.__nombres
-
-    def mostrarNombres(self):
-        print(self.__nombres[0])
-        print(self.__nombres[1])
-
-    # =================== URL ===================
-    def asignarUrl(self, nuevaUrl):
-        """
-        Actualiza la URL de la imagen del animal.
-        """
-        self.__url = nuevaUrl
-
-    def obtenerUrl(self):
-        return self.__url
-
-    def mostrarUrl(self):
-        print(self.__url)
-
-    # =================== Estado ===================
-    def asignarEstadoAleatorio(self):
-        """
-        Asigna un estado aleatorio entre 1 y 5 al animal:
-        1=vivo, 2=enfermo, 3=trasladado, 4=muerto en museo, 5=muerto
-        """
-        import random
-        self.__info[0] = random.randint(1, 5)
-
-    def obtenerEstado(self):
-        return self.__info[0]
-
-    def mostrarEstado(self):
-        print(self.__info[0])
-
-    # =================== Calificación ===================
-    def asignarCalificacion(self, valor):
-        """
-        Asigna una calificación del usuario, si es válida según el estado:
-        1=No marcado, 2=Me gusta, 3=Favorito, 4=Me entristece, 5=Me enoja
-        Restricciones:
-        - 4 solo si estado es 2 (enfermo) o 5 (muerto)
-        - 5 solo si estado es 3 (trasladado)
-        """
-        estado = self.__info[0]
-        if valor == 4 and estado not in [2, 5]:
-            print("Solo puedes marcar 'me entristece' si está enfermo o muerto.")
-            return
-        if valor == 5 and estado != 3:
-            print("Solo puedes marcar 'me enoja' si fue trasladado.")
-            return
-        if valor < 1 or valor > 5:
-            print("Calificación no válida.")
-            return
-        self.__info[1] = valor
-
-    def obtenerCalificacion(self):
-        return self.__info[1]
-
-    def mostrarCalificacion(self):
-        print(self.__info[1])
-
-    # =================== Orden y Peso ===================
-    def asignarOrdenYPeso(self, orden):
-        """
-        Asigna el orden del animal y su peso estimado:
-        - 'h' (herbívoros): entre 80.0 y 100.0 kg
-        - 'c' o 'o' (carnívoros u omnívoros): entre 0.0 y 80.0 kg
-        """
-        import random
-        orden = orden.lower()
-        if orden not in ['c', 'h', 'o']:
-            print("Orden debe ser 'c', 'h' u 'o'.")
-            return
-        self.__info[2] = orden
-        if orden == 'h':
-            self.__info[3] = round(random.uniform(80.0, 100.0), 2)
-        else:
-            self.__info[3] = round(random.uniform(0.0, 80.0), 2)
-
-    def obtenerOrdenYPeso(self):
-        return self.__info[2], self.__info[3]
-
-    def mostrarOrdenYPeso(self):
-        print(self.__info[2])
-        print(self.__info[3])
-
-    # =================== Todo el objeto ===================
-    def obtenerDatos(self):
-        """
-        Devuelve todos los atributos del objeto en una lista.
-        Orden: id, nombre común, nombre científico, url, estado, calificación, orden, peso
-        """
-        return [
-            self.__id,
-            self.__nombres[0],
-            self.__nombres[1],
-            self.__url,
-            self.__info[0],
-            self.__info[1],
-            self.__info[2],
-            self.__info[3]
-        ]
-
-    def mostrarDatos(self):
-        """
-        Muestra en consola todos los atributos del objeto.
-        """
-        self.mostrarId()
-        self.mostrarNombres()
-        self.mostrarUrl()
-        self.mostrarEstado()
-        self.mostrarCalificacion()
-        self.mostrarOrdenYPeso()
-
-    def asignarEstado(self, estado):
-        self.__info[0] = estado
-
-    def asignarPeso(self, peso):
-        self.__info[3] = peso
 
 #=======================1. obtener lista =========================
 """
@@ -278,16 +105,6 @@ def obtenerListaES(cantidadTexto, ventana):
         messagebox.showerror("Error", f"No se pudo obtener la lista de animales: {str(e)}")
 
 #=======================2. Crear Inventario =========================
-def leerNombresAnimales():
-    nombres = []
-    if not os.path.exists("nombresAnimales.txt"):
-        return nombres
-    with open("nombresAnimales.txt", "r", encoding="utf-8") as f:
-        for linea in f:
-            nombre = linea.strip()
-            if nombre != "":
-                nombres.append(nombre)
-    return nombres
 
 def seleccionarNombresAleatorios(nombres, cantidad):
     if len(nombres) < cantidad:
@@ -382,80 +199,7 @@ def guardarInventario(inventario, archivo="inventario.txt"):
             url = animal.obtenerUrl()
             f.write(f"{[nombres, info, url]}\n")
 
-def cargarInventario(archivo="inventario.txt"):
-    if not os.path.exists(archivo):
-        return []
-    inventario = []
-    with open(archivo, "r", encoding="utf-8") as file:
-        for linea in file:
-            linea = linea.strip()
-            if not linea:
-                continue
-            try:
-                iniNombres = linea.find('(')
-                finNombres = linea.find(')')
-                nombresStr = linea[iniNombres + 1:finNombres]
-                nombresSplit = nombresStr.split(',')
-                nombreComun = nombresSplit[0].strip().strip("'")
-                nombreCientifico = nombresSplit[1].strip().strip("'")
-
-                iniInfo = linea.find('[', finNombres)
-                finInfo = linea.find(']', iniInfo)
-                infoStr = linea[iniInfo + 1:finInfo]
-                infoSplit = infoStr.split(',')
-                estado = int(infoSplit[0].strip().strip("'"))
-                calificacion = int(infoSplit[1].strip().strip("'"))
-                orden = infoSplit[2].strip().strip("'")
-                peso = float(infoSplit[3].strip().strip("'"))
-
-                urlIni = linea.find("'", finInfo)
-                urlFin = linea.rfind("'")
-                if urlIni != -1 and urlFin != -1 and urlFin > urlIni:
-                    url = linea[urlIni + 1:urlFin]
-                else:
-                    url = ""
-                animal = Animal(nombreComun, nombreCientifico, url, orden)
-                animal.asignarEstado(estado)
-                animal.asignarCalificacion(calificacion)
-                animal.asignarOrdenYPeso(orden)
-                animal.asignarPeso(peso)
-                inventario.append(animal)
-            except Exception as error:
-                print(f"Error cargando línea: {error}")
-                continue
-    return inventario
 #=======================3. Mostrar inventario =========================
-"""
-instrucciones:crear una ventana 4 en 4 animales para ver el inventario
-y para calificarlos. Dado obligfatoriamente son 20 y se mostrarán 4 por ventana,
-debe tenerse 5 visualizaciones para moverse hacia adelante y hacia atras del inventario.
-Aquí es dónde usted debe calificar al animal, pero
-validando que pueda calificarlo según el estado. Vaya
-a la definición de la clase y siga instrucciones. Llame al
-método correspondiente para modificar, no solicite
-confirmación.
-Claro estamos que en la funcionalidad 2 se guardó el URL
-que proporciona Wikipedia en cada objeto, pero… dado el
-estado fue aleatorio, use ello para mostrar aquí la
-imagen según se indica. Por lo visto, estos 4 animales
-están en estado “vivo”…
-
-ejemplo:
-
-estado | imagen que mostrar
-1.vivo | muestre la imagen del url extraido de wikipedia
-2.enfermo | una ambulancia
-3.trasladado(a otro zoo)| una ambulancia
-4.muerto en museo | Un simbolo de museo
-5.muerto | una calavera
-
-Los diferentes símbolos representan los emojis para calificarlo. Siga las
-limitantes de la definición de la clase indicadas arriba. Considere que al calificarse el emoji
-debe mostrarse por alguna estrategia como marcado al dar clic y ser la correcta calificación
-según el estado.
-
-"""
-
 
 imagenesPorEstado = {
     2: "ambulancia.jpg",
@@ -463,19 +207,6 @@ imagenesPorEstado = {
     4: "museo.jpg",
     5: "calavera.jpg"
 }
-
-def cargarMostrarInventario():
-    inventario = []
-    with open("inventario.txt", "r", encoding="utf-8") as archivo:
-        for linea in archivo:
-            linea = linea.strip()
-            if linea:
-                try:
-                    elemento = ast.literal_eval(linea)
-                    inventario.append(elemento)
-                except:
-                    print(" Error al leer una línea, se omitió:", linea)
-    return inventario
 
 def cargarImagen(desdeUrlOArchivo):
     try:

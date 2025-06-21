@@ -35,7 +35,7 @@ def accionBoton(numero):
         if 2 in botones:
             botones[2]['state'] = 'normal'
     elif numero == 2:
-        crearInventarioDesdeInterfaz() 
+        crearInventarioDesdeInterfaz(ventana)
         verificarEstadoArchivo()
     elif numero == 3:
         if os.path.exists("inventario.txt"):

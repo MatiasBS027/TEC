@@ -15,6 +15,7 @@ import json
 import ast
 import io
 import urllib.request
+import time
 
 
 """
@@ -220,7 +221,7 @@ def obtenernombresAnimales(cantidad):
         genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
-        prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono').\n\n"
+        prompt = f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones.(no me des nombres muy generales como 'mono' o 'Gamba').\n\n"
         respuesta = modelo.generate_content(prompt)
         
         texto = respuesta.text.strip()
@@ -296,6 +297,8 @@ def seleccionarNombresAleatorios(nombres, cantidad):
     return seleccionados
 
 def pedirDatosAnimalAGemini(nombreComun):
+    reintentos=3
+    espera=10
     prompt = (
         f"Dame la siguiente información del animal '{nombreComun}' en español, "
         "en formato JSON con las claves: nombre_cientifico, url_imagen, orden. "
@@ -303,36 +306,36 @@ def pedirDatosAnimalAGemini(nombreComun):
         "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}")
     genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
     modelo = GenerativeModel('gemini-1.5-flash')
-    try:
-        respuesta = modelo.generate_content(prompt)
-        texto = respuesta.text.strip()
-    except Exception as e:
-        if "429" in str(e):
-            raise RuntimeError("Has superado el límite de peticiones de Gemini. Intenta más tarde.")
-        else:
-            raise e
-    if not texto:
-        raise ValueError("Respuesta vacía de Gemini")
-    # Extraer JSON 
-    inicio = texto.find('{')
-    fin = texto.rfind('}')
-    if inicio != -1 and fin != -1 and fin > inicio:
-        jsonTexto = texto[inicio:fin+1]
-        if texto.strip().startswith('['):
-            try:
-                lista = json.loads(texto)
-                if isinstance(lista, list) and len(lista) > 0:
-                    return lista[0]
-            except Exception:
-                pass  
-            # Extraer primer objeto de la lista manualmente
-            primerObjeto = texto[texto.find('{'):texto.find('}')+1]
-            return json.loads(primerObjeto)
-        else:
-            return json.loads(jsonTexto)
-    else:
-        print(f"Respuesta inesperada de Gemini para '{nombreComun}': {texto}")
-        raise ValueError("No se encontró JSON válido en la respuesta de Gemini.")
+    for intento in range(reintentos):
+        try:
+            respuesta = modelo.generate_content(prompt)
+            texto = respuesta.text.strip()
+            # Extraer JSON 
+            inicio = texto.find('{')
+            fin = texto.rfind('}')
+            if inicio != -1 and fin != -1 and fin > inicio:
+                jsonTexto = texto[inicio:fin+1]
+                if texto.strip().startswith('['):
+                    try:
+                        lista = json.loads(texto)
+                        if isinstance(lista, list) and len(lista) > 0:
+                            return lista[0]
+                    except Exception:
+                        pass  
+                    primerObjeto = texto[texto.find('{'):texto.find('}')+1]
+                    return json.loads(primerObjeto)
+                else:
+                    return json.loads(jsonTexto)
+            else:
+                print(f"Respuesta inesperada de Gemini para '{nombreComun}': {texto}")
+                raise ValueError("No se encontró JSON válido en la respuesta de Gemini.")
+        except Exception as e:
+            if "429" in str(e) or "límite" in str(e).lower():
+                print(f"Límite alcanzado, esperando {espera} segundos antes de reintentar...")
+                time.sleep(espera)
+            else:
+                raise e
+    raise RuntimeError("Has superado el límite de peticiones de Gemini. Intenta más tarde.")
 
 def crearAnimal(nombreComun, datos):
     nombreCientifico = datos.get("nombre_cientifico", "Desconocido")

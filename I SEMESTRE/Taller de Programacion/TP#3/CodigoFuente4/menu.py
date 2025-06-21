@@ -1,6 +1,6 @@
 #Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
 #fecha de creación 11/06/2025
-#última modificación 11/06/2025 20:00
+#última modificación 21/06/2025 20:00
 #python versión 3.13.2
 
 import tkinter as tk

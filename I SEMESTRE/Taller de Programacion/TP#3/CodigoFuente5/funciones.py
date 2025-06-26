@@ -1,7 +1,7 @@
 # Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
 # Fecha de creación: 11/06/2025
 # Última modificación: 21/06/2025 21:15
-# Python versión 3.13.2
+# Python versión 3.11.2
 
 from clase import Animal  # Importar la clase Animal desde el archivo clase.py
 from archivo import *   
@@ -18,6 +18,8 @@ import ast
 import io
 import urllib.request
 import time
+import csv
+import ast
 
 #=======================1. obtener lista =========================
 """
@@ -201,6 +203,13 @@ def guardarInventario(inventario, archivo="inventario.txt"):
 
 #=======================3. Mostrar inventario =========================
 
+
+import tkinter as tk
+from PIL import Image, ImageTk
+import urllib.request
+import io
+import os
+
 imagenesPorEstado = {
     2: "ambulancia.jpg",
     3: "ambulancia.jpg",
@@ -237,7 +246,7 @@ def mostrarInventarioES():
     }
 
     listaAnimales = cargarMostrarInventario()
-    paginaMostrada = [0]  # Para manejar la navegación
+    paginaMostrada = [0]
 
     ventana = tk.Toplevel()
     ventana.title("Mostrar inventario")
@@ -246,28 +255,24 @@ def mostrarInventarioES():
     marcoPrincipal = tk.Frame(ventana)
     marcoPrincipal.pack(pady=10)
 
-    listaCuadros = []  # Almacena los frames por animal
-
     def mostrarPagina():
-        for elemento in marcoPrincipal.winfo_children():
-            elemento.destroy()
-
-        listaCuadros.clear()
+        for widget in marcoPrincipal.winfo_children():
+            widget.destroy()
 
         inicio = paginaMostrada[0] * 4
         final = inicio + 4
         animalesEnPagina = []
 
         for i in range(inicio, final):
-            animalesEnPagina.append(listaAnimales[i])
+            if i < len(listaAnimales):
+                animalesEnPagina.append(listaAnimales[i])
 
-        for posicion in range(len(animalesEnPagina)):
-            animal = animalesEnPagina[posicion]
+        for posicion, animal in enumerate(animalesEnPagina):
             nombres = animal[0]
             datos = animal[1]
             enlaceImagen = animal[2]
 
-            estado = int(datos[0])  # Conversión explícita a entero
+            estado = int(datos[0])
             calificacion = datos[1]
             orden = datos[2]
             peso = datos[3]
@@ -277,8 +282,9 @@ def mostrarInventarioES():
             columna = posicion % 2
             cuadroAnimal.grid(row=fila, column=columna, padx=10, pady=10)
 
+            # Cargar imagen
             imagen = None
-            if estado == 1 and enlaceImagen.strip() != "":
+            if estado == 1 and enlaceImagen.strip() != "" and enlaceImagen.strip().lower() != "none":
                 imagen = cargarImagen(enlaceImagen)
                 if imagen is None:
                     print(f"[INFO] Imagen desde URL falló para '{nombres[0]}'")
@@ -291,46 +297,28 @@ def mostrarInventarioES():
                     print(f"[ADVERTENCIA] Imagen local no encontrada: {imagenLocal}")
                     imagen = cargarImagen("imagen-no-disponible.png")
 
-            if imagen is not None:
+            if imagen:
                 etiquetaImagen = tk.Label(cuadroAnimal, image=imagen)
                 etiquetaImagen.image = imagen
                 etiquetaImagen.pack()
 
-            nombreComun = nombres[0]
-            nombreCientifico = nombres[1]
-
-            tk.Label(cuadroAnimal, text=nombreComun, font=("Arial", 10, "bold")).pack()
-            tk.Label(cuadroAnimal, text=nombreCientifico, font=("Arial", 9)).pack()
-            textoEstado = estadoTexto.get(estado, "Desconocido")
-            tk.Label(cuadroAnimal, text=f"Estado: {textoEstado}", font=("Arial", 8, "italic")).pack()
+            tk.Label(cuadroAnimal, text=nombres[0], font=("Arial", 10, "bold")).pack()
+            tk.Label(cuadroAnimal, text=nombres[1], font=("Arial", 9)).pack()
+            tk.Label(cuadroAnimal, text=f"Estado: {estadoTexto.get(estado, 'Desconocido')}", font=("Arial", 8, "italic")).pack()
 
             marcoEmojis = tk.Frame(cuadroAnimal)
             marcoEmojis.pack()
 
-            def aplicarCalificacion(valorEmoji, frame, posicionAnimal):
-                datosAnimal = listaAnimales[inicio + posicionAnimal]
-                estadoActual = int(datosAnimal[1][0])
-
-                if valorEmoji == 4 and estadoActual not in (2, 5):
-                    return
-                if valorEmoji == 5 and estadoActual != 3:
-                    return
-
+            def aplicarCalificacion(valorEmoji, posicionAnimal):
                 listaAnimales[inicio + posicionAnimal][1][1] = valorEmoji
-
-                # Guardar todos los cambios en archivo
                 with open("inventario.txt", "w", encoding="utf-8") as archivo:
                     for animal in listaAnimales:
                         archivo.write(f"{animal}\n")
-
                 mostrarPagina()
-
-            def crearBotonEmoji(valorEmoji, frame, posicionAnimal):
-                return lambda: aplicarCalificacion(valorEmoji, frame, posicionAnimal)
 
             for valorEmoji in range(1, 6):
                 if valorEmoji == 1:
-                    emoji = "⭕"
+                    emoji = "❤️"
                 elif valorEmoji == 2:
                     emoji = "👍"
                 elif valorEmoji == 3:
@@ -340,35 +328,30 @@ def mostrarInventarioES():
                 elif valorEmoji == 5:
                     emoji = "😡"
 
-                estadoActual = int(listaAnimales[inicio + posicion][1][0])
-                esPermitido = False
-
-                if valorEmoji == 4:
-                    esPermitido = estadoActual in (2, 5)
-                elif valorEmoji == 5:
-                    esPermitido = estadoActual == 3
+                # NUEVA lógica de activación
+                if estado == 1:
+                    esPermitido = valorEmoji in (1, 2, 3)
                 else:
-                    esPermitido = True
+                    esPermitido = valorEmoji in (4, 5)
 
                 botonEmoji = tk.Button(
                     marcoEmojis,
                     text=emoji,
                     width=3,
-                    command=crearBotonEmoji(valorEmoji, marcoEmojis, posicion)
+                    font=("Segoe UI Emoji", 12),
+                    command=lambda ve=valorEmoji, pa=posicion: aplicarCalificacion(ve, pa)
                 )
 
-                calificacionActual = listaAnimales[inicio + posicion][1][1]
-                if calificacionActual == valorEmoji:
+                if calificacion == valorEmoji:
                     botonEmoji.config(relief="sunken")
-
                 if not esPermitido:
                     botonEmoji.config(state="disabled")
 
                 botonEmoji.pack(side="left", padx=2)
 
     def avanzarPagina():
-        paginaLimite = 4
-        if paginaMostrada[0] < paginaLimite:
+        totalPaginas = (len(listaAnimales) - 1) // 4
+        if paginaMostrada[0] < totalPaginas:
             paginaMostrada[0] += 1
             mostrarPagina()
 
@@ -380,13 +363,11 @@ def mostrarInventarioES():
     marcoNavegacion = tk.Frame(ventana)
     marcoNavegacion.pack(pady=5)
 
-    botonAtras = tk.Button(marcoNavegacion, text="⬅️", command=retrocederPagina)
-    botonAtras.pack(side="left", padx=10)
-
-    botonSiguiente = tk.Button(marcoNavegacion, text="➡️", command=avanzarPagina)
-    botonSiguiente.pack(side="left", padx=10)
+    tk.Button(marcoNavegacion, text="⬅️", command=retrocederPagina).pack(side="left", padx=10)
+    tk.Button(marcoNavegacion, text="➡️", command=avanzarPagina).pack(side="left", padx=10)
 
     mostrarPagina()
+
 
 
 #=======================4. Estadistica por Estado =========================
@@ -620,3 +601,172 @@ def generarPDFEstadisticaPorCalificacion():
 
     pdf.save()
     messagebox.showinfo("Éxito", "PDF generado como 'estadisticaPorCalificacion.pdf'.")
+
+#========================================== 7. generar csv ===================================
+
+"""
+indicaciones: como ya es de su conocimiento, exporte la lista completa de objetos a un .csv, separado por comas,
+para que pueda ser abierto en 'Excel' y se pueda corroborar la correctitud de cada reporte.
+"""
+def exportarInventarioACSV():
+    try:
+        with open("inventario.txt", "r", encoding="utf-8") as archivo:
+            lineas = archivo.readlines()
+        
+        datos_convertidos = []
+        for linea in lineas:
+            linea = linea.strip()
+            if not linea:
+                continue  # Saltar líneas vacías 
+            try:
+                item = ast.literal_eval(linea)
+                
+                if isinstance(item, list) and len(item) == 3:
+                    (nombre, familia) = item[0]
+                    fila, columna, estado, peso = item[1]
+                    url = item[2]
+
+                    # Añadir fila a lista
+                    datos_convertidos.append([
+                        nombre, familia, fila, columna, estado, peso, url
+                    ])
+                else:
+                    print(f"Línea malformada: {linea}") 
+            except Exception as e:
+                print(f"❌ Error al procesar línea:\n{linea}\nDetalles: {e}")
+
+        # Verificamos si se recolectaron datos
+        if not datos_convertidos:
+            print("⚠️ No se encontraron datos válidos para exportar.")
+            return
+
+        # Escribir en CSV
+        with open("inventario.csv", "w", newline="", encoding="utf-8") as csvfile:
+            escritor = csv.writer(csvfile)
+            escritor.writerow(["Nombre", "Familia", "Fila", "Columna", "Estado", "Peso", "Imagen URL"])
+            escritor.writerows(datos_convertidos)
+
+        print("✅ Archivo 'inventario.csv' creado correctamente con datos.")
+    
+    except FileNotFoundError:
+        print("❌ El archivo 'inventario.txt' no fue encontrado.")
+    except Exception as e:
+        print(f"❌ Error inesperado: {e}")
+
+#======================================= 8. busqueda por Orden ================================
+def buscarPorOrdenES():
+    import webbrowser
+    from tkinter import ttk, messagebox
+    import tkinter as tk  # Se debe importar para evitar errores si se ejecuta esta función de forma independiente
+
+    # Diccionario que mapea la primera letra del tipo de alimentación con su nombre completo
+    ordenMapeo = {
+        "c": "Carnívoro",
+        "h": "Herbívoro",
+        "o": "Omnívoro"
+    }
+
+    def generarHTML(animales, ordenSeleccionado):
+        """
+        Esta función recibe una lista de animales y el nombre del orden seleccionado.
+        Luego, genera un archivo HTML que muestra los animales de ese orden en una tabla,
+        con su nombre común, nombre científico y una imagen.
+        """
+        nombreArchivo = f"animales_{ordenSeleccionado.lower()}.html"
+
+        with open(nombreArchivo, "w", encoding="utf-8") as archivo:
+            # Estructura básica del HTML
+            archivo.write("<!DOCTYPE html>\n<html lang='es'>\n<head>\n")
+            archivo.write("<meta charset='UTF-8'>\n<title>Animales por Orden</title>\n")
+            archivo.write("<style>\n")
+            archivo.write("table { border-collapse: collapse; width: 100%; }\n")
+            archivo.write("th, td { border: 1px solid black; padding: 8px; text-align: center; }\n")
+            archivo.write("th { background-color: #ccc; }\n")
+            archivo.write("tr:nth-child(even) {background-color: #d0e7ff; }\n")
+            archivo.write("tr:nth-child(odd) { background-color: #ffffff; }\n")
+            archivo.write("caption { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: red; }\n")
+            archivo.write("</style>\n</head>\n<body>\n")
+
+            # Cabecera de la tabla
+            archivo.write(f"<table>\n<caption>Animales {ordenSeleccionado}s</caption>\n")
+            archivo.write("<tr><th>Código</th><th>Nombre común</th><th>Nombre científico</th><th>Foto</th></tr>\n")
+
+            # Se recorren los animales y se agregan a la tabla
+            for i, animal in enumerate(animales, start=1):
+                nombreComun = animal[0][0]
+                nombreCientifico = animal[0][1]
+                url = animal[2]
+
+                # Si no hay imagen, se pone una imagen genérica
+                if url.strip() == "":
+                    url = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Image_not_available.png/480px-Image_not_available.png"
+
+                archivo.write(f"<tr><td>{i}</td><td>{nombreComun}</td><td>{nombreCientifico}</td>")
+                archivo.write(f"<td><img src='{url}' alt='Imagen' width='100'></td></tr>\n")
+
+            archivo.write("</table>\n</body>\n</html>")
+
+        # Abre automáticamente el archivo HTML generado
+        webbrowser.open(nombreArchivo)
+
+    def mostrar():
+        """
+        Esta función se activa al presionar el botón 'Mostrar'. 
+        Verifica si el orden es válido, filtra los animales y llama a la función de generar HTML.
+        """
+        seleccion = comboOrden.get()
+
+        if seleccion not in ("Carnívoro", "Herbívoro", "Omnívoro"):
+            messagebox.showwarning("Selección inválida", "Por favor seleccione un orden válido.")
+            return
+
+        # Encuentra la letra que representa el orden (c, h, o)
+        letraOrden = ""
+        for k, v in ordenMapeo.items():
+            if v == seleccion:
+                letraOrden = k
+                break
+
+        # Carga todo el inventario
+        animales = cargarMostrarInventario()
+
+        # Filtra los animales que coinciden con el orden
+        filtrados = []
+        for a in animales:
+            if a[1][2].lower() == letraOrden:
+                filtrados.append(a)
+
+        # Muestra mensaje si no hay resultados
+        if not filtrados:
+            mensaje = f"No hay animales del orden {seleccion}."
+            messagebox.showinfo("Sin resultados", mensaje)
+        else:
+            generarHTML(filtrados, seleccion)
+
+    def limpiar():
+        """
+        Limpia la selección del combobox.
+        """
+        comboOrden.set("==Seleccionar==")
+
+    # ================== Interfaz gráfica ==================
+    ventana = tk.Toplevel()
+    ventana.title("Mostrar por Orden")
+    ventana.geometry("300x150")
+
+    tk.Label(ventana, text="Orden").pack(pady=5)
+
+    # Combobox para seleccionar el orden
+    comboOrden = ttk.Combobox(ventana, state="readonly", values=["Carnívoro", "Herbívoro", "Omnívoro"])
+    comboOrden.set("--Seleccionar--")
+    comboOrden.pack()
+
+    # Botones
+    marcoBotones = tk.Frame(ventana)
+    marcoBotones.pack(pady=10)
+
+    btnMostrar = tk.Button(marcoBotones, text="Mostrar", command=mostrar)
+    btnMostrar.pack(side="left", padx=5)
+
+    btnLimpiar = tk.Button(marcoBotones, text="Limpiar", command=limpiar)
+    btnLimpiar.pack(side="left", padx=5)

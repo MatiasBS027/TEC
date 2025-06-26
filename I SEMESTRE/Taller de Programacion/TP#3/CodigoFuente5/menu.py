@@ -1,7 +1,7 @@
 #Elaborado por Luis Carlos Tinoco y Matías Benavides Sandoval
 #fecha de creación 11/06/2025
 #última modificación 21/06/2025 20:00
-#python versión 3.13.2
+#python versión 3.11.2
 
 import tkinter as tk
 from tkinter import messagebox
@@ -48,7 +48,15 @@ def accionBoton(numero):
         crearHtmlInventario()
     elif numero == 6:
         generarPDFEstadisticaPorCalificacion()
-
+    elif numero == 7:
+        if os.path.exists("inventario.txt"):
+            exportarInventarioACSV()
+            messagebox.showinfo("CSV Generado", "Se ha creado el archivo 'inventario.csv' correctamente.")
+        else:
+            messagebox.showwarning("Advertencia", "Debes crear primero el inventario (opción 2).")
+    elif numero == 8:
+        buscarPorOrdenES()
+        
 def cerrarAplicacion():
     ventana.destroy()
 

@@ -33,6 +33,16 @@ información de los animales a Gemini.
     """
 
 def validarCantidadAux(cantidadTexto):
+    """
+    Funcionalidad:
+    - Valida que la cantidad ingresada sea un número entero positivo.
+
+    Entradas:
+    - cantidadTexto: str, texto ingresado por el usuario.
+
+    Salidas:
+    - Retorna una tupla (bool, int/str). Si es válido, True y el número; si no, False y mensaje de error.
+    """
     try:
         cantidad = int(cantidadTexto)
         if cantidad <= 0:
@@ -46,6 +56,16 @@ import google.generativeai as genai
 from google.generativeai import GenerativeModel
 
 def obtenernombresAnimales(cantidad):
+    """
+    Funcionalidad:
+    - Solicita a Gemini una lista de nombres comunes de animales y la retorna.
+
+    Entradas:
+    - cantidad: int, cantidad de nombres a solicitar.
+
+    Salidas:
+    - Retorna una lista de nombres de animales (str).
+    """
     try:
         genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
         modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
@@ -70,6 +90,17 @@ def obtenernombresAnimales(cantidad):
         raise Exception(f"Error al obtener lista de animales: {str(e)}")
 
 def obtenerListaES(cantidadTexto, ventana):
+    """
+    Funcionalidad:
+    - Obtiene la cantidad de nombres de animales desde la interfaz, los guarda en un archivo y cierra la ventana.
+
+    Entradas:
+    - cantidadTexto: str, cantidad de nombres a obtener.
+    - ventana: objeto Tkinter, ventana a cerrar al finalizar.
+
+    Salidas:
+    - No retorna valor. Guarda los nombres en archivo y muestra mensajes en la interfaz.
+    """
     # Verificar si el archivo ya existe
     if os.path.exists("nombresAnimales.txt"):
         messagebox.showinfo("Información", "El archivo de lista de animales ya existe y no se puede sobrescribir.")
@@ -109,12 +140,33 @@ def obtenerListaES(cantidadTexto, ventana):
 #=======================2. Crear Inventario =========================
 
 def seleccionarNombresAleatorios(nombres, cantidad):
+    """
+    Funcionalidad:
+    - Selecciona una cantidad de nombres aleatorios de una lista.
+
+    Entradas:
+    - nombres: lista de str, nombres disponibles.
+    - cantidad: int, cantidad a seleccionar.
+
+    Salidas:
+    - Retorna una lista de nombres seleccionados.
+    """
     if len(nombres) < cantidad:
         return []
     seleccionados = random.sample(nombres, cantidad)
     return seleccionados
 
 def pedirDatosAnimalAGemini(nombreComun):
+    """
+    Funcionalidad:
+    - Solicita a Gemini los datos de un animal específico en formato JSON.
+
+    Entradas:
+    - nombreComun: str, nombre común del animal.
+
+    Salidas:
+    - Retorna un diccionario con los datos del animal.
+    """
     reintentos=3
     espera=10
     prompt = (
@@ -156,6 +208,17 @@ def pedirDatosAnimalAGemini(nombreComun):
     raise RuntimeError("Has superado el límite de peticiones de Gemini. Intenta más tarde.")
 
 def crearAnimal(nombreComun, datos):
+    """
+    Funcionalidad:
+    - Crea un objeto Animal usando los datos proporcionados.
+
+    Entradas:
+    - nombreComun: str, nombre común del animal.
+    - datos: dict, datos del animal (nombre científico, url, orden).
+
+    Salidas:
+    - Retorna un objeto Animal.
+    """
     nombreCientifico = datos.get("nombre_cientifico", "Desconocido")
     urlImagen = datos.get("url_imagen", "")
     orden = datos.get("orden", "o")
@@ -163,6 +226,16 @@ def crearAnimal(nombreComun, datos):
     return animal
 
 def crearInventarioDesdeInterfaz(ventana):
+    """
+    Funcionalidad:
+    - Crea un inventario de 20 animales seleccionados aleatoriamente y lo guarda en archivo.
+
+    Entradas:
+    - ventana: objeto Tkinter, ventana principal para mostrar mensajes.
+
+    Salidas:
+    - Retorna la lista de objetos Animal creados.
+    """
     nombres = leerNombresAnimales()
     if len(nombres) < 20:
         messagebox.showerror("Error", "No hay suficientes nombres en el archivo.")
@@ -190,6 +263,17 @@ def crearInventarioDesdeInterfaz(ventana):
     return inventario
 
 def guardarInventario(inventario, archivo="inventario.txt"):
+    """
+    Funcionalidad:
+    - Guarda el inventario de animales en un archivo de texto.
+
+    Entradas:
+    - inventario: lista de objetos Animal.
+    - archivo: str, nombre del archivo destino.
+
+    Salidas:
+    - No retorna valor. Escribe los datos en el archivo.
+    """
     with open(archivo, "w", encoding="utf-8") as f:
         for animal in inventario:
             nombres = animal.obtenerNombres()
@@ -218,6 +302,16 @@ imagenesPorEstado = {
 }
 
 def cargarImagen(desdeUrlOArchivo):
+    """
+    Funcionalidad:
+    - Carga una imagen desde una URL o archivo local y la convierte para Tkinter.
+
+    Entradas:
+    - desdeUrlOArchivo: str, URL o ruta de archivo.
+
+    Salidas:
+    - Retorna un objeto PhotoImage o None si falla.
+    """
     try:
         if desdeUrlOArchivo.startswith("http"):
             req = urllib.request.Request(
@@ -237,6 +331,16 @@ def cargarImagen(desdeUrlOArchivo):
         return None
 
 def mostrarInventarioES():
+    """
+    Funcionalidad:
+    - Muestra el inventario de animales en una ventana paginada con imágenes y permite calificar con emojis.
+
+    Entradas:
+    - Ninguna (usa datos de archivo y la interfaz gráfica).
+
+    Salidas:
+    - No retorna valor. Muestra la ventana y permite interacción.
+    """
     estadoTexto = {
         1: "Vivo",
         2: "Enfermo",
@@ -372,6 +476,16 @@ def mostrarInventarioES():
 
 #=======================4. Estadistica por Estado =========================
 def mostrarEstadisticaPorEstado():
+    """
+    Funcionalidad:
+    - Muestra una ventana con la estadística de animales por estado.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Muestra la ventana con los datos.
+    """
     inventario = cargarInventario()
     if not inventario:
         messagebox.showerror("Error", "No hay inventario cargado.")
@@ -425,6 +539,16 @@ def mostrarEstadisticaPorEstado():
 
 #=======================5. HTML =========================
 def clasificarAnimalesPorOrden(inventario):
+    """
+    Funcionalidad:
+    - Clasifica los animales del inventario por su orden (omnívoro, carnívoro, herbívoro).
+
+    Entradas:
+    - inventario: lista de objetos Animal.
+
+    Salidas:
+    - Retorna un diccionario con listas de animales por orden.
+    """
     ordenes = {'o': [], 'c': [], 'h': []}
     for animal in inventario:
         orden = animal.obtenerOrdenYPeso()[0]
@@ -433,12 +557,33 @@ def clasificarAnimalesPorOrden(inventario):
     return ordenes
 
 def contarAnimalesPorOrden(ordenes):
+    """
+    Funcionalidad:
+    - Cuenta la cantidad de animales por cada orden.
+
+    Entradas:
+    - ordenes: dict, animales clasificados por orden.
+
+    Salidas:
+    - Retorna un diccionario con los conteos.
+    """
     conteo = {'o': 0, 'c': 0, 'h': 0}
     for clave in ordenes:
         conteo[clave] = len(ordenes[clave])
     return conteo
 
 def generarFilasTablaHtml(ordenes, ordenNombre):
+    """
+    Funcionalidad:
+    - Genera las filas HTML para la tabla de animales por orden.
+
+    Entradas:
+    - ordenes: dict, animales clasificados por orden.
+    - ordenNombre: dict, nombres de los órdenes.
+
+    Salidas:
+    - Retorna un string con las filas HTML.
+    """
     filas = ""
     for clave in ['o', 'c', 'h']:
         animales = ordenes[clave]
@@ -466,6 +611,16 @@ def generarFilasTablaHtml(ordenes, ordenNombre):
     return filas
 
 def generarTotalesHtml(conteo):
+    """
+    Funcionalidad:
+    - Genera el HTML para mostrar los totales por orden.
+
+    Entradas:
+    - conteo: dict, conteo de animales por orden.
+
+    Salidas:
+    - Retorna un string con el HTML de los totales.
+    """
     htmlTotales = (
         f'    <div class="totales">\n'
         f'        <p>Total de omnívoros: {conteo["o"]}</p>\n'
@@ -476,6 +631,16 @@ def generarTotalesHtml(conteo):
     return htmlTotales
 
 def crearHtmlInventario():
+    """
+    Funcionalidad:
+    - Crea un archivo HTML con la estadística de animales por orden.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Genera el archivo HTML y muestra mensaje.
+    """
     inventario = cargarInventario()
     if not inventario:
         messagebox.showerror("Error", "No hay inventario para exportar a HTML.")
@@ -528,6 +693,20 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 def seccionCalificacionPDF(pdf, animales, titulo, y, mostrarEstado=False):
+    """
+    Funcionalidad:
+    - Agrega una sección al PDF con los animales de una calificación específica.
+
+    Entradas:
+    - pdf: objeto canvas de ReportLab.
+    - animales: lista de objetos Animal.
+    - titulo: str, título de la sección.
+    - y: int, posición vertical inicial.
+    - mostrarEstado: bool, si se debe mostrar el estado.
+
+    Salidas:
+    - Retorna la nueva posición vertical (int) para continuar escribiendo.
+    """
     pdf.setFont("Helvetica-BoldOblique", 11)
     pdf.drawString(40, y, titulo)
     y -= 15
@@ -559,6 +738,16 @@ def seccionCalificacionPDF(pdf, animales, titulo, y, mostrarEstado=False):
     return y - 8
 
 def generarPDFEstadisticaPorCalificacion():
+    """
+    Funcionalidad:
+    - Genera un PDF con la estadística de animales por calificación.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Crea el PDF y muestra mensaje.
+    """
     inventario = cargarInventario()
     if not inventario:
         messagebox.showerror("Error", "No hay inventario para generar PDF.")
@@ -571,7 +760,9 @@ def generarPDFEstadisticaPorCalificacion():
         4: "Me entristece",
         5: "Me enoja"
     }
-    animalesPorCalificacion = {k: [] for k in clasificaciones}
+    animalesPorCalificacion = {}
+    for k in clasificaciones:
+        animalesPorCalificacion[k] = []
     for animal in inventario:
         calif = animal.obtenerCalificacion()
         if calif in animalesPorCalificacion:
@@ -609,6 +800,16 @@ indicaciones: como ya es de su conocimiento, exporte la lista completa de objeto
 para que pueda ser abierto en 'Excel' y se pueda corroborar la correctitud de cada reporte.
 """
 def exportarInventarioACSV():
+    """
+    Funcionalidad:
+    - Exporta el inventario de animales a un archivo CSV para Excel.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Crea el archivo CSV.
+    """
     try:
         with open("inventario.txt", "r", encoding="utf-8") as archivo:
             lineas = archivo.readlines()
@@ -655,6 +856,16 @@ def exportarInventarioACSV():
 
 #======================================= 8. busqueda por Orden ================================
 def buscarPorOrdenES():
+    """
+    Funcionalidad:
+    - Permite buscar animales por orden (carnívoro, herbívoro, omnívoro) y genera un HTML con los resultados.
+
+    Entradas:
+    - Ninguna (interfaz gráfica).
+
+    Salidas:
+    - No retorna valor. Muestra ventana y genera HTML si hay resultados.
+    """
     import webbrowser
     from tkinter import ttk, messagebox
     import tkinter as tk  # Se debe importar para evitar errores si se ejecuta esta función de forma independiente

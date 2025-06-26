@@ -18,11 +18,17 @@ class Animal:
 
     def __init__(self, nombreComun, nombreCientifico, url, orden):
         """
-        Constructor que inicializa un objeto Animal.
-        Se le asigna automáticamente:
-        - Un ID según la convención: primera y última letra del nombre + número secuencial.
-        - Un estado aleatorio (entre 1 y 5).
-        - Un peso aleatorio según el orden del animal.
+        Funcionalidad:
+        - Constructor que inicializa un objeto Animal con sus atributos principales.
+
+        Entradas:
+        - nombreComun: str, nombre común del animal.
+        - nombreCientifico: str, nombre científico del animal.
+        - url: str, URL de la imagen del animal.
+        - orden: str, orden del animal ('c', 'h', 'o').
+
+        Salidas:
+        - No retorna valor. Inicializa los atributos del objeto.
         """
         self.__id = self.crearId(nombreComun)
         self.__nombres = (nombreComun, nombreCientifico)
@@ -34,8 +40,14 @@ class Animal:
     # =================== ID ===================
     def crearId(self, nombre):
         """
-        Crea un ID basado en la primera y última letra del nombre común,
-        más un número secuencial no repetido.
+        Funcionalidad:
+        - Crea un ID basado en la primera y última letra del nombre común y un número secuencial.
+
+        Entradas:
+        - nombre: str, nombre común del animal.
+
+        Salidas:
+        - Retorna un string con el ID generado.
         """
         nombre = nombre.strip().lower()
         primera = nombre[0]
@@ -45,61 +57,165 @@ class Animal:
         return codigo
 
     def obtenerId(self):
+        """
+        Funcionalidad:
+        - Retorna el ID del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna el ID (str).
+        """
         return self.__id
 
     def mostrarId(self):
+        """
+        Funcionalidad:
+        - Muestra el ID del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime el ID.
+        """
         print(self.__id)
 
     # =================== Nombres ===================
     def asignarNombres(self, nombreComun, nombreCientifico):
         """
-        Asigna una nueva tupla de nombres al animal.
+        Funcionalidad:
+        - Asigna nuevos nombres al animal.
+
+        Entradas:
+        - nombreComun: str, nombre común.
+        - nombreCientifico: str, nombre científico.
+
+        Salidas:
+        - No retorna valor. Actualiza los nombres.
         """
         self.__nombres = (nombreComun, nombreCientifico)
 
     def obtenerNombres(self):
+        """
+        Funcionalidad:
+        - Retorna la tupla de nombres del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna una tupla (nombreComun, nombreCientifico).
+        """
         return self.__nombres
 
     def mostrarNombres(self):
+        """
+        Funcionalidad:
+        - Muestra los nombres del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime los nombres.
+        """
         print(self.__nombres[0])
         print(self.__nombres[1])
 
     # =================== URL ===================
     def asignarUrl(self, nuevaUrl):
         """
-        Actualiza la URL de la imagen del animal.
+        Funcionalidad:
+        - Actualiza la URL de la imagen del animal.
+
+        Entradas:
+        - nuevaUrl: str, nueva URL.
+
+        Salidas:
+        - No retorna valor. Actualiza la URL.
         """
         self.__url = nuevaUrl
 
     def obtenerUrl(self):
+        """
+        Funcionalidad:
+        - Retorna la URL de la imagen del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna la URL (str).
+        """
         return self.__url
 
     def mostrarUrl(self):
+        """
+        Funcionalidad:
+        - Muestra la URL de la imagen por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime la URL.
+        """
         print(self.__url)
 
     # =================== Estado ===================
     def asignarEstadoAleatorio(self):
         """
-        Asigna un estado aleatorio entre 1 y 5 al animal:
-        1=vivo, 2=enfermo, 3=trasladado, 4=muerto en museo, 5=muerto
+        Funcionalidad:
+        - Asigna un estado aleatorio entre 1 y 5 al animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Modifica el estado.
         """
         import random
         self.__info[0] = random.randint(1, 5)
 
     def obtenerEstado(self):
+        """
+        Funcionalidad:
+        - Retorna el estado actual del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna el estado (int).
+        """
         return self.__info[0]
 
     def mostrarEstado(self):
+        """
+        Funcionalidad:
+        - Muestra el estado del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime el estado.
+        """
         print(self.__info[0])
 
     # =================== Calificación ===================
     def asignarCalificacion(self, valor):
         """
-        Asigna una calificación del usuario, si es válida según el estado:
-        1=No marcado, 2=Me gusta, 3=Favorito, 4=Me entristece, 5=Me enoja
-        Restricciones:
-        - 4 solo si estado es 2 (enfermo) o 5 (muerto)
-        - 5 solo si estado es 3 (trasladado)
+        Funcionalidad:
+        - Asigna una calificación al animal, validando según el estado.
+
+        Entradas:
+        - valor: int, calificación a asignar.
+
+        Salidas:
+        - No retorna valor. Modifica la calificación si es válida.
         """
         estado = self.__info[0]
         if valor == 4 and estado not in [2, 5]:
@@ -114,17 +230,42 @@ class Animal:
         self.__info[1] = valor
 
     def obtenerCalificacion(self):
+        """
+        Funcionalidad:
+        - Retorna la calificación del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna la calificación (int).
+        """
         return self.__info[1]
 
     def mostrarCalificacion(self):
+        """
+        Funcionalidad:
+        - Muestra la calificación del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime la calificación.
+        """
         print(self.__info[1])
 
     # =================== Orden y Peso ===================
     def asignarOrdenYPeso(self, orden):
         """
-        Asigna el orden del animal y su peso estimado:
-        - 'h' (herbívoros): entre 80.0 y 100.0 kg
-        - 'c' o 'o' (carnívoros u omnívoros): entre 0.0 y 80.0 kg
+        Funcionalidad:
+        - Asigna el orden y un peso aleatorio al animal según su tipo.
+
+        Entradas:
+        - orden: str, tipo de orden ('c', 'h', 'o').
+
+        Salidas:
+        - No retorna valor. Modifica el orden y el peso.
         """
         import random
         orden = orden.lower()
@@ -138,17 +279,43 @@ class Animal:
             self.__info[3] = round(random.uniform(0.0, 80.0), 2)
 
     def obtenerOrdenYPeso(self):
+        """
+        Funcionalidad:
+        - Retorna el orden y el peso del animal.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna una tupla (orden, peso).
+        """
         return self.__info[2], self.__info[3]
 
     def mostrarOrdenYPeso(self):
+        """
+        Funcionalidad:
+        - Muestra el orden y el peso del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime el orden y el peso.
+        """
         print(self.__info[2])
         print(self.__info[3])
 
     # =================== Todo el objeto ===================
     def obtenerDatos(self):
         """
-        Devuelve todos los atributos del objeto en una lista.
-        Orden: id, nombre común, nombre científico, url, estado, calificación, orden, peso
+        Funcionalidad:
+        - Devuelve todos los atributos del objeto en una lista.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - Retorna una lista con los datos del animal.
         """
         return [
             self.__id,
@@ -163,7 +330,14 @@ class Animal:
 
     def mostrarDatos(self):
         """
-        Muestra en consola todos los atributos del objeto.
+        Funcionalidad:
+        - Muestra todos los atributos del animal por consola.
+
+        Entradas:
+        - Ninguna.
+
+        Salidas:
+        - No retorna valor. Imprime todos los datos.
         """
         self.mostrarId()
         self.mostrarNombres()
@@ -173,7 +347,27 @@ class Animal:
         self.mostrarOrdenYPeso()
 
     def asignarEstado(self, estado):
+        """
+        Funcionalidad:
+        - Asigna un estado específico al animal.
+
+        Entradas:
+        - estado: int, nuevo estado.
+
+        Salidas:
+        - No retorna valor. Modifica el estado.
+        """
         self.__info[0] = estado
 
     def asignarPeso(self, peso):
+        """
+        Funcionalidad:
+        - Asigna un peso específico al animal.
+
+        Entradas:
+        - peso: float, nuevo peso.
+
+        Salidas:
+        - No retorna valor. Modifica el peso.
+        """
         self.__info[3]

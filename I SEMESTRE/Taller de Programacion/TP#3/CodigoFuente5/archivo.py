@@ -8,6 +8,16 @@ import os
 import ast
 
 def leerNombresAnimales():
+    """
+    Funcionalidad:
+    - Lee y retorna una lista con los nombres de animales almacenados en el archivo 'nombresAnimales.txt'.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - Retorna una lista de cadenas con los nombres de animales.
+    """
     nombres = []
     if not os.path.exists("nombresAnimales.txt"):
         return nombres
@@ -19,6 +29,16 @@ def leerNombresAnimales():
     return nombres
 
 def cargarInventario(archivo="inventario.txt"):
+    """
+    Funcionalidad:
+    - Carga el inventario de animales desde un archivo de texto y lo convierte en una lista de objetos Animal.
+
+    Entradas:
+    - archivo: str, nombre del archivo desde donde se cargará el inventario (por defecto 'inventario.txt').
+
+    Salidas:
+    - Retorna una lista de objetos Animal con la información cargada del archivo.
+    """
     if not os.path.exists(archivo):
         return []
     inventario = []
@@ -63,6 +83,16 @@ def cargarInventario(archivo="inventario.txt"):
     return inventario
 
 def cargarMostrarInventario():
+    """
+    Funcionalidad:
+    - Carga el inventario desde el archivo 'inventario.txt' y lo retorna como una lista de elementos evaluados.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - Retorna una lista de elementos (listas o diccionarios) obtenidos del archivo.
+    """
     inventario = []
     with open("inventario.txt", "r", encoding="utf-8") as archivo:
         for linea in archivo:

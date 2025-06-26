@@ -30,6 +30,16 @@ imagen.pack(side=tk.LEFT, padx=5)
 tk.Label(tituloFrame, text="Zooinventario", font=("Arial", 14, "bold")).pack(side=tk.LEFT, padx=10)
 
 def accionBoton(numero):
+    """
+    Funcionalidad:
+    - Ejecuta la acción correspondiente según el botón presionado en la interfaz principal.
+
+    Entradas:
+    - numero: int, número del botón presionado.
+
+    Salidas:
+    - No retorna valor. Ejecuta funciones y muestra ventanas o mensajes según la opción.
+    """
     if numero == 1:
         ventanaObtenerLista()
         if 2 in botones:
@@ -58,6 +68,16 @@ def accionBoton(numero):
         buscarPorOrdenES()
         
 def cerrarAplicacion():
+    """
+    Funcionalidad:
+    - Cierra la ventana principal de la aplicación.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Cierra la aplicación.
+    """
     ventana.destroy()
 
 botones = {}
@@ -82,6 +102,16 @@ for texto in etiquetas:
     i += 1
 
 def verificarEstadoArchivo():
+    """
+    Funcionalidad:
+    - Verifica la existencia de archivos clave y habilita o deshabilita los botones de la interfaz según corresponda.
+
+    Entradas:
+    - Ninguna.
+
+    Salidas:
+    - No retorna valor. Modifica el estado de los botones en la interfaz.
+    """
     if os.path.exists("nombresAnimales.txt"):
         try:
             botones[1]['state'] = 'disabled'
@@ -120,6 +150,16 @@ def verificarEstadoArchivo():
 
 
 def ventanaObtenerLista():
+    """
+    Funcionalidad:
+    - Abre una ventana secundaria para solicitar la cantidad de nombres de animales a obtener de Wikipedia.
+
+    Entradas:
+    - Ninguna (interacción por interfaz gráfica).
+
+    Salidas:
+    - No retorna valor. Llama a la función para obtener la lista y cierra la ventana secundaria.
+    """
     ventanaLista = tk.Toplevel(ventana)
     ventanaLista.title("Obtener lista de animales")
     ventanaLista.geometry("300x180")

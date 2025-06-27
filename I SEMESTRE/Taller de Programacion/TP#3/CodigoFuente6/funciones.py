@@ -50,10 +50,10 @@ def validarCantidadAux(cantidadTexto):
         return True, cantidad
     except ValueError:
         return False, "Por favor, ingrese un número válido."
-
+"""
         #====== Función central: pedir nombres a Gemini=======================
 import google.generativeai as genai
-from google.generativeai import GenerativeModel
+from google.generativeai import GenerativeModel"""
 
 def obtenernombresAnimales(cantidad):
     """
@@ -68,7 +68,7 @@ def obtenernombresAnimales(cantidad):
     """
     try:
         genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
-        modelo = GenerativeModel('gemini-1.5-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
+        modelo = GenerativeModel('gemini-2.0-flash')  # ← cambio aqui el modelo usado (depende el que se use puede dar error)
 
         prompt = (f"Proporcióname una lista exactamente de {cantidad} nombres comunes de animales en español, uno por línea, sin numeración ni explicaciones."
                 "(no me des nombres muy generales como 'mono', 'Gamba', 'ballena', 'gato', 'lagartija' o cosas que no espeficiquen a un animal en particular).\n\n")
@@ -103,7 +103,7 @@ def obtenerListaES(cantidadTexto, ventana):
     """
     # Verificar si el archivo ya existe
     if os.path.exists("nombresAnimales.txt"):
-        messagebox.showinfo("Información", "El archivo de lista de animales ya existe y no se puede sobrescribir.")
+        messagebox.showinfo("Información", "El archivo de lista de animales ya existe y no se puede sobrescribir.") #esto al final no es tan necesario porque el botón se desactiva si existe
         return
 
     # Validar la cantidad
@@ -175,7 +175,7 @@ def pedirDatosAnimalAGemini(nombreComun):
         "El orden debe ser 'c' para carnívoro, 'h' para herbívoro, 'o' para omnívoro. "
         "Ejemplo: {\"nombre_cientifico\": \"Panthera leo\", \"url_imagen\": \"https://...\", \"orden\": \"c\"}")
     genai.configure(api_key="AIzaSyDVce9ynQYkU--tTfEiIwP9_BqjDAr9-tI")
-    modelo = GenerativeModel('gemini-1.5-flash')
+    modelo = GenerativeModel('gemini-2.0-flash')
     for intento in range(reintentos):
         try:
             respuesta = modelo.generate_content(prompt)
@@ -288,59 +288,57 @@ def guardarInventario(inventario, archivo="inventario.txt"):
 #=======================3. Mostrar inventario =========================
 
 
-import tkinter as tk
-from PIL import Image, ImageTk
-import urllib.request
-import io
-import os
-
+# Diccionario que asocia estados específicos con imágenes locales
+# Sirve para mostrar una imagen apropiada cuando el animal no tiene una URL válida
 imagenesPorEstado = {
-    2: "ambulancia.jpg",
-    3: "ambulancia.jpg",
-    4: "museo.jpg",
-    5: "calavera.jpg"
+    2: "ambulancia.jpg",     # Enfermo
+    3: "ambulancia.jpg",     # Trasladado
+    4: "museo.jpg",          # Muerto en museo
+    5: "calavera.jpg"        # Muerto
 }
+
 
 def cargarImagen(desdeUrlOArchivo):
     """
-    Funcionalidad:
-    - Carga una imagen desde una URL o archivo local y la convierte para Tkinter.
-
-    Entradas:
-    - desdeUrlOArchivo: str, URL o ruta de archivo.
-
-    Salidas:
-    - Retorna un objeto PhotoImage o None si falla.
+    Esta función intenta cargar una imagen desde una URL o desde un archivo local.
+    Si es desde una URL, hace una petición HTTP y lee la imagen desde los datos binarios (lo investigué pero entendí poco sobre el funcionamiento).
+    En ambos casos, la imagen se redimensiona a 120x120 y se convierte en un objeto
+    que Tkinter puede mostrar (ImageTk.PhotoImage).
+    Si ocurre un error (como una URL inválida o archivo no encontrado), se muestra el error
+    en la consola y se retorna None.
     """
     try:
         if desdeUrlOArchivo.startswith("http"):
+            # Si la imagen viene de internet, se hace una solicitud HTTP con headers
             req = urllib.request.Request(
                 desdeUrlOArchivo,
                 headers={'User-Agent': 'Mozilla/5.0'}
             )
             with urllib.request.urlopen(req) as respuesta:
                 datosImagen = respuesta.read()
-            imagen = Image.open(io.BytesIO(datosImagen))
+            imagen = Image.open(io.BytesIO(datosImagen))  # Convertimos los datos en imagen
         else:
+            # Si la imagen está en el equipo local
             imagen = Image.open(desdeUrlOArchivo)
+
         imagenRedimensionada = imagen.resize((120, 120))
         imagenConvertida = ImageTk.PhotoImage(imagenRedimensionada)
         return imagenConvertida
+
     except Exception as e:
         print(f"Error cargando imagen desde {desdeUrlOArchivo}: {e}")
         return None
 
+
 def mostrarInventarioES():
     """
-    Funcionalidad:
-    - Muestra el inventario de animales en una ventana paginada con imágenes y permite calificar con emojis.
-
-    Entradas:
-    - Ninguna (usa datos de archivo y la interfaz gráfica).
-
-    Salidas:
-    - No retorna valor. Muestra la ventana y permite interacción.
+    Esta función abre una ventana para mostrar el inventario de animales.
+    Cada animal se muestra en una tarjeta con su imagen, nombre, familia, estado y emojis para calificar.
+    Se permite navegar entre páginas (de 4 animales por página) con botones.
+    La imagen se elige según el estado o la URL, y los emojis permiten calificar al animal.
     """
+
+    # Diccionario para convertir valores numéricos de estado en palabras comprensibles
     estadoTexto = {
         1: "Vivo",
         2: "Enfermo",
@@ -349,17 +347,25 @@ def mostrarInventarioES():
         5: "Muerto"
     }
 
-    listaAnimales = cargarMostrarInventario()
-    paginaMostrada = [0]
+    listaAnimales = cargarMostrarInventario()  # Carga todos los animales del inventario
+    paginaMostrada = [0]  # Usamos una lista para que el valor pueda cambiar dentro de funciones anidadas
 
+    # Creamos la ventana emergente
     ventana = tk.Toplevel()
     ventana.title("Mostrar inventario")
     ventana.geometry("600x500")
 
+    # Marco principal donde se colocarán los animales
     marcoPrincipal = tk.Frame(ventana)
     marcoPrincipal.pack(pady=10)
 
     def mostrarPagina():
+        """
+        Esta función muestra los animales correspondientes a la página actual.
+        Cada animal se representa visualmente con su imagen, nombre, familia y estado.
+        También se incluyen botones de emoji para calificar al animal.
+        """
+        # Limpiamos la vista anterior antes de mostrar la nueva página
         for widget in marcoPrincipal.winfo_children():
             widget.destroy()
 
@@ -367,33 +373,38 @@ def mostrarInventarioES():
         final = inicio + 4
         animalesEnPagina = []
 
+        # Se seleccionan hasta 4 animales para esta página
         for i in range(inicio, final):
             if i < len(listaAnimales):
                 animalesEnPagina.append(listaAnimales[i])
 
+        # Para cada animal, creamos un marco visual con su información
         for posicion, animal in enumerate(animalesEnPagina):
-            nombres = animal[0]
-            datos = animal[1]
-            enlaceImagen = animal[2]
+            nombres = animal[0]      # ['Nombre común', 'Familia']
+            datos = animal[1]        # [estado, calificación, orden, peso]
+            enlaceImagen = animal[2] # URL o ruta de imagen
 
             estado = int(datos[0])
             calificacion = datos[1]
             orden = datos[2]
             peso = datos[3]
 
+            # Se crea un "cuadro" para cada animal
             cuadroAnimal = tk.Frame(marcoPrincipal, bd=2, relief="groove")
             fila = posicion // 2
             columna = posicion % 2
             cuadroAnimal.grid(row=fila, column=columna, padx=10, pady=10)
 
-            # Cargar imagen
+            # --- CARGA DE IMAGEN ---
             imagen = None
+            # Si está vivo y tiene imagen en URL válida, se intenta cargar desde internet
             if estado == 1 and enlaceImagen.strip() != "" and enlaceImagen.strip().lower() != "none":
                 imagen = cargarImagen(enlaceImagen)
                 if imagen is None:
                     print(f"[INFO] Imagen desde URL falló para '{nombres[0]}'")
                     imagen = cargarImagen("imagen-no-disponible.png")
             else:
+                # Si no tiene URL válida, se carga según el estado del animal
                 imagenLocal = imagenesPorEstado.get(estado, "calavera.jpg")
                 if os.path.exists(imagenLocal):
                     imagen = cargarImagen(imagenLocal)
@@ -401,19 +412,26 @@ def mostrarInventarioES():
                     print(f"[ADVERTENCIA] Imagen local no encontrada: {imagenLocal}")
                     imagen = cargarImagen("imagen-no-disponible.png")
 
+            # Se muestra la imagen si se cargó correctamente
             if imagen:
                 etiquetaImagen = tk.Label(cuadroAnimal, image=imagen)
-                etiquetaImagen.image = imagen
+                etiquetaImagen.image = imagen  # Esto es necesario para que la imagen no se borre
                 etiquetaImagen.pack()
 
-            tk.Label(cuadroAnimal, text=nombres[0], font=("Arial", 10, "bold")).pack()
-            tk.Label(cuadroAnimal, text=nombres[1], font=("Arial", 9)).pack()
+            # Mostramos texto con la información del animal
+            tk.Label(cuadroAnimal, text=nombres[0], font=("Arial", 10, "bold")).pack()  # Nombre común
+            tk.Label(cuadroAnimal, text=nombres[1], font=("Arial", 9)).pack()           # Familia
             tk.Label(cuadroAnimal, text=f"Estado: {estadoTexto.get(estado, 'Desconocido')}", font=("Arial", 8, "italic")).pack()
 
+            # --- SECCIÓN DE EMOJIS ---
             marcoEmojis = tk.Frame(cuadroAnimal)
             marcoEmojis.pack()
 
             def aplicarCalificacion(valorEmoji, posicionAnimal):
+                """
+                Cambia la calificación del animal (según emoji) y actualiza el archivo.
+                Luego, refresca la página para mostrar los cambios.
+                """
                 listaAnimales[inicio + posicionAnimal][1][1] = valorEmoji
                 with open("inventario.txt", "w", encoding="utf-8") as archivo:
                     for animal in listaAnimales:
@@ -421,6 +439,7 @@ def mostrarInventarioES():
                 mostrarPagina()
 
             for valorEmoji in range(1, 6):
+                # Definimos qué emoji corresponde a cada valor
                 if valorEmoji == 1:
                     emoji = "❤️"
                 elif valorEmoji == 2:
@@ -432,45 +451,52 @@ def mostrarInventarioES():
                 elif valorEmoji == 5:
                     emoji = "😡"
 
-                # NUEVA lógica de activación
-                if estado == 1:
+                # Se permite usar solo algunos emojis según el estado del animal
+                if estado == 1:  # Si está vivo
                     esPermitido = valorEmoji in (1, 2, 3)
-                else:
+                else:            # Si está muerto o en otro estado
                     esPermitido = valorEmoji in (4, 5)
 
+                # Se crea el botón del emoji
                 botonEmoji = tk.Button(
                     marcoEmojis,
                     text=emoji,
                     width=3,
-                    font=("Segoe UI Emoji", 12),
+                    font=("Segoe UI Emoji", 12), # si se usa uno diferente a segoe... los emojis se pueden mostrar en menos definición
                     command=lambda ve=valorEmoji, pa=posicion: aplicarCalificacion(ve, pa)
                 )
 
+                # Si el emoji ya está seleccionado, se marca hundido
                 if calificacion == valorEmoji:
                     botonEmoji.config(relief="sunken")
+                # Si el emoji no es permitido según el estado, se desactiva
                 if not esPermitido:
                     botonEmoji.config(state="disabled")
 
                 botonEmoji.pack(side="left", padx=2)
 
     def avanzarPagina():
+        """Permite avanzar a la siguiente página si hay más animales por mostrar."""
         totalPaginas = (len(listaAnimales) - 1) // 4
         if paginaMostrada[0] < totalPaginas:
             paginaMostrada[0] += 1
             mostrarPagina()
 
     def retrocederPagina():
+        """Permite volver a la página anterior si no estamos en la primera."""
         if paginaMostrada[0] > 0:
             paginaMostrada[0] -= 1
             mostrarPagina()
 
+    # Marco con los botones de navegación (izquierda/derecha)
     marcoNavegacion = tk.Frame(ventana)
     marcoNavegacion.pack(pady=5)
 
     tk.Button(marcoNavegacion, text="⬅️", command=retrocederPagina).pack(side="left", padx=10)
     tk.Button(marcoNavegacion, text="➡️", command=avanzarPagina).pack(side="left", padx=10)
 
-    mostrarPagina()
+    mostrarPagina()  # Se muestra la primera página al abrir la ventana
+
 
 
 
@@ -893,8 +919,8 @@ def buscarPorOrdenES():
             archivo.write("table { border-collapse: collapse; width: 100%; }\n")
             archivo.write("th, td { border: 1px solid black; padding: 8px; text-align: center; }\n")
             archivo.write("th { background-color: #ccc; }\n")
-            archivo.write("tr:nth-child(even) {background-color: #d0e7ff; }\n")
-            archivo.write("tr:nth-child(odd) { background-color: #ffffff; }\n")
+            archivo.write("tr:nth-child(even) {background-color: #d0e7ff; }\n") #colores de las filas 
+            archivo.write("tr:nth-child(odd) { background-color: #ffffff; }\n") #colores de las filas
             archivo.write("caption { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: red; }\n")
             archivo.write("</style>\n</head>\n<body>\n")
 

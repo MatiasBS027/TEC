@@ -330,6 +330,24 @@ def cargarImagen(desdeUrlOArchivo):
         return None
 
 
+def cargarMostrarInventario():
+    """
+    Lee el archivo 'inventario.txt' y convierte cada línea en una estructura de datos válida usando ast.literal_eval.
+    Retorna una lista con todos los animales registrados.
+    """
+    lista = []
+    try:
+        with open("inventario.txt", "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                try:
+                    animal = ast.literal_eval(linea.strip())  # Convierte el texto a lista/tupla
+                    lista.append(animal)
+                except Exception as e:
+                    print(f"[ERROR] Línea inválida en inventario.txt:\n{linea.strip()}\n{e}")
+    except FileNotFoundError:
+        print("[ERROR] El archivo 'inventario.txt' no fue encontrado.")
+    return lista
+
 def mostrarInventarioES():
     """
     Esta función abre una ventana para mostrar el inventario de animales.

@@ -8,7 +8,7 @@ public class Main {
         numeros.add(30);
         numeros.add(40); 
         numeros.add(50); 
-        System.out.println(numeros.get(0)); 
+        System.out.println("Elementos del ArrayList: " + numeros); // Se imprime el contenido del ArrayList
 
         String[] animales = {"Perro", "Gato", "Pájaro", "Conejo" };  // Se crea un arreglo de cadenas
     } 

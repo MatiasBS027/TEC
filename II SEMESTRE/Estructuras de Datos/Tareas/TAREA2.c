@@ -70,7 +70,7 @@ int main(){
     printf("Ingrese el texto a invertir: ");
     scanf("%s", texto); // Leer el texto ingresado por el usuario
 
-    //invertir_Texto(texto); // Llamar a la funcion para invertir el texto
+    invertir_Texto(texto); // Llamar a la funcion para invertir el texto
 
     printf("Texto invertido: %s\n", texto); // Imprimir el texto invertido
 
@@ -79,7 +79,7 @@ int main(){
     int numero;
     printf("Ingrese un numero entero a invertir: ");
     scanf("%d", &numero); // Leer el numero ingresado por el usuario
-    //invertir_Entero(&numero); // Llamar a la funcion para invertir el numero
+    invertir_Entero(&numero); // Llamar a la funcion para invertir el numero
     printf("Numero invertido: %d\n", numero); // Imprimir el numero invertido
     
     char *texto_prefijo = calloc(100, sizeof(char)); // Reservar memoria para el texto con prefijo
@@ -97,11 +97,11 @@ int main(){
     scanf("%s", texto_prefijo); // Leer el texto con prefijo ingresado por
     printf("Ingrese el prefijo a eliminar: ");
     scanf("%s", prefijo); // Leer el prefijo ingresado por el usuario   
-    //eliminar_prefijo(texto_prefijo, prefijo); // Llamar a la funcion para eliminar el prefijo
+    eliminar_prefijo(texto_prefijo, prefijo); // Llamar a la funcion para eliminar el prefijo
     printf("Texto sin prefijo: %s\n", texto_prefijo); // Imprimir el texto sin prefijo
     free(texto_prefijo); // Liberar la memoria
     free(prefijo); // Liberar la memoria
-
+  
     int arreglo[] = {1, 2, 3, 4, 5}; // Definir un arreglo de enteros
     int tam = sizeof(arreglo) / sizeof(arreglo[0]); // Calcular el tamaño del arreglo
     int numero_buscar;

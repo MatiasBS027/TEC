@@ -191,25 +191,24 @@ int insertar_ordenado(struct lista *lista, int valor) {
  * - Inserta elementos al final usando insertar_final()
  * - Cada inserción crea nuevo nodo en memoria heap
  * - Imprime la lista completa usando imprimir_lista()
- * - Los nodos se conectan formando: 10→20→30→NULL
+ * - Permite insertar al inicio y en orden usando insertar_inicio() e insertar_ordenado()
  */
 int main() {
     struct lista *mi_lista = crear_lista(); // Crear una nueva lista enlazada
 
-    insertar_final(mi_lista, 10); // Insertar elementos en la lista
-    insertar_final(mi_lista, 20);
-    insertar_final(mi_lista, 30);
+    //insertar_final(mi_lista, 10); // Insertar elementos en la lista
+    //insertar_final(mi_lista, 20);
+    //insertar_final(mi_lista, 30);
 
-    imprimir_lista(mi_lista); // Imprimir los elementos de la lista
+    //imprimir_lista(mi_lista); // Imprimir los elementos de la lista
 
-    insertar_inicio(mi_lista, 5); // Insertar elemento al inicio
-    insertar_inicio(mi_lista, 1); // Insertar otro elemento al inicio
-    imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
+    // insertar_inicio(mi_lista, 5); // Insertar elemento al inicio
+    // insertar_inicio(mi_lista, 1); // Insertar otro elemento al inicio
+    // imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
 
-    insertar_ordenado(mi_lista, 15); // Insertar elemento en orden
-    insertar_ordenado(mi_lista, 25); // Insertar otro elemento en orden
-    imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
+    // insertar_ordenado(mi_lista, 15); // Insertar elemento en orden
+    // insertar_ordenado(mi_lista, 25); // Insertar otro elemento en orden
+    // imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
 
-    // Liberar memoria (no implementado en este ejemplo)
     return 0;
 }

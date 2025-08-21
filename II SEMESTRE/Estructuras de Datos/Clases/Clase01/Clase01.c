@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h> // Para calloc y free
-#include <string.h> // Para strncmp
 
 //Elaborado por: Matias Benavides
 //Fecha: 21/08/2025
@@ -122,37 +121,47 @@ int insertar_final(struct lista *lista, int valor) {
     return 0; // Retornar 0 si se inserto correctamente
 }
 
-/*
- * FUNCION: eliminar_nodo
- * DESCRIPCION: Elimina un nodo con un valor específico de la lista
- * - Recibe la lista y el valor a eliminar
- * - Recorre la lista buscando el nodo con el valor dado
- * - Si lo encuentra, lo elimina y libera su memoria
- * - Si es el primer nodo, actualiza 'inicio' para apuntar al siguiente
- * FLUJO: Buscar último nodo → enlazar → nuevo nodo se convierte en último
- */
-int eliminar_nodo(struct lista *lista, int valor) {
-    if (lista == NULL || lista->inicio == NULL) {
-        fprintf(stderr, "La lista esta vacia o no existe.\n");
-        return -1; // Retornar -1 si la lista no existe o esta vacia
+int insertar_inicio(struct lista *lista, int valor) {
+    if (lista == NULL) {
+        fprintf(stderr, "La lista no ha sido creada.\n");
+        return -1; // Retornar -1 si la lista no existe
     }
-    struct nodo *actual = lista->inicio;
-    struct nodo *anterior = NULL;
-    while (actual != NULL && actual->valor != valor) {
+    
+    struct nodo *nuevo_nodo = crear_nodo(valor); // Crear un nuevo nodo con el valor dado
+    if (lista->inicio == NULL) {
+        lista->inicio = nuevo_nodo; // Si la lista esta vacia, el nuevo nodo es el inicio
+        return 0; // Retornar 0 si se inserto correctamente
+    }        
+        nuevo_nodo->siguiente = lista->inicio; // El nuevo nodo apunta al inicio actual
+        lista->inicio = nuevo_nodo; // El nuevo nodo se convierte en el nuevo inicio
+    return 0; // Retornar 0 si se inserto correctamente
+}
+
+int insertar_ordenado(struct lista *lista, int valor) {
+    if (lista == NULL) {
+        fprintf(stderr, "La lista no ha sido creada.\n");
+        return -1; // Retornar -1 si la lista no existe
+    }
+    
+    struct nodo *nuevo_nodo = crear_nodo(valor); // Crear un nuevo nodo con el valor dado
+    struct nodo *actual = NULL; // Puntero para recorrer la lista
+    struct nodo *anterior = NULL; // Puntero para mantener el nodo anterior
+
+    if (lista->inicio == NULL || lista->inicio->valor >= valor) {// Insertar al inicio si la lista esta vacia o el valor es menor o igual al primer nodo
+        nuevo_nodo->siguiente = lista->inicio; // El nuevo nodo apunta al inicio actual
+        lista->inicio = nuevo_nodo; // El nuevo nodo se convierte en el nuevo inicio
+        return 0; // Retornar 0 si se inserto correctamente
+    }
+
+    actual = lista->inicio; // Comenzar desde el inicio de la lista
+    while (actual != NULL && actual->valor < valor) { // Recorrer hasta encontrar la posicion correcta
         anterior = actual;
         actual = actual->siguiente; // Avanzar al siguiente nodo
     }
-    if (actual == NULL) {
-        fprintf(stderr, "Valor %d no encontrado en la lista.\n", valor);
-        return -1; // Retornar -1 si el valor no se encuentra
-    }
-    if (anterior == NULL) {
-        lista->inicio = actual->siguiente; // Eliminar el primer nodo
-    } else {
-        anterior->siguiente = actual->siguiente; // Enlazar el nodo anterior con el siguiente del nodo a eliminar
-    }
-    free(actual); // Liberar memoria del nodo eliminado
-    return 0; // Retornar 0 si se elimino correctamente
+    // Insertar el nuevo nodo entre 'anterior' y 'actual'
+    nuevo_nodo->siguiente = actual;
+    anterior->siguiente = nuevo_nodo;
+    return 0; // Retornar 0 si se inserto correctamente
 }
 
 /*
@@ -173,9 +182,13 @@ int main() {
 
     imprimir_lista(mi_lista); // Imprimir los elementos de la lista
 
-    eliminar_nodo(mi_lista, 20); // Eliminar un nodo con valor 20
-    printf("Despues de eliminar el nodo con valor 20:\n");
-    imprimir_lista(mi_lista); // Imprimir la lista nuevamente
+    insertar_inicio(mi_lista, 5); // Insertar elemento al inicio
+    insertar_inicio(mi_lista, 1); // Insertar otro elemento al inicio
+    imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
+
+    insertar_ordenado(mi_lista, 15); // Insertar elemento en orden
+    insertar_ordenado(mi_lista, 25); // Insertar otro elemento en orden
+    imprimir_lista(mi_lista); // Imprimir los elementos de la lista nuevamente
 
     // Liberar memoria (no implementado en este ejemplo)
     return 0;

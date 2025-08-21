@@ -121,6 +121,16 @@ int insertar_final(struct lista *lista, int valor) {
     return 0; // Retornar 0 si se inserto correctamente
 }
 
+/*
+ * FUNCION: insertar_inicio
+ * DESCRIPCION: Inserta un nuevo nodo al inicio de la lista 
+ * - Recibe la lista y el valor a insertar
+ * - Crea un nuevo nodo usando crear_nodo()
+ * - Si la lista está vacía (inicio == NULL), el nuevo nodo se convierte en el primero
+ * - Si no está vacía, el nuevo nodo apunta al nodo actual de inicio
+ * - El nuevo nodo se convierte en el nuevo inicio de la lista
+ * FLUJO: Nuevo nodo → apunta al inicio actual → nuevo nodo se convierte en inicio
+ */
 int insertar_inicio(struct lista *lista, int valor) {
     if (lista == NULL) {
         fprintf(stderr, "La lista no ha sido creada.\n");
@@ -137,6 +147,16 @@ int insertar_inicio(struct lista *lista, int valor) {
     return 0; // Retornar 0 si se inserto correctamente
 }
 
+/*
+ * FUNCION: insertar_ordenado
+ * DESCRIPCION: Inserta un nuevo nodo de manera ordenada en la lista
+ * - Recibe la lista y el valor a insertar
+ * - Crea un nuevo nodo usando crear_nodo()
+ * - Si la lista está vacía (inicio == NULL) o el valor es menor que el primer nodo, inserta al inicio
+ * - Si no, recorre la lista buscando la posición correcta para mantener el orden
+ * - Enlaza el nuevo nodo entre el nodo anterior y el actual
+ * FLUJO: Buscar posición → enlazar → nuevo nodo se inserta en orden
+ */
 int insertar_ordenado(struct lista *lista, int valor) {
     if (lista == NULL) {
         fprintf(stderr, "La lista no ha sido creada.\n");

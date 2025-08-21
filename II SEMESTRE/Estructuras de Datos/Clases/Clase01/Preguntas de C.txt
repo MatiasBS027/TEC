@@ -1,0 +1,4 @@
+Preguntas de C
+1. Que ocurre si la memoria se llena y pedimos un calloc de x cantidad de bytes, hay forma de hacerle espacio?
+
+2. En la lista que hicimos que pasa si al crear un nodo llegamos a un lugar donde ya habia algo?

@@ -11,6 +11,7 @@ import conceptos.Rectangulo;
 /**
  *
  * @author Matias
+ * carne: 2025102376
  */
 public class Main {
 

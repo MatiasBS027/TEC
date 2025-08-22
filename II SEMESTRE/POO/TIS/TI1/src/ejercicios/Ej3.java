@@ -4,17 +4,21 @@
  */
 package ejercicios;
 
+import java.util.Scanner;
 /**
  *
  * @author Matias
+ * carne: 2025102376
  */
-public class Ej3 {
 
-    /**
-     * @param args the command line arguments
-     */
+public class Ej3 {
     public static void main(String[] args) {
-        // TODO code application logic here
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese una cadena: ");
+        String texto = sc.nextLine();
+
+        for (int i = 0; i < texto.length(); i++) {
+            System.out.println(texto.charAt(i));
+        }
     }
-    
 }

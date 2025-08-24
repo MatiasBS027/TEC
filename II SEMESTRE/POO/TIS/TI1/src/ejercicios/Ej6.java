@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package ejercicios;
+import java.util.Arrays;
 
 /**
  *
@@ -10,12 +11,14 @@ package ejercicios;
  * carne: 2025102376
  */
 public class Ej6 {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        int[] array1 = {1, 2, 3, 4, 5};
+        int[] array2 = {1, 2, 3, 4, 5};
+
+        if (Arrays.equals(array1, array2)) {
+            System.out.println("Los arrays son iguales.");
+        } else {
+            System.out.println("Los arrays son diferentes.");
+        }
     }
-    
 }

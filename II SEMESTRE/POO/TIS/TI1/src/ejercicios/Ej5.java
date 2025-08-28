@@ -17,7 +17,7 @@ public class Ej5{
         Random rand = new Random();
 
         for (int i = 0; i < numeros.length; i++) {
-            numeros[i] = rand.nextInt(100); // Números entre 0 y 99
+            numeros[i] = rand.nextInt(1000); // Números entre 0 y 999
         }
         System.out.println("Números aleatorios:");
         for (int num : numeros) {

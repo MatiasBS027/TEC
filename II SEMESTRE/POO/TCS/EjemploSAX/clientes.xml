@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clientes>
+       <cliente>
+              <nombre>Juan Perez</nombre>
+              <placa>100</placa>
+              <telefono>7777-1000</telefono>
+       </cliente>
+       <cliente>
+              <nombre>Ana Rojas</nombre>
+              <placa>200</placa>
+              <telefono>7777-2000</telefono>
+       </cliente>
+       <cliente>
+              <nombre>Pedro Arnaez</nombre>
+              <placa>300</placa>
+              <telefono>7777-3000</telefono>
+       </cliente>
+</clientes>

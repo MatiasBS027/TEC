@@ -1,3 +1,2 @@
 ﻿  Assembling mcm.asm...
-mcm.asm(3): error A2088: END directive required at end of file
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\BuildCustomizations\masm.targets(70,5): error MSB3721: El comando "ml64.exe /c /nologo /Zi /Fo"x64\Debug\mcm.obj" /W3 /errorReport:prompt  /Tamcm.asm" salió con el código 1.
+  mcm2025.vcxproj -> C:\TEC\II SEMESTRE\Arqui\TC1\mcm2025\x64\Debug\mcm2025.exe

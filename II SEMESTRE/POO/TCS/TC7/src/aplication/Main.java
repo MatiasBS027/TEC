@@ -22,10 +22,9 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Escritorio escritorio = new Escritorio();
-        escritorio.setVisible(true);
+       
         
-        /*try {
+        try {
             ArrayList<Cliente> clientes;
             File xmlFile = new File("clientes.xml");
             clientes = util.cargadorXML.Cargar(new FileInputStream(xmlFile));
@@ -35,7 +34,7 @@ public class Main {
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }*/
+        }
     }
     
 }

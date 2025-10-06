@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<servicios>
+       <servicio id="100">
+              <nombre>Cambio Aceite 20</nombre>
+              <precio>20100</precio>
+       </servicio>
+       <servicio id="101">
+              <nombre>Balanceo de llantas</nombre>
+              <precio>5000</precio>
+       </servicio>
+       <servicio id="102">
+              <nombre>Mecanica Motor</nombre>
+              <precio>25000</precio>
+       </servicio>
+</servicios>

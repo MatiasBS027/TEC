@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mecanicos>
+       <mecanico id="200">
+              <nombre>Rodrigo Perez</nombre>
+              <puesto>Mecanico General</puesto>
+              <servicios>
+				<id>100</id>
+				<id>101</id>
+			  </servicios>
+       </mecanico>
+       <mecanico id="201">
+              <nombre>Maria Rojas</nombre>
+              <puesto>Mecanico General</puesto>
+              <servicios>
+				<id>100</id>
+				<id>101</id>
+				<id>102</id>
+			  </servicios>
+       </mecanico>
+       <mecanico id="202">
+              <nombre>Pedro Blanco</nombre>
+              <puesto>Mecanico Electrico</puesto>
+              <servicios>
+				<id>102</id>
+			  </servicios>
+       </mecanico>
+</mecanicos>

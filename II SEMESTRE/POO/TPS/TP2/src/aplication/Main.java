@@ -3,14 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package aplication;
-
-import java.util.ArrayList;
-import conceptos.Cliente;
 import ventanas.Escritorio;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 /**
  *
@@ -26,18 +20,6 @@ public class Main {
     public static void main(String[] args) {
         Escritorio escritorio = new Escritorio();
         escritorio.setVisible(true);
-        
-        /*try {
-            ArrayList<Cliente> clientes;
-            File xmlFile = new File("clientes.xml");
-            clientes = util.cargadorXML.Cargar(new FileInputStream(xmlFile));
-
-            for (Cliente c : clientes) {
-                System.out.println(c);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
     
 }

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <clientes>
     <cliente id="000000000">
-        <nombre>Sin Registro</nombre>
+        <nombre>Matias Benavides</nombre>
         <placa>NA</placa>
         <telefono>NA</telefono>
         <email>NA</email>
@@ -37,7 +37,7 @@
         <email>ricardo.t@gmail.com</email>
     </cliente>
     <cliente id="300000666">
-        <nombre>Laura Sanchez</nombre>
+        <nombre>Laura Cordero</nombre>
         <placa>FFF600</placa>
         <telefono>7777-6000</telefono>
         <email>laura.s@gmail.com</email>
@@ -109,7 +109,7 @@
         <email>manuel.o@gmail.com</email>
     </cliente>
     <cliente id="300001888">
-        <nombre>Claudia Ruiz</nombre>
+        <nombre>Claudia Gomez</nombre>
         <placa>RRR180</placa>
         <telefono>7777-1810</telefono>
         <email>claudia.r@gmail.com</email>
@@ -174,10 +174,10 @@
         <telefono>7777-2810</telefono>
         <email>patricia.n@gmail.com</email>
     </cliente>
-    <cliente id="300002999">
-        <nombre>Esteban Morales</nombre>
-        <placa>CCC290</placa>
-        <telefono>7777-2910</telefono>
-        <email>esteban.m@gmail.com</email>
+    <cliente id="000000001">
+        <nombre>Matias Benavides</nombre>
+        <placa>356 786</placa>
+        <telefono>9887-1231</telefono>
+        <email>mati@gmail.com</email>
     </cliente>
 </clientes>

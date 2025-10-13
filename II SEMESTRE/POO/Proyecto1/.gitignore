@@ -1,0 +1,33 @@
+# === IDEs ===
+.idea/
+*.iml
+nbproject/private/
+*.ipr
+*.iws
+
+# === Compilados y temporales ===
+*.class
+*.log
+*.tmp
+*.swp
+*.bak
+*.cache
+
+# === Carpetas de build/output ===
+build/
+out/
+dist/
+
+# === Dependencias descargadas (si aplica) ===
+#/data/
+#*.jar
+#*.war
+#*.ear
+
+# === Archivos de sistema ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Archivos de configuración sensible ===
+*.env

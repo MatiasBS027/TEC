@@ -26,11 +26,11 @@ import org.w3c.dom.Element;
  * @author Corea
  */
 public class GuardarArchivo {
-
+    // Rutas de los archivos XML
     private static final String RUTA_CLIENTES = "src/data/clientes.xml";
     private static final String RUTA_MECANICOS = "src/data/mecanicos.xml";
     private static final String RUTA_SERVICIOS = "src/data/servicios.xml";
-
+    // Método para guardar la lista de clientes en un archivo XML
     public static void guardarClientes(List<Cliente> clientes) {
         try {
             Document doc = crearDocumento();
@@ -52,7 +52,7 @@ public class GuardarArchivo {
             throw new IllegalStateException("Error al guardar clientes", ex);
         }
     }
-
+    // Método para guardar la lista de mecánicos en un archivo XML
     public static void guardarMecanicos(List<Mecanico> mecanicos) {
         try {
             Document doc = crearDocumento();
@@ -78,7 +78,7 @@ public class GuardarArchivo {
             throw new IllegalStateException("Error al guardar mecanicos", ex);
         }
     }
-
+    // Método para guardar la lista de servicios en un archivo XML
     public static void guardarServicios(List<Servicio> servicios) {
         try {
             Document doc = crearDocumento();
@@ -98,19 +98,19 @@ public class GuardarArchivo {
             throw new IllegalStateException("Error al guardar servicios", ex);
         }
     }
-
+    // Métodos auxiliares para crear y escribir documentos XML
     private static Document crearDocumento() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.newDocument();
     }
-
+    // Método para agregar un nodo de texto a un elemento padre
     private static void agregarNodoTexto(Document doc, Element padre, String nombre, String valor) {
         Element nodo = doc.createElement(nombre);
         nodo.appendChild(doc.createTextNode(valor == null ? "" : valor));
         padre.appendChild(nodo);
     }
-
+    // Método para escribir el documento XML en un archivo
     private static void escribirDocumento(Document doc, String ruta) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();

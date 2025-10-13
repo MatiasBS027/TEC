@@ -25,9 +25,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     private final ArrayList<String> serviciosSeleccionados = new ArrayList<>();
     private DefaultTableModel modelo;
 
-    /**
-     * Creates new form ventanaMecanico
-     */
+    // Creates new form ventanaMecanico
     public ventanaMecanico(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -36,7 +34,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
     }
-
+    // Configura la tabla y sus eventos
     private void configurarTabla() {
         modelo = new DefaultTableModel(new Object[]{"ID", "Nombre", "Puesto"}, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -54,7 +52,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         });
         actualizarEtiquetaServicios();
     }
-
+    // Llena la tabla con los datos de los mecánicos desde el archivo XML
     private void llenarTabla() {
         mecanicos.clear();
         modelo.setRowCount(0);
@@ -81,7 +79,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
             mostrarError("Error al leer mecanicos: " + e.getMessage());
         }
     }
-
+    // Carga los datos del mecánico seleccionado en la tabla a los campos de texto
     private void cargarDesdeTabla() {
         int fila = jTable1.getSelectedRow();
         if (fila < 0 || fila >= mecanicos.size()) {
@@ -96,7 +94,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         serviciosSeleccionados.addAll(mecanico.getServicios());
         actualizarEtiquetaServicios();
     }
-
+    // Construye un objeto Mecanico desde los campos de texto
     private Mecanico construirMecanicoDesdeCampos() {
         String id = jTextFieldId.getText().trim();
         String nombre = jTextFieldNombre.getText().trim();
@@ -119,7 +117,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         mecanico.getServicios().addAll(serviciosSeleccionados);
         return mecanico;
     }
-
+    // Limpia los campos de texto y la selección de servicios
     private void limpiarCampos() {
         jTextFieldId.setText("");
         jTextFieldNombre.setText("");
@@ -313,6 +311,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
+        // Agregar nuevo mecánico
         Mecanico mecanico = construirMecanicoDesdeCampos();
         if (mecanico == null) {
             return;
@@ -343,6 +342,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonVerEditarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        // Modificar mecánico seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un mecánico");
@@ -377,6 +377,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
+        // Borrar mecánico seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un mecánico");

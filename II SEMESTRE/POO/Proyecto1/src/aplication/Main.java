@@ -6,7 +6,11 @@ package aplication;
 import ventanas.Menu;
 /**
  *
- * @author Matias
+ * @author Matias Benavides Sandoval
+ * carnee: 2025102376
+ * @author William Corea Ledezma 
+ * carnee: 2025103669
+ * 
  */
 public class Main {
 

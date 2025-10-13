@@ -19,6 +19,7 @@ import org.xml.sax.XMLReader;
  * @author Matias
  */
 public class cargadorXML {
+    // tipo puede ser "cliente", "mecanico" o "servicio"
     public static ArrayList<?> Cargar(InputStream input, String tipo) {
         try {
             InputSource source = new InputSource(input);

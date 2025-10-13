@@ -23,9 +23,7 @@ public class ventanaServiciosValidados extends javax.swing.JDialog {
     private DefaultTableModel modelo;
     private boolean aceptado = false;
 
-    /**
-     * Creates new form ventanaServiciosValidados
-     */
+    // Constructor que recibe la ventana padre, si es modal y una lista de IDs de servicios seleccionados
     public ventanaServiciosValidados(java.awt.Frame parent, boolean modal) {
         this(parent, modal, new ArrayList<String>());
     }
@@ -42,7 +40,7 @@ public class ventanaServiciosValidados extends javax.swing.JDialog {
         llenarTabla();
         setLocationRelativeTo(parent);
     }
-
+    // Configura el modelo de la tabla para mostrar los servicios y permitir selección
     private void configurarTabla() {
         modelo = new DefaultTableModel(new Object[]{"Validado", "Servicio"}, 0) {
             @Override public Class<?> getColumnClass(int columnIndex) { return columnIndex == 0 ? Boolean.class : String.class; }
@@ -50,7 +48,7 @@ public class ventanaServiciosValidados extends javax.swing.JDialog {
         };
         jTable1.setModel(modelo);
     }
-
+    // Llena la tabla con los servicios cargados desde el archivo XML
     private void llenarTabla() {
         servicios.clear();
         modelo.setRowCount(0);
@@ -73,15 +71,15 @@ public class ventanaServiciosValidados extends javax.swing.JDialog {
             e.printStackTrace();
         }
     }
-
+    // Retorna true si el usuario aceptó los cambios, false si canceló
     public boolean fueAceptado() {
         return aceptado;
     }
-
+    // Retorna la lista de IDs de servicios seleccionados
     public List<String> getServiciosSeleccionados() {
         return new ArrayList<>(aceptado ? seleccionTrabajo : seleccionInicial);
     }
-
+    // Actualiza la lista de selección basada en el estado actual de la tabla
     private void actualizarSeleccionDesdeTabla() {
         seleccionTrabajo.clear();
         for (int i = 0; i < modelo.getRowCount(); i++) {

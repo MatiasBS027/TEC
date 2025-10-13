@@ -25,9 +25,7 @@ public class ventanaClientes extends javax.swing.JDialog {
     private final ArrayList<Cliente> clientes = new ArrayList<>();
     private DefaultTableModel modelo;
 
-    /**
-     * Creates new form ventanaClientes
-     */
+    // Constructor
     public ventanaClientes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -36,7 +34,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
     }
-
+    // Configurar la tabla
     private void configurarTabla() {
         modelo = new DefaultTableModel(new Object[]{"ID", "Nombre", "Placa", "Telefono", "Email"}, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -51,7 +49,7 @@ public class ventanaClientes extends javax.swing.JDialog {
             }
         });
     }
-
+    // Llenar la tabla con datos desde el XML
     private void llenarTabla() {
         clientes.clear();
         modelo.setRowCount(0);
@@ -73,7 +71,7 @@ public class ventanaClientes extends javax.swing.JDialog {
             mostrarError("Error al leer clientes: " + e.getMessage());
         }
     }
-
+    // Cargar datos desde la tabla a los campos de texto
     private void cargarDesdeTabla() {
         int fila = jTable1.getSelectedRow();
         if (fila < 0 || fila >= clientes.size()) {
@@ -86,7 +84,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         jTextFieldTelefono.setText(cliente.getTelefono());
         jTextFieldEmail.setText(cliente.getEmail());
     }
-
+    // Construir un objeto Cliente desde los campos de texto
     private Cliente construirClienteDesdeCampos() {
         String id = jTextFieldId.getText().trim();
         String nombre = jTextFieldNombre.getText().trim();
@@ -109,7 +107,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         cliente.setEmail(email);
         return cliente;
     }
-
+    // Limpiar los campos de texto
     private void limpiarCampos() {
         jTextFieldId.setText("");
         jTextFieldNombre.setText("");
@@ -122,7 +120,7 @@ public class ventanaClientes extends javax.swing.JDialog {
     private void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
-
+    // Mostrar mensaje de información
     private void mostrarInfo(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -304,6 +302,7 @@ public class ventanaClientes extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
+        // Crear un nuevo cliente
         Cliente cliente = construirClienteDesdeCampos();
         if (cliente == null) {
             return;
@@ -324,6 +323,7 @@ public class ventanaClientes extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        // Modificar un cliente existente
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un cliente");
@@ -354,6 +354,7 @@ public class ventanaClientes extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
+        // Borrar un cliente seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un cliente");

@@ -24,9 +24,7 @@ public class ventanaServicios extends javax.swing.JDialog {
     private final ArrayList<Servicio> servicios = new ArrayList<>();
     private DefaultTableModel modelo;
 
-    /**
-     * Creates new form ventanaMecanico
-     */
+    // Constructor
     public ventanaServicios(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -35,7 +33,7 @@ public class ventanaServicios extends javax.swing.JDialog {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
     }
-
+    // Configura el modelo de la tabla y el listener de selección
     private void configurarTabla() {
         modelo = new DefaultTableModel(new Object[]{"ID", "Nombre", "Precio"}, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -52,7 +50,7 @@ public class ventanaServicios extends javax.swing.JDialog {
             }
         });
     }
-
+    // Llena la tabla con los datos cargados desde el archivo XML
     private void llenarTabla() {
         servicios.clear();
         modelo.setRowCount(0);
@@ -79,7 +77,7 @@ public class ventanaServicios extends javax.swing.JDialog {
             mostrarError("Error al leer servicios: " + e.getMessage());
         }
     }
-
+    // Carga los datos del servicio seleccionado en los campos de texto
     private void cargarDesdeTabla() {
         int fila = jTable1.getSelectedRow();
         if (fila < 0 || fila >= servicios.size()) {
@@ -91,7 +89,7 @@ public class ventanaServicios extends javax.swing.JDialog {
         jTextFieldNombre.setText(servicio.getNombre());
         jTextFieldPuesto.setText(servicio.getPrecio());
     }
-
+    // Construye un objeto Servicio desde los campos de texto, validando entradas
     private Servicio construirServicioDesdeCampos() {
         String id = jTextFieldId.getText().trim();
         String nombre = jTextFieldNombre.getText().trim();
@@ -117,7 +115,7 @@ public class ventanaServicios extends javax.swing.JDialog {
         servicio.setPrecio(precio);
         return servicio;
     }
-
+    // Limpia los campos de texto y la selección de la tabla
     private void limpiarCampos() {
         jTextFieldId.setText("");
         jTextFieldNombre.setText("");
@@ -285,6 +283,7 @@ public class ventanaServicios extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
+        // Agregar nuevo servicio
         Servicio servicio = construirServicioDesdeCampos();
         if (servicio == null) {
             return;
@@ -305,6 +304,7 @@ public class ventanaServicios extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        // Modificar servicio seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un servicio");
@@ -334,6 +334,7 @@ public class ventanaServicios extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
+        // Borrar servicio seleccionado
         int fila = jTable1.getSelectedRow();
         
         if (fila < 0) {

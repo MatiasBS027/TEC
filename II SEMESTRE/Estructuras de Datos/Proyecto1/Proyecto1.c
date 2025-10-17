@@ -263,6 +263,7 @@ struct ONU* createNewIA(){
     if (!newONU) return NULL;    
     //direcciones
     newONU->actualPais = NULL; //No esta en ningun pais por ahora
+    return newONU;
 };
 
 //################################################################
@@ -291,10 +292,7 @@ int quitarPaisesMuertos(struct Latinoamerica* lista) {
     return paises_muertos;
 }
 
-
-
 //E: tamannio de lista, lista y probabilidad_aumentar
-
 void aumentarAleatorio(struct Latinoamerica* lista, int probabilidad_aumentar, int tamannio){
     //NUmeros aleatorios
     int probabilidad = randint(0,probabilidad_aumentar); //probabilidad que dice si aumenta o no
@@ -357,14 +355,9 @@ void expansionValores(struct Latinoamerica* lista, int cantidad_aumentar) {
         actual = actual->next;
     }
 }
-
-    
-
 //#######################################
 //ACIONES DE LA IA
 //#########################################
-
-
 //-------------------------------------------------------------------------------
 //                      MOVIMIENTOS IA
 //-------------------------------------------------------------------------------
@@ -414,6 +407,7 @@ bool ponerONU(struct Latinoamerica* lista, struct ONU* ONU) {
     if (ONU->actualPais == NULL) {
         ONU->actualPais = lista->end;
     }
+    return true;
 }
 
 bool hacerProyectoIA(int probabilidad_fracaso_proyecto, struct Pais* pais){
@@ -511,7 +505,6 @@ struct TablaProyectos {
 //----------------------------------------------------------------
 // FUNCIÓN DE HASH
 //----------------------------------------------------------------
-
 // Función hash simple usando suma de caracteres
 unsigned int funcionHash(const char* clave, int tamanio) {
     unsigned int hash = 0;
@@ -524,7 +517,6 @@ unsigned int funcionHash(const char* clave, int tamanio) {
 //----------------------------------------------------------------
 // CREAR TABLA
 //----------------------------------------------------------------
-
 struct TablaProyectos* crearTablaProyectos() {
     struct TablaProyectos* tabla = calloc(1, sizeof(struct TablaProyectos));
     if (!tabla) return NULL;
@@ -540,7 +532,6 @@ struct TablaProyectos* crearTablaProyectos() {
     
     return tabla;
 }
-
 //----------------------------------------------------------------
 // CREAR PROYECTO
 //----------------------------------------------------------------
@@ -563,7 +554,6 @@ struct Proyecto* crearProyecto(const char* nombre, const char* descripcion,
 //----------------------------------------------------------------
 // REDIMENSIONAR TABLA
 //----------------------------------------------------------------
-
 void redimensionarTabla(struct TablaProyectos* tabla) {
     int nuevoTamanio = tabla->tamanio * 2;
     struct Proyecto** nuevaTabla = calloc(nuevoTamanio, sizeof(struct Proyecto*));
@@ -598,8 +588,7 @@ void redimensionarTabla(struct TablaProyectos* tabla) {
 // INSERTAR PROYECTO
 //----------------------------------------------------------------
 
-bool insertarProyecto(struct TablaProyectos* tabla, const char* nombre, 
-                    const char* descripcion, const char* bibliografia, 
+bool insertarProyecto(struct TablaProyectos* tabla, const char* nombre, const char* descripcion, const char* bibliografia, 
                     const char* paises, int aspecto) {
     if (!tabla) return false;
     
@@ -832,7 +821,6 @@ bool jugador_moverse_izquierda(struct Latinoamerica* lista, struct Jugador* juga
     return true;
 }
 
-
 //################################################################
 // CONDICIONES DE VICTORIA Y DERROTA
 //################################################################
@@ -884,13 +872,11 @@ bool verificarDerrota(struct Latinoamerica* lista) {
 // Hacer Proyectos 
 //----------------------------------------------------------------
 
-bool jugador_hacerProyecto(struct TablaProyectos* tablaProyectos, 
-                                   int probabilidad_fracaso_proyecto, 
-                                   struct Pais* pais) {
+bool jugador_hacerProyecto(struct TablaProyectos* tablaProyectos, int probabilidad_fracaso_proyecto, struct Pais* pais) {
     if (!pais || !tablaProyectos) return false;
     
     printf("\nPais actual: %s [Gestion pub: %d, Salud: %d]\n", 
-           pais->nombre, pais->primer_valor, pais->segundo_valor);
+        pais->nombre, pais->primer_valor, pais->segundo_valor);
     
     // Mostrar qué aspecto se puede mejorar
     printf("\nQue aspecto deseas mejorar?\n");
@@ -982,7 +968,7 @@ bool turnoJugador(struct Latinoamerica* lista, struct Jugador* jugador,
         printf("1. Moverse derecha\n");
         printf("2. Moverse izquierda\n");
         printf("3. Implementar proyecto\n");
-        printf("4. Ver mapa completo\n");
+        printf("4. Ver mapa completo\n"); 
         printf("Opcion: ");
         
         int opcion;
@@ -998,11 +984,10 @@ bool turnoJugador(struct Latinoamerica* lista, struct Jugador* jugador,
                 cant_acciones--;
                 break;
             case 3:
-                if (jugador_hacerProyecto(tablaProyectos, probabilidad_fracaso_proyecto, 
-                                                jugador->actualPais)) {
+                if (jugador_hacerProyecto(tablaProyectos, probabilidad_fracaso_proyecto, jugador->actualPais)) {
                     cant_acciones--;
                 } else {
-                    printf("No se consumio accion\n");
+                    printf("No se logro el proyecto\n");
                 }
                 break;
             case 4:
@@ -1021,10 +1006,8 @@ bool turnoJugador(struct Latinoamerica* lista, struct Jugador* jugador,
 // Ciclo del juego
 //----------------------------------------------------------------
 
-void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador, 
-                            struct ONU* onu, struct TablaProyectos* tablaProyectos,
-                            int cant_acciones_jugador, int cant_acciones_onu, 
-                            int prob_fracaso_proyecto, int prob_aumentar_pais, 
+void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador, struct ONU* onu, struct TablaProyectos* tablaProyectos,
+                            int cant_acciones_jugador, int cant_acciones_onu, int prob_fracaso_proyecto, int prob_aumentar_pais, 
                             int max_valor_expansion) {
     
     int tamannio = contarPaises(lista);
@@ -1037,8 +1020,7 @@ void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador,
         printf("Paises restantes: %d\n", tamannio);
         
         // TURNO DEL JUGADOR
-        turnoJugador(lista, jugador, tablaProyectos, 
-                                cant_acciones_jugador, prob_fracaso_proyecto);
+        turnoJugador(lista, jugador, tablaProyectos, cant_acciones_jugador, prob_fracaso_proyecto);
         
         if (verificarVictoria(lista)) break;
         
@@ -1049,7 +1031,7 @@ void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador,
         if (verificarVictoria(lista)) break;
         
         // EXPANSION DE PROBLEMATICAS
-        printf("\nExpansion de problematicas\n");
+        printf("\nExpansion de aspectos problematicos\n");
         aumentarAleatorio(lista, prob_aumentar_pais, tamannio);
         expansionValores(lista, max_valor_expansion);
         
@@ -1068,8 +1050,6 @@ void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador,
     
     printf("\nFin de la partida\n");
 }
-
-
 
 //----------------------------------------------------------------
 // LIBERAR TABLA
@@ -1090,6 +1070,7 @@ void liberarTablaProyectos(struct TablaProyectos* tabla) {
     free(tabla->tabla);
     free(tabla);
 }
+
 // MAIN 
 
 int main() {

@@ -484,41 +484,642 @@ bool turnoIA (struct Latinoamerica* lista, struct ONU* onu, int cant_movimientos
     return true;
 }
 
-// Ejemplo de uso
+//################################################################
+// TABLA DE DISPERSIÓN DE PROYECTOS
+//################################################################
+
+#define TAMANIO_INICIAL_TABLA 20
+#define FACTOR_CARGA_MAX 0.7
+
+// Estructura de un proyecto
+struct Proyecto {
+    char nombre[100];
+    char descripcion[300];
+    char bibliografia[400];
+    char paises[200];  // países donde se aplicó
+    int aspecto;  // 1 = gestión pública, 2 = salud
+    struct Proyecto* siguiente;  // para colisiones (encadenamiento)
+};
+
+// Tabla de dispersión
+struct TablaProyectos {
+    struct Proyecto** tabla;
+    int tamanio;
+    int elementos;
+};
+
+//----------------------------------------------------------------
+// FUNCIÓN DE HASH
+//----------------------------------------------------------------
+
+// Función hash simple usando suma de caracteres
+unsigned int funcionHash(const char* clave, int tamanio) {
+    unsigned int hash = 0;
+    for (int i = 0; clave[i] != '\0'; i++) {
+        hash = (hash * 31 + clave[i]) % tamanio;
+    }
+    return hash;
+}
+
+//----------------------------------------------------------------
+// CREAR TABLA
+//----------------------------------------------------------------
+
+struct TablaProyectos* crearTablaProyectos() {
+    struct TablaProyectos* tabla = calloc(1, sizeof(struct TablaProyectos));
+    if (!tabla) return NULL;
+    
+    tabla->tamanio = TAMANIO_INICIAL_TABLA;
+    tabla->elementos = 0;
+    tabla->tabla = calloc(tabla->tamanio, sizeof(struct Proyecto*));
+    
+    if (!tabla->tabla) {
+        free(tabla);
+        return NULL;
+    }
+    
+    return tabla;
+}
+
+//----------------------------------------------------------------
+// CREAR PROYECTO
+//----------------------------------------------------------------
+
+struct Proyecto* crearProyecto(const char* nombre, const char* descripcion, 
+                            const char* bibliografia, const char* paises, int aspecto) {
+    struct Proyecto* nuevo = calloc(1, sizeof(struct Proyecto));
+    if (!nuevo) return NULL;
+    
+    strncpy(nuevo->nombre, nombre, sizeof(nuevo->nombre) - 1);
+    strncpy(nuevo->descripcion, descripcion, sizeof(nuevo->descripcion) - 1);
+    strncpy(nuevo->bibliografia, bibliografia, sizeof(nuevo->bibliografia) - 1);
+    strncpy(nuevo->paises, paises, sizeof(nuevo->paises) - 1);
+    nuevo->aspecto = aspecto;
+    nuevo->siguiente = NULL;
+    
+    return nuevo;
+}
+
+//----------------------------------------------------------------
+// REDIMENSIONAR TABLA
+//----------------------------------------------------------------
+
+void redimensionarTabla(struct TablaProyectos* tabla) {
+    int nuevoTamanio = tabla->tamanio * 2;
+    struct Proyecto** nuevaTabla = calloc(nuevoTamanio, sizeof(struct Proyecto*));
+    
+    if (!nuevaTabla) return;
+    
+    // Reinsertar todos los elementos
+    for (int i = 0; i < tabla->tamanio; i++) {
+        struct Proyecto* actual = tabla->tabla[i];
+        while (actual) {
+            struct Proyecto* siguiente = actual->siguiente;
+            
+            // Calcular nueva posición
+            unsigned int nuevaPos = funcionHash(actual->nombre, nuevoTamanio);
+            
+            // Insertar en nueva tabla
+            actual->siguiente = nuevaTabla[nuevaPos];
+            nuevaTabla[nuevaPos] = actual;
+            
+            actual = siguiente;
+        }
+    }
+    
+    free(tabla->tabla);
+    tabla->tabla = nuevaTabla;
+    tabla->tamanio = nuevoTamanio;
+    
+    printf("Tabla redimensionada a %d\n", nuevoTamanio);
+}
+
+//----------------------------------------------------------------
+// INSERTAR PROYECTO
+//----------------------------------------------------------------
+
+bool insertarProyecto(struct TablaProyectos* tabla, const char* nombre, 
+                    const char* descripcion, const char* bibliografia, 
+                    const char* paises, int aspecto) {
+    if (!tabla) return false;
+    
+    // Verificar factor de carga
+    float factorCarga = (float)tabla->elementos / tabla->tamanio;
+    if (factorCarga > FACTOR_CARGA_MAX) {
+        redimensionarTabla(tabla);
+    }
+    
+    unsigned int posicion = funcionHash(nombre, tabla->tamanio);
+    
+    struct Proyecto* nuevo = crearProyecto(nombre, descripcion, bibliografia, paises, aspecto);
+    if (!nuevo) return false;
+    
+    // Insertar al inicio de la lista (manejo de colisiones)
+    nuevo->siguiente = tabla->tabla[posicion];
+    tabla->tabla[posicion] = nuevo;
+    tabla->elementos++;
+    
+    return true;
+}
+
+//----------------------------------------------------------------
+// CARGAR PROYECTOS DE CORRUPCIÓN
+//----------------------------------------------------------------
+
+void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
+    // PROYECTOS DE GESTIÓN PÚBLICA (aspecto 1)
+    
+    insertarProyecto(tabla, 
+        "Sanciones administrativas",
+        "Leyes que permitan sancionar funcionarios publicos por actos de corrupcion",
+        "Peru tiene procedimientos sancionadores efectivos",
+        "Peru",
+        1);
+    
+    insertarProyecto(tabla,
+        "Licitaciones transparentes",
+        "Procesos de compra publica transparentes con licitacion",
+        "Chile tiene portal ChileCompra que mejora transparencia",
+        "Chile",
+        1);
+    
+    insertarProyecto(tabla,
+        "Supervision externa",
+        "ONGs u organismos internacionales revisan gasto publico",
+        "Presion mediatica lleva a reformas",
+        "Varios paises",
+        1);
+    
+    insertarProyecto(tabla,
+        "Canales de denuncia",
+        "Mecanismos seguros para denunciar irregularidades",
+        "Proteccion a denunciantes reduce corrupcion",
+        "Latinoamerica",
+        1);
+    
+    insertarProyecto(tabla,
+        "Digitalizacion de compras",
+        "Sistemas digitales para tramites de compras y contratos",
+        "Peru usa PAS digital, Chile usa ChileCompra",
+        "Peru, Chile",
+        1);
+    
+    insertarProyecto(tabla,
+        "Portal transparencia",
+        "Plataforma digital con contratos publicos accesibles",
+        "BID indica que mejora gestion financiera",
+        "Varios paises",
+        1);
+    
+    insertarProyecto(tabla,
+        "Blockchain compras",
+        "Blockchain para registro de procesos de contratacion",
+        "Costa Rica estudia SICOP con blockchain",
+        "Costa Rica",
+        1);
+    
+    insertarProyecto(tabla,
+        "Analisis predictivo",
+        "Machine learning para detectar patrones de corrupcion",
+        "Mexico usa modelo para identificar contratos corruptos",
+        "Mexico",
+        1);
+    
+    // PROYECTOS DE SALUD (aspecto 2)
+    
+    insertarProyecto(tabla,
+        "Denuncias salud",
+        "Canales anonimos para denunciar corrupcion en salud",
+        "Proteccion a denunciantes reduce corrupcion detectada",
+        "Latinoamerica",
+        2);
+    
+    insertarProyecto(tabla,
+        "Whistleblower protections",
+        "Proteccion legal a denunciantes en sector salud",
+        "Costa Rica y Peru tienen sistemas de proteccion",
+        "Costa Rica, Peru",
+        2);
+    
+    insertarProyecto(tabla,
+        "Auditorias rapidas",
+        "Auditorias independientes rapidas ante alertas",
+        "COVID-19 demostro efectividad de auditorias externas",
+        "Varios paises",
+        2);
+    
+    insertarProyecto(tabla,
+        "Digitalizacion salud",
+        "Sistemas digitales para compras de insumos medicos",
+        "Reduce sobornos en compras medicas",
+        "Varios paises",
+        2);
+    
+    printf("Proyectos cargados: %d\n", tabla->elementos);
+}
+
+//----------------------------------------------------------------
+// BUSCAR PROYECTOS POR ASPECTO
+//----------------------------------------------------------------
+
+void listarProyectosPorAspecto(struct TablaProyectos* tabla, int aspecto) {
+    if (!tabla) return;
+    
+    const char* nombreAspecto = (aspecto == 1) ? "Gestion publica" : "Salud";
+    printf("\n=== Proyectos de %s ===\n", nombreAspecto);
+    
+    int contador = 1;
+    for (int i = 0; i < tabla->tamanio; i++) {
+        struct Proyecto* actual = tabla->tabla[i];
+        while (actual) {
+            if (actual->aspecto == aspecto) {
+                printf("%d. %s\n", contador, actual->nombre);
+                contador++;
+            }
+            actual = actual->siguiente;
+        }
+    }
+}
+
+//----------------------------------------------------------------
+// MOSTRAR DETALLES DE PROYECTO
+//----------------------------------------------------------------
+
+struct Proyecto* buscarProyecto(struct TablaProyectos* tabla, const char* nombre) {
+    if (!tabla) return NULL;
+    
+    unsigned int posicion = funcionHash(nombre, tabla->tamanio);
+    struct Proyecto* actual = tabla->tabla[posicion];
+    
+    while (actual) {
+        if (strcmp(actual->nombre, nombre) == 0) {
+            return actual;
+        }
+        actual = actual->siguiente;
+    }
+    
+    return NULL;
+}
+
+void mostrarDetallesProyecto(struct Proyecto* proyecto) {
+    if (!proyecto) return;
+    
+    printf("\nProyecto: %s\n", proyecto->nombre);
+    printf("Descripcion: %s\n", proyecto->descripcion);
+    printf("Bibliografia: %s\n", proyecto->bibliografia);
+    printf("Aplicado en: %s\n", proyecto->paises);
+}
+
+//################################################################
+// ESTRUCTURA Y FUNCIONES DEL JUGADOR
+//################################################################
+
+struct Jugador {
+    struct Pais* actualPais;
+    char nombre[30];
+};
+
+// Crear jugador
+struct Jugador* createNewJugador(const char* nombre) {
+    struct Jugador* newJugador = calloc(1, sizeof(struct Jugador));
+    if (!newJugador) return NULL;
+    
+    strncpy(newJugador->nombre, nombre, sizeof(newJugador->nombre) - 1);
+    newJugador->nombre[sizeof(newJugador->nombre) - 1] = '\0';
+    newJugador->actualPais = NULL;
+    
+    return newJugador;
+}
+
+// Posicionar jugador al inicio
+bool ponerJugador(struct Latinoamerica* lista, struct Jugador* jugador) {
+    if (!jugador || !lista || !lista->start) return false;
+    
+    if (jugador->actualPais == NULL) {
+        jugador->actualPais = lista->start;
+        printf("%s comienza en: %s\n", jugador->nombre, jugador->actualPais->nombre);
+    }
+    return true;
+}
+
+//----------------------------------------------------------------
+// MOVIMIENTOS DEL JUGADOR 
+//----------------------------------------------------------------
+
+bool jugador_moverse_derecha(struct Latinoamerica* lista, struct Jugador* jugador) {
+    if (!jugador || !lista || !jugador->actualPais) return false;
+
+    if (jugador->actualPais->next == NULL) {
+        jugador->actualPais = lista->start;
+    } else {
+        jugador->actualPais = jugador->actualPais->next;
+    }
+
+    printf("Te moviste a: %s\n", jugador->actualPais->nombre);
+    return true;
+}
+
+bool jugador_moverse_izquierda(struct Latinoamerica* lista, struct Jugador* jugador) {
+    if (!jugador || !lista || !jugador->actualPais) return false;
+
+    if (jugador->actualPais->prev == NULL) {
+        jugador->actualPais = lista->end;
+    } else {
+        jugador->actualPais = jugador->actualPais->prev;
+    }
+
+    printf("Te moviste a: %s\n", jugador->actualPais->nombre);
+    return true;
+}
+
+
+//################################################################
+// CONDICIONES DE VICTORIA Y DERROTA
+//################################################################
+
+bool verificarVictoria(struct Latinoamerica* lista) {
+    if (!lista || !lista->start) return false;
+    
+    bool aspecto1_erradicado = true;
+    bool aspecto2_erradicado = true;
+    
+    struct Pais* actual = lista->start;
+    while (actual) {
+        if (actual->primer_valor > 0) aspecto1_erradicado = false;
+        if (actual->segundo_valor > 0) aspecto2_erradicado = false;
+        actual = actual->next;
+    }
+    
+    if (aspecto1_erradicado || aspecto2_erradicado) {
+        printf("\nVICTORIA! Erradicaron por completo un aspecto negativo de todos los paises!\n");
+        return true;
+    }
+    
+    return false;
+}
+
+int contarPaises(struct Latinoamerica* lista) {
+    if (!lista || !lista->start) return 0;
+    
+    int count = 0;
+    struct Pais* actual = lista->start;
+    while (actual) {
+        count++;
+        actual = actual->next;
+    }
+    return count;
+}
+
+bool verificarDerrota(struct Latinoamerica* lista) {
+    int cantidad = contarPaises(lista);
+    
+    if (cantidad <= 3) {
+        printf("\nDERROTA. Quedan solo %d paises.\n", cantidad);
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+// Hacer Proyectos 
+//----------------------------------------------------------------
+
+bool jugador_hacerProyecto(struct TablaProyectos* tablaProyectos, 
+                                   int probabilidad_fracaso_proyecto, 
+                                   struct Pais* pais) {
+    if (!pais || !tablaProyectos) return false;
+    
+    printf("\nPais actual: %s [Gestion pub: %d, Salud: %d]\n", 
+           pais->nombre, pais->primer_valor, pais->segundo_valor);
+    
+    // Mostrar qué aspecto se puede mejorar
+    printf("\nQue aspecto deseas mejorar?\n");
+    printf("1. Gestion publica (valor actual: %d)\n", pais->primer_valor);
+    printf("2. Salud (valor actual: %d)\n", pais->segundo_valor);
+    printf("0. Cancelar\n");
+    printf("Opcion: ");
+    
+    int aspecto;
+    scanf("%d", &aspecto);
+    
+    if (aspecto == 0) return false;
+    if (aspecto != 1 && aspecto != 2) {
+        printf("Opcion invalida\n");
+        return false;
+    }
+    
+    // Mostrar proyectos disponibles para ese aspecto
+    listarProyectosPorAspecto(tablaProyectos, aspecto);
+    
+    // Crear array temporal con los proyectos del aspecto
+    struct Proyecto* proyectosDisponibles[20];
+    int contador = 0;
+    
+    for (int i = 0; i < tablaProyectos->tamanio && contador < 20; i++) {
+        struct Proyecto* actual = tablaProyectos->tabla[i];
+        while (actual && contador < 20) {
+            if (actual->aspecto == aspecto) {
+                proyectosDisponibles[contador] = actual;
+                contador++;
+            }
+            actual = actual->siguiente;
+        }
+    }
+    
+    printf("\nSelecciona un proyecto (1-%d) o 0 para cancelar: ", contador);
+    int seleccion;
+    scanf("%d", &seleccion);
+    
+    if (seleccion == 0) return false;
+    if (seleccion < 1 || seleccion > contador) {
+        printf("Seleccion invalida\n");
+        return false;
+    }
+    
+    struct Proyecto* proyectoSeleccionado = proyectosDisponibles[seleccion - 1];
+    mostrarDetallesProyecto(proyectoSeleccionado);
+    
+    // Intentar implementar el proyecto
+    int probabilidad = randint(0, probabilidad_fracaso_proyecto);
+    int numero_cambio = randint(1, 2);
+    
+    int* objetivo = (aspecto == 1) ? &pais->primer_valor : &pais->segundo_valor;
+    
+    if (probabilidad == 0) {
+        // Fracaso
+        *objetivo += numero_cambio;
+        if (*objetivo > 3) *objetivo = 3;
+        printf("\nProyecto FRACASO! Aspecto aumento en %d\n", numero_cambio);
+        return false;
+    } else {
+        // Éxito
+        *objetivo -= numero_cambio;
+        if (*objetivo < 0) *objetivo = 0;
+        printf("\nProyecto EXITOSO! Aspecto disminuyo en %d\n", numero_cambio);
+        return true;
+    }
+}
+
+//----------------------------------------------------------------
+// Turno del jugador
+//----------------------------------------------------------------
+
+bool turnoJugador(struct Latinoamerica* lista, struct Jugador* jugador, 
+                            struct TablaProyectos* tablaProyectos,
+                            int cant_acciones, int probabilidad_fracaso_proyecto) {
+    if (!lista || !jugador || !jugador->actualPais) return false;
+    
+    printf("\nTurno de: %s\n", jugador->nombre);
+    printf("Acciones: %d\n", cant_acciones);
+    
+    while (cant_acciones > 0) {
+        printf("\nPais actual: %s [%d, %d]\n", 
+            jugador->actualPais->nombre, 
+            jugador->actualPais->primer_valor, 
+            jugador->actualPais->segundo_valor);
+        
+        printf("Acciones restantes: %d\n", cant_acciones);
+        printf("1. Moverse derecha\n");
+        printf("2. Moverse izquierda\n");
+        printf("3. Implementar proyecto\n");
+        printf("4. Ver mapa completo\n");
+        printf("Opcion: ");
+        
+        int opcion;
+        scanf("%d", &opcion);
+        
+        switch(opcion) {
+            case 1:
+                jugador_moverse_derecha(lista, jugador);
+                cant_acciones--;
+                break;
+            case 2:
+                jugador_moverse_izquierda(lista, jugador);
+                cant_acciones--;
+                break;
+            case 3:
+                if (jugador_hacerProyecto(tablaProyectos, probabilidad_fracaso_proyecto, 
+                                                jugador->actualPais)) {
+                    cant_acciones--;
+                } else {
+                    printf("No se consumio accion\n");
+                }
+                break;
+            case 4:
+                printList(lista);
+                break;
+            default:
+                printf("Opcion invalida\n");
+        }
+    }
+    
+    printf("Turno completado\n");
+    return true;
+}
+
+//----------------------------------------------------------------
+// Ciclo del juego
+//----------------------------------------------------------------
+
+void cicloDeJuego(struct Latinoamerica* lista, struct Jugador* jugador, 
+                            struct ONU* onu, struct TablaProyectos* tablaProyectos,
+                            int cant_acciones_jugador, int cant_acciones_onu, 
+                            int prob_fracaso_proyecto, int prob_aumentar_pais, 
+                            int max_valor_expansion) {
+    
+    int tamannio = contarPaises(lista);
+    
+    printf("\nComienza la partida\n");
+    printf("Paises iniciales: %d\n", tamannio);
+    
+    while (true) {
+        printf("\n=====================================\n");
+        printf("Paises restantes: %d\n", tamannio);
+        
+        // TURNO DEL JUGADOR
+        turnoJugador(lista, jugador, tablaProyectos, 
+                                cant_acciones_jugador, prob_fracaso_proyecto);
+        
+        if (verificarVictoria(lista)) break;
+        
+        // TURNO DE LA ONU
+        printf("\nTurno de la ONU\n");
+        turnoIA(lista, onu, cant_acciones_onu, prob_fracaso_proyecto);
+        
+        if (verificarVictoria(lista)) break;
+        
+        // EXPANSION DE PROBLEMATICAS
+        printf("\nExpansion de problematicas\n");
+        aumentarAleatorio(lista, prob_aumentar_pais, tamannio);
+        expansionValores(lista, max_valor_expansion);
+        
+        // ELIMINAR PAISES MUERTOS
+        int paises_muertos = quitarPaisesMuertos(lista);
+        if (paises_muertos > 0) {
+            printf("%d pais(es) colapsaron\n", paises_muertos);
+            tamannio -= paises_muertos;
+        }
+        
+        printf("\nEstado del mapa:\n");
+        printList(lista);
+        
+        if (verificarDerrota(lista)) break;
+    }
+    
+    printf("\nFin de la partida\n");
+}
+
+
+
+//----------------------------------------------------------------
+// LIBERAR TABLA
+//----------------------------------------------------------------
+
+void liberarTablaProyectos(struct TablaProyectos* tabla) {
+    if (!tabla) return;
+    
+    for (int i = 0; i < tabla->tamanio; i++) {
+        struct Proyecto* actual = tabla->tabla[i];
+        while (actual) {
+            struct Proyecto* temp = actual->siguiente;
+            free(actual);
+            actual = temp;
+        }
+    }
+    
+    free(tabla->tabla);
+    free(tabla);
+}
+// MAIN 
+
 int main() {
     srand(time(NULL));
-    int tipo; // 0=pequeño,1=mediano,2=grande
-    int dificultad; // afecta los valores
-    printf("Escoga su tipo de mapa y nivel de dificultad\n");
-    printf("Tipo: ");
+    
+    int tipo;
+    int dificultad;
+    
+    printf("Tematica: CORRUPCION en Latinoamerica\n");
+    printf("Aspectos: 1= Gestion publica, 2= Salud\n\n");
+    
+    printf("Selecciona tamano del mapa (0=pequeno, 1=mediano, 2=grande): ");
     scanf("%d", &tipo);
-    printf("\n DIff: ");
+    
+    printf("Selecciona dificultad (0=facil, 1=medio, 2=dificil): ");
     scanf("%d", &dificultad);
-
-    int tamannio = 0;   //tamannio del mapa se debe actualizar con el int que quita paises muertos y retorna la cantidad que fueron quitados 
-    int cantidad_mov_IA = 0;    //cantidad de movimientos de la IA por turno
-    int prob_fracaso_proyecto = 0;  //probabilidad de fracaso de la IA
-    int prob_aumentar_pais = 0; //probabildiad que aumente en un pais aleatorio una problematica
-    int max_valor_expansion = 0; //cantidad maxima del valor a la hora de expandirse
-    //Definicion del tamannio
-    if (tipo == 0 ){
-        tamannio = 3;
-    }
-    else if (tipo == 1){
-        tamannio = 8;
-    }
-    else {
-        tipo = 2;
-        tamannio = 16;
-    };
-
-    //definicion segun la dificultad de valores y que tan buena es la IA
-    if (dificultad == 0){
+    
+    // Variables de configuración
+    int cantidad_mov_jugador = 4;
+    int cantidad_mov_IA = 0;
+    int prob_fracaso_proyecto = 0;
+    int prob_aumentar_pais = 0;
+    int max_valor_expansion = 0;
+    
+    if (dificultad == 0) {
         cantidad_mov_IA = 4;
         prob_fracaso_proyecto = 3;
         prob_aumentar_pais = 1;
         max_valor_expansion = 1;
-    } else if (dificultad == 1){
+    } else if (dificultad == 1) {
         cantidad_mov_IA = 4;
         prob_fracaso_proyecto = 2;
         prob_aumentar_pais = 0;
@@ -529,45 +1130,46 @@ int main() {
         prob_aumentar_pais = 0;
         max_valor_expansion = 2;
     }
-
-
+    
+    // Crear el mundo
     struct Latinoamerica* lista = generarLatinoamericaAleatoria(tipo, dificultad);
+    
+    // Crear tabla de proyectos
+    printf("\nCargando proyectos contra corrupcion...\n");
+    struct TablaProyectos* tablaProyectos = crearTablaProyectos();
+    cargarProyectosCorrupcion(tablaProyectos);
+    
+    // Crear jugadores
+    printf("\nIngresa el nombre del Jugador: ");
+    char nombre[30];
+    scanf("%s", nombre);
+    
+    struct Jugador* jugador = createNewJugador(nombre);
     struct ONU* onu = createNewIA();
-    printList(lista);
-    imprimirLatinoamerica(lista);
-
+    
+    // Posicionar jugadores
+    ponerJugador(lista, jugador);
     ponerONU(lista, onu);
-
-    printf("\n\n\n");
-    printf("Turno de IA\n");
-    turnoIA(lista, onu, cantidad_mov_IA, prob_fracaso_proyecto);
-    printList(lista);
-
-    aumentarAleatorio(lista,prob_aumentar_pais,tamannio);
-
-    printf("Se aumentan los aspectos negativos en algun pais \n \n");
-    printList(lista);
-
-    printf("\n");
-    expansionValores(lista, max_valor_expansion);
+    
+    printf("\nEstado inicial:\n");
     printList(lista);
     
-    int paises_muertos = quitarPaisesMuertos(lista);
-    tamannio -= paises_muertos;
-    printf("Lista post eliminados\n");
-    printList(lista);
+    // INICIAR EL JUEGO
+    cicloDeJuego(lista, jugador, onu, tablaProyectos,
+                cantidad_mov_jugador, cantidad_mov_IA, 
+                prob_fracaso_proyecto, prob_aumentar_pais, 
+                max_valor_expansion);
     
+    // Limpiar memoria
+    free(jugador);
+    free(onu);
+    liberarTablaProyectos(tablaProyectos);
     liberarLista(lista);
-
+    
     return 0;
 }
 
 //TODO: JUGADOR Y SUS FUNCIONES
-//PROYECTOS DEL JUGADOR HASHMAP Y TODO ESO
-//EL CICLO DE TURNOS
-//GANAR/PERDER
 //Comentarios mas bonitos en ciclo de juego
 
 //SI DA TIEMPO HACEMOS EL MODO ONU DEMONIO (mayor cantidad de turnos pero mayor cantidad de fracaso en sus proyectos) u ONU utopia (menor cantidad de turno pero practicamente 100% de probabildad de exito)
-Programa.c
-19 KB

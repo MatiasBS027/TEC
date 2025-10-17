@@ -23,16 +23,13 @@ public class Menu extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
         // Detectar cambios de estado
-        addWindowStateListener(new java.awt.event.WindowStateListener() {
-            @Override
-            public void windowStateChanged(java.awt.event.WindowEvent e) {
-                if ((e.getNewState() & javax.swing.JFrame.MAXIMIZED_BOTH) == javax.swing.JFrame.MAXIMIZED_BOTH) {
-                    System.out.println("Ventana maximizada");
-                } else if (e.getNewState() == javax.swing.JFrame.NORMAL) {
-                    // tamaño al restaurar
-                    setSize(1024, 768);
-                    setLocationRelativeTo(null);
-                }
+        addWindowStateListener((java.awt.event.WindowEvent e) -> {
+            if ((e.getNewState() & javax.swing.JFrame.MAXIMIZED_BOTH) == javax.swing.JFrame.MAXIMIZED_BOTH) {
+                System.out.println("Ventana maximizada");
+            } else if (e.getNewState() == javax.swing.JFrame.NORMAL) {
+                // tamaño al restaurar
+                setSize(1024, 768);
+                setLocationRelativeTo(null);
             }
         });
 
@@ -62,25 +59,22 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Taller Mecanico");
+        setAutoRequestFocus(false);
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel1.setMaximumSize(new java.awt.Dimension(1024, 768));
         jPanel1.setPreferredSize(new java.awt.Dimension(1024, 768));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel3.setText("Servicios");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(792, 212, 193, -1));
-
-        jLabel2.setText("Mecanicos");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(402, 212, 204, -1));
+        jPanel1.setLayout(new java.awt.GridLayout(2, 3, 100, 0));
 
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -88,10 +82,7 @@ public class Menu extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 350, 200));
-
-        jLabel1.setText("Clientes");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 212, 192, -1));
+        jPanel1.add(jButton1);
 
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -99,34 +90,31 @@ public class Menu extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 347, 200));
+        jPanel1.add(jButton2);
 
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setPreferredSize(new java.awt.Dimension(50, 50));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(792, 6, 347, 200));
+        jPanel1.add(jButton3);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37))
-        );
+        jLabel1.setText("Clientes");
+        jPanel1.add(jLabel1);
+
+        jLabel2.setText("Mecanicos");
+        jPanel1.add(jLabel2);
+
+        jLabel3.setText("Servicios");
+        jPanel1.add(jLabel3);
+
+        getContentPane().add(jPanel1);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

@@ -52,7 +52,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         });
         actualizarEtiquetaServicios();
     }
-    // Llena la tabla con los datos de los mecánicos desde el archivo XML
+    // Llena la tabla con los datos de los mecanicos desde el archivo XML
     private void llenarTabla() {
         mecanicos.clear();
         modelo.setRowCount(0);
@@ -166,6 +166,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         jButtonLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Mecanicos");
 
         jLabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelTitulo.setText("Mecanicos");
@@ -199,8 +200,18 @@ public class ventanaMecanico extends javax.swing.JDialog {
         });
 
         jButtonModificar.setText("Modificar");
+        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarActionPerformed(evt);
+            }
+        });
 
         jButtonBorrar.setText("Borrar");
+        jButtonBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBorrarActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -298,9 +309,9 @@ public class ventanaMecanico extends javax.swing.JDialog {
                     .addComponent(jButtonLimpiar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSalir)
-                .addGap(20, 20, 20))
+                .addGap(32, 32, 32))
         );
 
         pack();
@@ -311,7 +322,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
-        // Agregar nuevo mecánico
+        // Agregar nuevo mecanico
         Mecanico mecanico = construirMecanicoDesdeCampos();
         if (mecanico == null) {
             return;
@@ -342,7 +353,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonVerEditarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        // Modificar mecánico seleccionado
+        // Modificar mecanico seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un mecánico");
@@ -377,7 +388,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
-        // Borrar mecánico seleccionado
+        // Borrar mecanico seleccionado
         int fila = jTable1.getSelectedRow();
         if (fila < 0) {
             mostrarError("Seleccione un mecánico");

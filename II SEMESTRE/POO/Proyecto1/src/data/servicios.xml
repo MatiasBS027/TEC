@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <servicios>
     <servicio id="1000">
-        <nombre>Cambio Aceite 20</nombre>
+        <nombre>Cambio Aceite 200</nombre>
         <precio>20100</precio>
     </servicio>
     <servicio id="101">
@@ -21,11 +21,11 @@
         <precio>15000</precio>
     </servicio>
     <servicio id="105">
-        <nombre>Revision de suspension</nombre>
+        <nombre>Revision de suspensiones</nombre>
         <precio>12000</precio>
     </servicio>
     <servicio id="106">
-        <nombre>Cambio de bujias</nombre>
+        <nombre>Cambio de bujia</nombre>
         <precio>7000</precio>
     </servicio>
     <servicio id="107">
@@ -40,10 +40,6 @@
         <nombre>Reparacion de alternador</nombre>
         <precio>30000</precio>
     </servicio>
-    <servicio id="110">
-        <nombre>Cambio de correa de distribucion</nombre>
-        <precio>40000</precio>
-    </servicio>
     <servicio id="111">
         <nombre>Limpieza de inyectores</nombre>
         <precio>22000</precio>
@@ -52,8 +48,12 @@
         <nombre>Ajuste de valvulas</nombre>
         <precio>27000</precio>
     </servicio>
-    <servicio id="113">
-        <nombre>Cambio de radiador</nombre>
-        <precio>35000</precio>
+    <servicio id="1021">
+        <nombre>Mecanica aeromotriz</nombre>
+        <precio>25000</precio>
+    </servicio>
+    <servicio id="1050">
+        <nombre>Revision General</nombre>
+        <precio>12000</precio>
     </servicio>
 </servicios>

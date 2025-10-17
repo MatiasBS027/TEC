@@ -43,7 +43,7 @@
         <email>laura.s@gmail.com</email>
     </cliente>
     <cliente id="300000777">
-        <nombre>Carlos Gutierrez</nombre>
+        <nombre>Carlos Gutierrez Sa</nombre>
         <placa>GGG700</placa>
         <telefono>7777-7000</telefono>
         <email>carlos.g@gmail.com</email>
@@ -67,9 +67,9 @@
         <email>gabriela.c@gmail.com</email>
     </cliente>
     <cliente id="300001111">
-        <nombre>Fernando Vargas</nombre>
+        <nombre>Fernando V</nombre>
         <placa>KKK110</placa>
-        <telefono>7777-1110</telefono>
+        <telefono>7777-1111</telefono>
         <email>fernando.v@gmail.com</email>
     </cliente>
     <cliente id="300001222">
@@ -95,12 +95,6 @@
         <placa>OOO150</placa>
         <telefono>7777-1510</telefono>
         <email>diego.n@gmail.com</email>
-    </cliente>
-    <cliente id="300001666">
-        <nombre>Sofia Alvarez</nombre>
-        <placa>PPP160</placa>
-        <telefono>7777-1610</telefono>
-        <email>sofia.a@gmail.com</email>
     </cliente>
     <cliente id="300001777">
         <nombre>Manuel Ortega</nombre>
@@ -138,12 +132,6 @@
         <telefono>7777-2210</telefono>
         <email>diana.s@gmail.com</email>
     </cliente>
-    <cliente id="300002333">
-        <nombre>Julio Reyes</nombre>
-        <placa>WWW230</placa>
-        <telefono>7777-2310</telefono>
-        <email>julio.r@gmail.com</email>
-    </cliente>
     <cliente id="300002444">
         <nombre>Elena Campos</nombre>
         <placa>XXX240</placa>
@@ -173,5 +161,23 @@
         <placa>BBB280</placa>
         <telefono>7777-2810</telefono>
         <email>patricia.n@gmail.com</email>
+    </cliente>
+    <cliente id="3000005">
+        <nombre>Ricardo</nombre>
+        <placa>EEE500</placa>
+        <telefono>7777-5000</telefono>
+        <email>ricardo.t@gmail.com</email>
+    </cliente>
+    <cliente id="3000022">
+        <nombre>Matias Benavides</nombre>
+        <placa>VVV220</placa>
+        <telefono>7777-2210</telefono>
+        <email>diana.s@gmail.com</email>
+    </cliente>
+    <cliente id="300001889">
+        <nombre>Claudia Rodriguez</nombre>
+        <placa>RRR180</placa>
+        <telefono>7777-1810</telefono>
+        <email>claudia.r@gmail.com</email>
     </cliente>
 </clientes>

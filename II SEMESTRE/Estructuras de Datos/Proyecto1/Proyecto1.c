@@ -188,7 +188,6 @@ void asignarValores(int tipo, int dificultad, int index, int* val1, int* val2) {
             else { *val1=0+dificultad; *val2=1; }
             break;
     }
-
     // Limitar máximo 3
     if (*val1 > 3) *val1 = 3;
     if (*val2 > 3) *val2 = 3;
@@ -199,14 +198,12 @@ void asignarValores(int tipo, int dificultad, int index, int* val1, int* val2) {
 struct Latinoamerica* generarLatinoamericaAleatoria(int tipo, int dificultad) {
     struct Latinoamerica* lista = calloc(1, sizeof(struct Latinoamerica));
     if (!lista) return NULL;
-
     const char* paises[17] = {
         "Mexico", "Guatemala", "Honduras", "El Salvador",
         "Nicaragua", "Costa Rica", "Panama", "Colombia",
         "Venezuela", "Ecuador", "Peru", "Bolivia",
         "Paraguay", "Chile", "Argentina", "Uruguay", "Brasil"
     };
-
     int cantidad;
     switch (tipo) {
         case 0: cantidad = 4; break;   // pequeño
@@ -214,7 +211,6 @@ struct Latinoamerica* generarLatinoamericaAleatoria(int tipo, int dificultad) {
         case 2: cantidad = 17; break;  // grande
         default: free(lista); return NULL;
     }
-
     int pais_inicial = randint(0, 16);
     for (int i = 0; i < cantidad; i++) {
         int val1, val2;
@@ -226,7 +222,6 @@ struct Latinoamerica* generarLatinoamericaAleatoria(int tipo, int dificultad) {
         }
         agregarPais(lista, nuevo);
     }
-
     return lista;
 }
 
@@ -242,9 +237,7 @@ void liberarLista(struct Latinoamerica* lista) {
     free(lista);
 }
 
-
 //En lista doblemente enlazada luego puedo dependiendo del tamannio solo asignar con 3 todos los paises que deseo eliminar y luego los elimino.
-
 
 //#################################################################################
 //  IA
@@ -254,7 +247,6 @@ void liberarLista(struct Latinoamerica* lista) {
 struct ONU {
     struct Pais* actualPais; //Pais al que ve
 };
-
 
 //La probabilidad de exito se da por un valor y un random.
 //Por ejemplo se da de 0 a 3. Si es igual a 0 falla el proyecto, (o sea un 25% de prob de fracaso)
@@ -274,21 +266,16 @@ struct ONU* createNewIA(){
 //REcibe la lista y luego solo elimina los paises cuyos 2 valores sean 3
 int quitarPaisesMuertos(struct Latinoamerica* lista) {
     if (!lista || !lista->start) return 0;
-
     struct Pais* actual = lista->start;
     int paises_muertos = 0;
-
     while (actual) {
         struct Pais* siguiente = actual->next; // guarda antes de eliminar
-
         if (actual->primer_valor == 3 && actual->segundo_valor == 3) {
             eliminarPais(lista, actual);
             paises_muertos++;
         }
-
         actual = siguiente; // moverse al siguiente guardado
     }
-
     return paises_muertos;
 }
 
@@ -299,7 +286,6 @@ void aumentarAleatorio(struct Latinoamerica* lista, int probabilidad_aumentar, i
     int numero_a_aumentar = randint(0,3);
     int indice_pais_aumentar = randint(0,tamannio); //indice del pais a aumentar, es un indice aleatorio junto al tamannio
     int valor = randint(0,1); //SI es 0 es el primer valor el que sufre, si es 1 es el segundo.
-
     //avanza al pais escogido
     struct Pais* actual = lista->start; //puntero temporal
     for (int i = 0; i < indice_pais_aumentar && actual->next; i++) {
@@ -320,15 +306,12 @@ void aumentarAleatorio(struct Latinoamerica* lista, int probabilidad_aumentar, i
 //S: void (solo cambia valores dentro de los paises)
 void expansionValores(struct Latinoamerica* lista, int cantidad_aumentar) {
     if (!lista || !lista->start) return;
-
     struct Pais* actual = lista->start;
-
     while (actual) {
         // Expande si el primer valor llegó a 3
         if (actual->primer_valor == 3) {
             int valor = randint(0, 1); // 0 = derecha, 1 = izquierda
             struct Pais* vecino = (valor == 0) ? actual->next : actual->prev;
-
             if (vecino) {
                 int* objetivo = (valor == 0) ? &vecino->primer_valor : &vecino->segundo_valor;
                 *objetivo += cantidad_aumentar;
@@ -337,12 +320,10 @@ void expansionValores(struct Latinoamerica* lista, int cantidad_aumentar) {
                        actual->nombre, vecino->nombre, *objetivo - cantidad_aumentar, *objetivo);
             }
         }
-
         // Expande si el segundo valor llegó a 3
         if (actual->segundo_valor == 3) {
             int valor = randint(0, 1);
             struct Pais* vecino = (valor == 0) ? actual->next : actual->prev;
-
             if (vecino) {
                 int* objetivo = (valor == 0) ? &vecino->segundo_valor : &vecino->primer_valor;
                 *objetivo += cantidad_aumentar;
@@ -351,7 +332,6 @@ void expansionValores(struct Latinoamerica* lista, int cantidad_aumentar) {
                        actual->nombre, vecino->nombre, *objetivo - cantidad_aumentar, *objetivo);
             }
         }
-
         actual = actual->next;
     }
 }
@@ -363,46 +343,38 @@ void expansionValores(struct Latinoamerica* lista, int cantidad_aumentar) {
 //-------------------------------------------------------------------------------
 bool moverse_derecha(struct Latinoamerica* lista, struct ONU* ONU) {
     if (!ONU || !lista) return false;
-
     // Si aún no está posicionada, la ponemos al final
     if (ONU->actualPais == NULL) {
         ONU->actualPais = lista->end;
     }
-
     // Si ya está al final
     if (ONU->actualPais->next == NULL) {
         ONU->actualPais = lista->start;      //si esta en el final va al inicio
     } else {
         ONU->actualPais = ONU->actualPais->next;
     }
-
     printf("Posicion Onu %s \n", ONU->actualPais->nombre);
     return true;
     
 }
 
-
 bool moverse_izquierda(struct Latinoamerica* lista, struct ONU* ONU) {
     if (!ONU || !lista) return false;
-
     // Si aún no está posicionada, la ponemos al final
     if (ONU->actualPais == NULL) {
         ONU->actualPais = lista->end;
     }
-
     if (ONU->actualPais->prev == NULL) {
         ONU->actualPais = lista->end;  //SI esta al inicio pasa al final
     } else {
         ONU->actualPais = ONU->actualPais->prev;
     }
-
     printf("Posicion Onu %s \n", ONU->actualPais->nombre);
     return true;
 }
 
 bool ponerONU(struct Latinoamerica* lista, struct ONU* ONU) {
     if (!ONU || !lista) return false;
-
     // Si aún no está posicionada, la ponemos al final
     if (ONU->actualPais == NULL) {
         ONU->actualPais = lista->end;
@@ -415,7 +387,6 @@ bool hacerProyectoIA(int probabilidad_fracaso_proyecto, struct Pais* pais){
     int probabilidad = randint(0,probabilidad_fracaso_proyecto);
     int valor = randint(0,1); //SI es 0 es el primer valor el que sufre, si es 1 es el segundo.
     int numero_a_aumentar = randint(0,3); //probabilidad que dice si aumenta 0, 1 o 2 en un elemento o disminuye
-
 
     if (probabilidad == 0) {
         int* objetivo = (valor == 0) ? &pais->primer_valor : &pais->segundo_valor; //Equivalente a un if-else sin ser if-else
@@ -439,19 +410,15 @@ bool hacerProyectoIA(int probabilidad_fracaso_proyecto, struct Pais* pais){
         printf("La ONU hizo un proyecto con exito, disminuyo en uno de los aspectos negativos del pais: %s, una sorprendente cantidad de: %d \n",pais->nombre, numero_a_aumentar);
         return true;
     }
-
-    
 }
 
 bool turnoIA (struct Latinoamerica* lista, struct ONU* onu, int cant_movimientos, int probabilidad_fracaso_proyecto){
     
     if (!lista || !onu || !onu->actualPais) return false;
 
-
     while (cant_movimientos > 0){
         
         int accion = randint(0,2);
-
         if (accion == 0 || accion == 1){
             if (onu->actualPais->primer_valor == 3|| onu->actualPais->segundo_valor == 3){
                 accion = 2;
@@ -536,8 +503,7 @@ struct TablaProyectos* crearTablaProyectos() {
 // CREAR PROYECTO
 //----------------------------------------------------------------
 
-struct Proyecto* crearProyecto(const char* nombre, const char* descripcion, 
-                            const char* bibliografia, const char* paises, int aspecto) {
+struct Proyecto* crearProyecto(const char* nombre, const char* descripcion, const char* bibliografia, const char* paises, int aspecto) {
     struct Proyecto* nuevo = calloc(1, sizeof(struct Proyecto));
     if (!nuevo) return NULL;
     

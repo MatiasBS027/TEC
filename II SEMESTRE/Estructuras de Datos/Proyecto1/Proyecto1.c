@@ -587,14 +587,14 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla, 
         "Sanciones administrativas",
         "Leyes que permitan sancionar funcionarios publicos por actos de corrupcion",
-        "Peru tiene procedimientos sancionadores efectivos",
+        "https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
         "Peru",
         1);
     
     insertarProyecto(tabla,
         "Licitaciones transparentes",
         "Procesos de compra publica transparentes con licitacion",
-        "Chile tiene portal ChileCompra que mejora transparencia",
+        "https://www.chilecompra.cl",
         "Chile",
         1);
     
@@ -608,35 +608,35 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Canales de denuncia",
         "Mecanismos seguros para denunciar irregularidades",
-        "Proteccion a denunciantes reduce corrupcion",
+        "Proteccion a denunciantes reduce corrupcion,'whistleblowers'",
         "Latinoamerica",
         1);
     
     insertarProyecto(tabla,
         "Digitalizacion de compras",
         "Sistemas digitales para tramites de compras y contratos",
-        "Peru usa PAS digital, Chile usa ChileCompra",
+        "https://www.chilecompra.cl, https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
         "Peru, Chile",
         1);
     
     insertarProyecto(tabla,
         "Portal transparencia",
         "Plataforma digital con contratos publicos accesibles",
-        "BID indica que mejora gestion financiera",
+        "https://publications.iadb.org/en/public-financial-management-latin-america-key-efficiency-and-transparency?utm_source=chatgpt.com",
         "Varios paises",
         1);
     
     insertarProyecto(tabla,
         "Blockchain compras",
         "Blockchain para registro de procesos de contratacion",
-        "Costa Rica estudia SICOP con blockchain",
+        "https://publications.eai.eu/index.php/sis/article/view/7608?utm_source=chatgpt.com",
         "Costa Rica",
         1);
     
     insertarProyecto(tabla,
         "Analisis predictivo",
         "Machine learning para detectar patrones de corrupcion",
-        "Mexico usa modelo para identificar contratos corruptos",
+        "https://arxiv.org/abs/2211.01478?utm_source=chatgpt.com",
         "Mexico",
         1);
     
@@ -1115,8 +1115,4 @@ int main() {
     
     return 0;
 }
-
-//TODO: JUGADOR Y SUS FUNCIONES
-//Comentarios mas bonitos en ciclo de juego
-
 //SI DA TIEMPO HACEMOS EL MODO ONU DEMONIO (mayor cantidad de turnos pero mayor cantidad de fracaso en sus proyectos) u ONU utopia (menor cantidad de turno pero practicamente 100% de probabildad de exito)

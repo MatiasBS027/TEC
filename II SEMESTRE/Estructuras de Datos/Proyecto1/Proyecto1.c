@@ -473,8 +473,8 @@ struct TablaProyectos {
 // FUNCIÓN DE HASH
 //----------------------------------------------------------------
 // Función hash simple usando suma de caracteres
-unsigned int funcionHash(const char* clave, int tamanio) {
-    unsigned int hash = 0;
+int funcionHash(const char* clave, int tamanio) {
+    int hash = 0;
     for (int i = 0; clave[i] != '\0'; i++) {
         hash = (hash * 31 + clave[i]) % tamanio;
     }
@@ -533,7 +533,7 @@ void redimensionarTabla(struct TablaProyectos* tabla) {
             struct Proyecto* siguiente = actual->siguiente;
             
             // Calcular nueva posición
-            unsigned int nuevaPos = funcionHash(actual->nombre, nuevoTamanio);
+            int nuevaPos = funcionHash(actual->nombre, nuevoTamanio);
             
             // Insertar en nueva tabla
             actual->siguiente = nuevaTabla[nuevaPos];
@@ -564,7 +564,7 @@ bool insertarProyecto(struct TablaProyectos* tabla, const char* nombre, const ch
         redimensionarTabla(tabla);
     }
     
-    unsigned int posicion = funcionHash(nombre, tabla->tamanio);
+    int posicion = funcionHash(nombre, tabla->tamanio);
     
     struct Proyecto* nuevo = crearProyecto(nombre, descripcion, bibliografia, paises, aspecto);
     if (!nuevo) return false;
@@ -703,7 +703,7 @@ void listarProyectosPorAspecto(struct TablaProyectos* tabla, int aspecto) {
 struct Proyecto* buscarProyecto(struct TablaProyectos* tabla, const char* nombre) {
     if (!tabla) return NULL;
     
-    unsigned int posicion = funcionHash(nombre, tabla->tamanio);
+    int posicion = funcionHash(nombre, tabla->tamanio);
     struct Proyecto* actual = tabla->tabla[posicion];
     
     while (actual) {

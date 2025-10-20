@@ -587,7 +587,7 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla, 
         "Sanciones administrativas",
         "Leyes que permitan sancionar funcionarios publicos por actos de corrupcion",
-        "https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
+        "https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas",
         "Peru",
         1);
     
@@ -615,28 +615,28 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Digitalizacion de compras",
         "Sistemas digitales para tramites de compras y contratos",
-        "https://www.chilecompra.cl, https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
+        "https://www.chilecompra.cl, https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas",
         "Peru, Chile",
         1);
     
     insertarProyecto(tabla,
         "Portal transparencia",
         "Plataforma digital con contratos publicos accesibles",
-        "https://publications.iadb.org/en/public-financial-management-latin-america-key-efficiency-and-transparency?utm_source=chatgpt.com",
+        "https://publications.iadb.org/en/public-financial-management-latin-america-key-efficiency-and-transparency",
         "Varios paises",
         1);
     
     insertarProyecto(tabla,
         "Blockchain compras",
         "Blockchain para registro de procesos de contratacion",
-        "https://publications.eai.eu/index.php/sis/article/view/7608?utm_source=chatgpt.com",
+        "https://publications.eai.eu/index.php/sis/article/view/7608",
         "Costa Rica",
         1);
     
     insertarProyecto(tabla,
         "Analisis predictivo",
         "Machine learning para detectar patrones de corrupcion",
-        "https://arxiv.org/abs/2211.01478?utm_source=chatgpt.com",
+        "https://arxiv.org/abs/2211.01478",
         "Mexico",
         1);
     

@@ -608,7 +608,7 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Canales de denuncia",
         "Mecanismos seguros para denunciar irregularidades",
-        "Proteccion a denunciantes reduce corrupcion,'whistleblowers'",
+        "https://central-law.com/costa-rica-ley-de-proteccion-de-las-personas-denunciantes-y-testigos-de-actos-de-corrupcion-contra-represalias-laborales",
         "Latinoamerica",
         1);
     
@@ -645,14 +645,14 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Denuncias salud",
         "Canales anonimos para denunciar corrupcion en salud",
-        "Proteccion a denunciantes reduce corrupcion detectada",
+        "https://www.ministeriodesalud.go.cr/index.php/denuncias/denuncias-sanitarias",
         "Latinoamerica",
         2);
     
     insertarProyecto(tabla,
         "Whistleblower protections",
         "Proteccion legal a denunciantes en sector salud",
-        "Costa Rica y Peru tienen sistemas de proteccion",
+        "https://central-law.com/costa-rica-ley-de-proteccion-de-las-personas-denunciantes-y-testigos-de-actos-de-corrupcion-contra-represalias-laborales",
         "Costa Rica, Peru",
         2);
     
@@ -666,7 +666,7 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Digitalizacion salud",
         "Sistemas digitales para compras de insumos medicos",
-        "Reduce sobornos en compras medicas",
+        "https://www.saludondigital-latam.com",
         "Varios paises",
         2);
     

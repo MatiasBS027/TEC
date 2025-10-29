@@ -41,7 +41,7 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListPersonas = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jListTareas = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,14 +77,12 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel3.setText("Asociar Persona a Tarea");
 
-        jComboBoxPersona.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxPersona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxPersonaActionPerformed(evt);
             }
         });
 
-        jComboBoxTareas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxTareas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxTareasActionPerformed(evt);
@@ -109,12 +107,12 @@ public class Ventana extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jListPersonas);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jListTareas.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(jListTareas);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -260,20 +258,20 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAsignacion;
-    private javax.swing.JButton jButtonInsertarPersona;
-    private javax.swing.JButton jButtonInsertarTareas;
-    private javax.swing.JComboBox<String> jComboBoxPersona;
-    private javax.swing.JComboBox<String> jComboBoxTareas;
-    private javax.swing.JTextField jInsertarPersona;
-    private javax.swing.JTextField jInsertarTarea;
+    public javax.swing.JButton jButtonAsignacion;
+    public javax.swing.JButton jButtonInsertarPersona;
+    public javax.swing.JButton jButtonInsertarTareas;
+    public javax.swing.JComboBox<String> jComboBoxPersona;
+    public javax.swing.JComboBox<String> jComboBoxTareas;
+    public javax.swing.JTextField jInsertarPersona;
+    public javax.swing.JTextField jInsertarTarea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jListPersonas;
+    public javax.swing.JList<String> jListPersonas;
+    public javax.swing.JList<String> jListTareas;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

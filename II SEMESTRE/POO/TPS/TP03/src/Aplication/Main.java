@@ -4,17 +4,46 @@
  */
 package Aplication;
 
+import Controlador.ControladorInsertar;
+import Controlador.ControladorAsociar;
+import Controlador.ControladorAsignaciones;
+import Vista.Ventana;
+import Modelo.ModeloAsignacion;
+import javax.swing.DefaultListModel;
+
 /**
- *
+ * Aplicación principal
  * @author Matias
+ * Carnet: 2025102376
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Crear modelos
+        ModeloAsignacion modeloPersonas = new ModeloAsignacion();
+        ModeloAsignacion modeloTareas = new ModeloAsignacion();
+
+        // Crear vista
+        Ventana vista = new Ventana();
+
+        // Crear los modelos de las listas
+        DefaultListModel<String> listModelPersonas = new DefaultListModel<>();
+        DefaultListModel<String> listModelTareas = new DefaultListModel<>();
+
+        // Asignar modelos a las listas de la vista
+        vista.jListPersonas.setModel(listModelPersonas);
+        vista.jListTareas.setModel(listModelTareas);
+
+        // Crear los 3 controladores
+        ControladorInsertar controladorInsertar = new ControladorInsertar(vista, modeloPersonas, modeloTareas, listModelPersonas, listModelTareas);
+
+        ControladorAsociar controladorAsociar = new ControladorAsociar(vista, modeloPersonas, modeloTareas, listModelPersonas, listModelTareas);
+
+        ControladorAsignaciones controladorAsignaciones = new ControladorAsignaciones(vista, modeloPersonas, modeloTareas);
+
+        // Mostrar ventana
+        vista.setTitle("Sistema de Asignación de Tareas");
+        vista.setLocationRelativeTo(null);
+        vista.setVisible(true);
     }
-    
 }

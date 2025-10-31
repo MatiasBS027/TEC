@@ -12,7 +12,7 @@ import Modelo.ModeloAsignacion;
 import javax.swing.DefaultListModel;
 
 /**
- * Aplicación principal
+ * 
  * @author Matias
  * Carnet: 2025102376
  */

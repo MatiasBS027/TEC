@@ -587,7 +587,7 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla, 
         "Sanciones administrativas",
         "Leyes que permitan sancionar funcionarios publicos por actos de corrupcion",
-        "https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
+        "https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas",
         "Peru",
         1);
     
@@ -608,35 +608,35 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Canales de denuncia",
         "Mecanismos seguros para denunciar irregularidades",
-        "Proteccion a denunciantes reduce corrupcion,'whistleblowers'",
+        "https://central-law.com/costa-rica-ley-de-proteccion-de-las-personas-denunciantes-y-testigos-de-actos-de-corrupcion-contra-represalias-laborales",
         "Latinoamerica",
         1);
     
     insertarProyecto(tabla,
         "Digitalizacion de compras",
         "Sistemas digitales para tramites de compras y contratos",
-        "https://www.chilecompra.cl, https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas?utm_source=chatgpt.com",
+        "https://www.chilecompra.cl, https://www.gob.pe/institucion/contraloria/noticias/562730-contraloria-procesara-y-sancionara-administrativamente-casos-de-corrupcion-en-todas-las-entidades-publicas",
         "Peru, Chile",
         1);
     
     insertarProyecto(tabla,
         "Portal transparencia",
         "Plataforma digital con contratos publicos accesibles",
-        "https://publications.iadb.org/en/public-financial-management-latin-america-key-efficiency-and-transparency?utm_source=chatgpt.com",
+        "https://publications.iadb.org/en/public-financial-management-latin-america-key-efficiency-and-transparency",
         "Varios paises",
         1);
     
     insertarProyecto(tabla,
         "Blockchain compras",
         "Blockchain para registro de procesos de contratacion",
-        "https://publications.eai.eu/index.php/sis/article/view/7608?utm_source=chatgpt.com",
+        "https://publications.eai.eu/index.php/sis/article/view/7608",
         "Costa Rica",
         1);
     
     insertarProyecto(tabla,
         "Analisis predictivo",
         "Machine learning para detectar patrones de corrupcion",
-        "https://arxiv.org/abs/2211.01478?utm_source=chatgpt.com",
+        "https://arxiv.org/abs/2211.01478",
         "Mexico",
         1);
     
@@ -645,14 +645,14 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Denuncias salud",
         "Canales anonimos para denunciar corrupcion en salud",
-        "Proteccion a denunciantes reduce corrupcion detectada",
+        "https://www.ministeriodesalud.go.cr/index.php/denuncias/denuncias-sanitarias",
         "Latinoamerica",
         2);
     
     insertarProyecto(tabla,
         "Whistleblower protections",
         "Proteccion legal a denunciantes en sector salud",
-        "Costa Rica y Peru tienen sistemas de proteccion",
+        "https://central-law.com/costa-rica-ley-de-proteccion-de-las-personas-denunciantes-y-testigos-de-actos-de-corrupcion-contra-represalias-laborales",
         "Costa Rica, Peru",
         2);
     
@@ -666,7 +666,7 @@ void cargarProyectosCorrupcion(struct TablaProyectos* tabla) {
     insertarProyecto(tabla,
         "Digitalizacion salud",
         "Sistemas digitales para compras de insumos medicos",
-        "Reduce sobornos en compras medicas",
+        "https://www.saludondigital-latam.com",
         "Varios paises",
         2);
     

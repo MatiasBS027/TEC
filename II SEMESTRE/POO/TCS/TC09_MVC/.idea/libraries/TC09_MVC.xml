@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TC09_MVC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/TC09_MVC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

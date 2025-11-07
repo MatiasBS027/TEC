@@ -7,9 +7,9 @@ ExitProcess proto
 
 .data
     ; Variables de prueba
-    test_base dd 3
-    test_exp dd 5
-    test_mod dd 7
+    test_base dd 9
+    test_exp dd 2
+    test_mod dd 11
     resultado dd ?
 
 .code

@@ -7,6 +7,7 @@ Sistema de ordenamiento de artículos científicos
 #include <stdbool.h>
 #include <string.h>
 #include <stddef.h>
+#include <windows.h>
 
 /*
 Colores para el menu e interaccion con el usuario
@@ -627,6 +628,11 @@ void ordenar_articulos_heap(struct Articulo** articulos, int cantidad, int tipo_
 //######################################################
 
 int main() {
+    // Configurar UTF-8 en Windows
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
+    setvbuf(stdout, NULL, _IOFBF, 1000);
+    
     printf(GREENB "\n\n=== SISTEMA DE GESTION DE ARTICULOS ===\n\n" RESET);
     
     // Leer artículos del archivo

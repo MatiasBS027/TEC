@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mecanicos>
+    <mecanico id="200">
+        <nombre>Rodrigo Perez</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>1000</id>
+            <id>101</id>
+            <id>103</id>
+            <id>105</id>
+            <id>108</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="201">
+        <nombre>Maria Rojas</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>101</id>
+            <id>102</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="202">
+        <nombre>Pedro Blanco</nombre>
+        <puesto>Mecanico Electrico</puesto>
+        <servicios>
+            <id>102</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="203">
+        <nombre>Lucia Fernandez</nombre>
+        <puesto>Mecanico de Frenos</puesto>
+        <servicios>
+            <id>103</id>
+            <id>104</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="204">
+        <nombre>Carlos Gutierrez</nombre>
+        <puesto>Mecanico de Transmisiones</puesto>
+        <servicios>
+            <id>105</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="205">
+        <nombre>Laura Sanchez</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>106</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="209">
+        <nombre>Camila Torres</nombre>
+        <puesto>Mecanico de Motor</puesto>
+        <servicios>
+            <id>110</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="2100">
+        <nombre>Fernando Aguilar</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>1000</id>
+            <id>101</id>
+            <id>102</id>
+            <id>104</id>
+            <id>106</id>
+            <id>111</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="211">
+        <nombre>Gabriela Vargas</nombre>
+        <puesto>Mecanico Electrico</puesto>
+        <servicios>
+            <id>102</id>
+            <id>105</id>
+            <id>106</id>
+            <id>112</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="212">
+        <nombre>Ricardo Morales</nombre>
+        <puesto>Mecanico de Frenos</puesto>
+        <servicios>
+            <id>103</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="213">
+        <nombre>Diana Herrera</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>113</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="215">
+        <nombre>Patricia Delgado</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>115</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="216">
+        <nombre>Antonio Jimenez</nombre>
+        <puesto>Mecanico Electrico</puesto>
+        <servicios>
+            <id>102</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="217">
+        <nombre>Sofia Alvarez</nombre>
+        <puesto>Mecanico de Motor</puesto>
+        <servicios>
+            <id>110</id>
+            <id>116</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="218">
+        <nombre>Hector Navarro</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>117</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="219">
+        <nombre>Ana Gonzalez</nombre>
+        <puesto>Mecanico de Suspensiones</puesto>
+        <servicios>
+            <id>108</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="221">
+        <nombre>Claudia Ruiz</nombre>
+        <puesto>Mecanico Electrico</puesto>
+        <servicios>
+            <id>102</id>
+            <id>119</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="222">
+        <nombre>Raul Mendoza</nombre>
+        <puesto>Mecanico de Frenos</puesto>
+        <servicios>
+            <id>103</id>
+            <id>120</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="223">
+        <nombre>Isabel Soto</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>121</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="224">
+        <nombre>Francisco Leon</nombre>
+        <puesto>Mecanico de Transmisiones</puesto>
+        <servicios>
+            <id>105</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="225">
+        <nombre>Angela Pineda</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>122</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="226">
+        <nombre>Diego Castillo</nombre>
+        <puesto>Mecanico Electrico</puesto>
+        <servicios>
+            <id>102</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="227">
+        <nombre>Veronica Silva</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>123</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="228">
+        <nombre>Julio Reyes</nombre>
+        <puesto>Mecanico de Motor</puesto>
+        <servicios>
+            <id>110</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="229">
+        <nombre>Elena Cabrera</nombre>
+        <puesto>Mecanico de Suspensiones</puesto>
+        <servicios>
+            <id>108</id>
+            <id>124</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="2081">
+        <nombre>Javier Lopez</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>100</id>
+            <id>109</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="2001">
+        <nombre>Ricardo</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>101</id>
+            <id>104</id>
+            <id>105</id>
+            <id>107</id>
+        </servicios>
+    </mecanico>
+    <mecanico id="2280">
+        <nombre>Julio Rey</nombre>
+        <puesto>Mecanico General</puesto>
+        <servicios>
+            <id>1000</id>
+            <id>101</id>
+            <id>103</id>
+            <id>104</id>
+            <id>110</id>
+        </servicios>
+    </mecanico>
+</mecanicos>

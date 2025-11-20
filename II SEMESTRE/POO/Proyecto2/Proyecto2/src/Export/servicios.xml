@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<servicios>
+    <servicio id="1000">
+        <nombre>Cambio Aceite 200</nombre>
+        <precio>20100</precio>
+    </servicio>
+    <servicio id="101">
+        <nombre>Balanceo de llantas</nombre>
+        <precio>5000</precio>
+    </servicio>
+    <servicio id="102">
+        <nombre>Mecanica Motor</nombre>
+        <precio>25000</precio>
+    </servicio>
+    <servicio id="103">
+        <nombre>Alineacion de llantas</nombre>
+        <precio>8000</precio>
+    </servicio>
+    <servicio id="104">
+        <nombre>Cambio de frenos</nombre>
+        <precio>15000</precio>
+    </servicio>
+    <servicio id="105">
+        <nombre>Revision de suspensiones</nombre>
+        <precio>12000</precio>
+    </servicio>
+    <servicio id="106">
+        <nombre>Cambio de bujia</nombre>
+        <precio>7000</precio>
+    </servicio>
+    <servicio id="107">
+        <nombre>Escaneo electronico</nombre>
+        <precio>18000</precio>
+    </servicio>
+    <servicio id="108">
+        <nombre>Cambio de bateria</nombre>
+        <precio>25000</precio>
+    </servicio>
+    <servicio id="109">
+        <nombre>Reparacion de alternador</nombre>
+        <precio>30000</precio>
+    </servicio>
+    <servicio id="111">
+        <nombre>Limpieza de inyectores</nombre>
+        <precio>22000</precio>
+    </servicio>
+    <servicio id="112">
+        <nombre>Ajuste de valvulas</nombre>
+        <precio>27000</precio>
+    </servicio>
+    <servicio id="1021">
+        <nombre>Mecanica aeromotriz</nombre>
+        <precio>25000</precio>
+    </servicio>
+    <servicio id="1050">
+        <nombre>Revision General</nombre>
+        <precio>12000</precio>
+    </servicio>
+</servicios>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clientes>
+    <cliente id="000000000">
+        <nombre>Matias Benavides</nombre>
+        <placa>NA</placa>
+        <telefono>NA</telefono>
+        <email>NA</email>
+    </cliente>
+    <cliente id="300000111">
+        <nombre>Juan Perez</nombre>
+        <placa>AAA100</placa>
+        <telefono>7777-1000</telefono>
+        <email>juan.p@gmail.com</email>
+    </cliente>
+    <cliente id="300000222">
+        <nombre>Ana Rojas</nombre>
+        <placa>BBB200</placa>
+        <telefono>7777-2000</telefono>
+        <email>ana.r@gmail.com</email>
+    </cliente>
+    <cliente id="300000333">
+        <nombre>Pedro Arnaez</nombre>
+        <placa>CCC300</placa>
+        <telefono>7777-3000</telefono>
+        <email>pedro.a@gmail.com</email>
+    </cliente>
+    <cliente id="300000444">
+        <nombre>Maria Lopez</nombre>
+        <placa>DDD400</placa>
+        <telefono>7777-4000</telefono>
+        <email>maria.l@gmail.com</email>
+    </cliente>
+    <cliente id="300000555">
+        <nombre>Ricardo Torres</nombre>
+        <placa>EEE500</placa>
+        <telefono>7777-5000</telefono>
+        <email>ricardo.t@gmail.com</email>
+    </cliente>
+    <cliente id="300000666">
+        <nombre>Laura Sanchez</nombre>
+        <placa>FFF600</placa>
+        <telefono>7777-6000</telefono>
+        <email>laura.s@gmail.com</email>
+    </cliente>
+    <cliente id="300000777">
+        <nombre>Carlos Gutierrez Sa</nombre>
+        <placa>GGG700</placa>
+        <telefono>7777-7000</telefono>
+        <email>carlos.g@gmail.com</email>
+    </cliente>
+    <cliente id="300000888">
+        <nombre>Valeria Diaz</nombre>
+        <placa>HHH800</placa>
+        <telefono>7777-8000</telefono>
+        <email>valeria.d@gmail.com</email>
+    </cliente>
+    <cliente id="300000999">
+        <nombre>Andres Herrera</nombre>
+        <placa>III900</placa>
+        <telefono>7777-9000</telefono>
+        <email>andres.h@gmail.com</email>
+    </cliente>
+    <cliente id="300001000">
+        <nombre>Gabriela Castro</nombre>
+        <placa>JJJ100</placa>
+        <telefono>7777-1010</telefono>
+        <email>gabriela.c@gmail.com</email>
+    </cliente>
+    <cliente id="300001111">
+        <nombre>Fernando V</nombre>
+        <placa>KKK110</placa>
+        <telefono>7777-1111</telefono>
+        <email>fernando.v@gmail.com</email>
+    </cliente>
+    <cliente id="300001222">
+        <nombre>Isabel Martinez</nombre>
+        <placa>LLL120</placa>
+        <telefono>7777-1210</telefono>
+        <email>isabel.m@gmail.com</email>
+    </cliente>
+    <cliente id="300001333">
+        <nombre>Oscar Jimenez</nombre>
+        <placa>MMM130</placa>
+        <telefono>7777-1310</telefono>
+        <email>oscar.j@gmail.com</email>
+    </cliente>
+    <cliente id="300001444">
+        <nombre>Paola Romero</nombre>
+        <placa>NNN140</placa>
+        <telefono>7777-1410</telefono>
+        <email>paola.r@gmail.com</email>
+    </cliente>
+    <cliente id="300001555">
+        <nombre>Diego Navarro</nombre>
+        <placa>OOO150</placa>
+        <telefono>7777-1510</telefono>
+        <email>diego.n@gmail.com</email>
+    </cliente>
+    <cliente id="300001777">
+        <nombre>Manuel Ortega</nombre>
+        <placa>QQQ170</placa>
+        <telefono>7777-1710</telefono>
+        <email>manuel.o@gmail.com</email>
+    </cliente>
+    <cliente id="300001888">
+        <nombre>Claudia Ruiz</nombre>
+        <placa>RRR180</placa>
+        <telefono>7777-1810</telefono>
+        <email>claudia.r@gmail.com</email>
+    </cliente>
+    <cliente id="300001999">
+        <nombre>Raul Mendoza</nombre>
+        <placa>SSS190</placa>
+        <telefono>7777-1910</telefono>
+        <email>raul.m@gmail.com</email>
+    </cliente>
+    <cliente id="300002000">
+        <nombre>Angela Pineda</nombre>
+        <placa>TTT200</placa>
+        <telefono>7777-2010</telefono>
+        <email>angela.p@gmail.com</email>
+    </cliente>
+    <cliente id="300002111">
+        <nombre>Hector Cabrera</nombre>
+        <placa>UUU210</placa>
+        <telefono>7777-2110</telefono>
+        <email>hector.c@gmail.com</email>
+    </cliente>
+    <cliente id="300002222">
+        <nombre>Diana Salazar</nombre>
+        <placa>VVV220</placa>
+        <telefono>7777-2210</telefono>
+        <email>diana.s@gmail.com</email>
+    </cliente>
+    <cliente id="300002444">
+        <nombre>Elena Campos</nombre>
+        <placa>XXX240</placa>
+        <telefono>7777-2410</telefono>
+        <email>elena.c@gmail.com</email>
+    </cliente>
+    <cliente id="300002555">
+        <nombre>Francisco Leon</nombre>
+        <placa>YYY250</placa>
+        <telefono>7777-2510</telefono>
+        <email>francisco.l@gmail.com</email>
+    </cliente>
+    <cliente id="300002666">
+        <nombre>Veronica Silva</nombre>
+        <placa>ZZZ260</placa>
+        <telefono>7777-2610</telefono>
+        <email>veronica.s@gmail.com</email>
+    </cliente>
+    <cliente id="300002777">
+        <nombre>Antonio Delgado</nombre>
+        <placa>AAA270</placa>
+        <telefono>7777-2710</telefono>
+        <email>antonio.d@gmail.com</email>
+    </cliente>
+    <cliente id="300002888">
+        <nombre>Patricia Nunez</nombre>
+        <placa>BBB280</placa>
+        <telefono>7777-2810</telefono>
+        <email>patricia.n@gmail.com</email>
+    </cliente>
+    <cliente id="3000005">
+        <nombre>Ricardo</nombre>
+        <placa>EEE500</placa>
+        <telefono>7777-5000</telefono>
+        <email>ricardo.t@gmail.com</email>
+    </cliente>
+    <cliente id="3000022">
+        <nombre>Matias Benavides</nombre>
+        <placa>VVV220</placa>
+        <telefono>7777-2210</telefono>
+        <email>diana.s@gmail.com</email>
+    </cliente>
+    <cliente id="300001889">
+        <nombre>Claudia Rodriguez</nombre>
+        <placa>RRR180</placa>
+        <telefono>7777-1810</telefono>
+        <email>claudia.r@gmail.com</email>
+    </cliente>
+</clientes>

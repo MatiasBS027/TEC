@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package util;
+package Util;
 
-import conceptos.Cliente;
-import conceptos.Mecanico;
-import conceptos.Servicio;
+import Conceptos.Cliente;
+import Conceptos.Mecanico;
+import Conceptos.Servicio;
 import java.io.File;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;

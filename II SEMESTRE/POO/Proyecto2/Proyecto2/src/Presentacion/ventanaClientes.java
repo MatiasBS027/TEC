@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package ventanas;
+package Presentacion;
 
-import conceptos.Cliente;
+import Conceptos.Cliente;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -412,6 +412,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ventanaClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */

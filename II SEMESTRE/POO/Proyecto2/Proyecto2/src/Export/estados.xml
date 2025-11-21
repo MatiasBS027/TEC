@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<estados>
+    <estado id="000">
+        <nombre>Nuevo</nombre>
+    </estado>
+    <estado id="001">
+        <nombre>En Revision</nombre>
+    </estado>
+    <estado id="002">
+        <nombre>Pendiente de Repuestos</nombre>
+    </estado>
+    <estado id="003">
+        <nombre>En Pruebas</nombre>
+    </estado>
+    <estado id="004">
+        <nombre>Completado</nombre>
+    </estado>
+</estados>

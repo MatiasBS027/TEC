@@ -3,19 +3,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Conceptos;
-
 import java.io.Serializable;
 
 /**
  *
- * @author Corea
+ * @author Matias
  */
-public class Servicio implements Serializable {
+public class Estado implements Serializable {
     private static final long serialVersionUID = 1L;
-    String id;
-    String nombre;
-    String precio;
+    
+    private String id;
+    private String nombre;
 
+    // Constructor vacío
+    public Estado() {
+    }
+
+    // Constructor con parámetros
+    public Estado(String id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -32,16 +42,8 @@ public class Servicio implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(String precio) {
-        this.precio = precio;
-    }
-
     @Override
     public String toString() {
-        return "id=" + id + ", nombre=" + nombre + ", precio=" + precio;
+        return nombre; // Para que se vea bien en los ComboBox
     }
 }

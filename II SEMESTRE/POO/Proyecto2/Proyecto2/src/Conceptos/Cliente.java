@@ -4,11 +4,14 @@
  */
 package Conceptos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Corea
  */
-public class Cliente {
+public class Cliente implements Serializable {
+    private static final long serialVersionUID = 1L;
     String id;
     String nombre;
     String placa;
@@ -16,16 +19,45 @@ public class Cliente {
     String email;
 
     // Getters y setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getPlaca() { return placa; }
-    public void setPlaca(String placa) { this.placa = placa; }
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {

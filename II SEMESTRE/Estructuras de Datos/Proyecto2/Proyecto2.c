@@ -7,7 +7,6 @@ Sistema de ordenamiento de artículos científicos
 #include <stdbool.h>
 #include <string.h>
 #include <stddef.h>
-#include <windows.h>
 
 /*
 Colores para el menu e interaccion con el usuario
@@ -29,10 +28,10 @@ Más info en: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 struct Articulo {
     char nombre_autor[21];     // 20 + 1 para '\0'
     char apellido_autor[21];   // 20 + 1 para '\0'
-    char titulo[51];           // 50 + 1 para '\0'
+    char titulo[501];           // 50 + 1 para '\0'
     char ruta[61];             // 60 + 1 para '\0'
     char anio[11];             // 10 + 1 para '\0'
-    char abstract[101];        // 100 + 1 para '\0'
+    char abstract[1001];        // 100 + 1 para '\0'
 };
 
 struct MonitculoArticulos {
@@ -231,7 +230,7 @@ struct Articulo* leer_articulo_desde_linea(char* linea) {
     nuevo->apellido_autor[20] = '\0';
     
     strncpy(nuevo->titulo, titulo, 50);
-    nuevo->titulo[50] = '\0';
+    nuevo->titulo[500] = '\0';
     
     strncpy(nuevo->ruta, ruta, 60);
     nuevo->ruta[60] = '\0';
@@ -240,7 +239,7 @@ struct Articulo* leer_articulo_desde_linea(char* linea) {
     nuevo->anio[10] = '\0';
     
     strncpy(nuevo->abstract, abstract, 100);
-    nuevo->abstract[100] = '\0';
+    nuevo->abstract[1000] = '\0';
     
     // Limpiar espacios al final de cada campo
     limpiar_espacios_final(nuevo->nombre_autor);
@@ -628,11 +627,6 @@ void ordenar_articulos_heap(struct Articulo** articulos, int cantidad, int tipo_
 //######################################################
 
 int main() {
-    // Configurar UTF-8 en Windows
-    SetConsoleCP(CP_UTF8);
-    SetConsoleOutputCP(CP_UTF8);
-    setvbuf(stdout, NULL, _IOFBF, 1000);
-    
     printf(GREENB "\n\n=== SISTEMA DE GESTION DE ARTICULOS ===\n\n" RESET);
     
     // Leer artículos del archivo

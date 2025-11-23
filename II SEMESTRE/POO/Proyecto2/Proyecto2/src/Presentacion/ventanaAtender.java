@@ -4,6 +4,9 @@
  */
 package Presentacion;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author Matias
@@ -16,6 +19,8 @@ public class ventanaAtender extends javax.swing.JDialog {
     public ventanaAtender(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(screenSize);
     }
 
     /**
@@ -266,7 +271,7 @@ public class ventanaAtender extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     /**

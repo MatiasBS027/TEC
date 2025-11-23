@@ -184,15 +184,39 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+
+        setVisible(false);
+        try {
+            ventanaConsultar consultar = new ventanaConsultar(Menu.this, true);
+            consultar.setVisible(true);
+        } finally {
+            setVisible(true);
+            setLocationRelativeTo(null);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+
+        setVisible(false);
+        try {
+            ventanaSolicitar solicitar = new ventanaSolicitar(Menu.this, true);
+            solicitar.setVisible(true);
+        } finally {
+            setVisible(true);
+            setLocationRelativeTo(null);
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+
+        setVisible(false);
+        try {
+            ventanaAtender atender = new ventanaAtender(Menu.this, true);
+            atender.setVisible(true);
+        } finally {
+            setVisible(true);
+            setLocationRelativeTo(null);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**

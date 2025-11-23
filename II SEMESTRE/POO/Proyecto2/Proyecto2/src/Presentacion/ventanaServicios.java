@@ -62,9 +62,9 @@ public class ventanaServicios extends javax.swing.JDialog {
         modelo.setRowCount(0);
         try {
 
-            InputStream is = getClass().getClassLoader().getResourceAsStream("data/servicios.xml");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/servicios.xml");
             if (is == null) {
-                throw new FileNotFoundException("No se encontró data/servicios.xml en el classpath");
+                throw new FileNotFoundException("No se encontró Export/servicios.xml en el classpath");
             }
 
             @SuppressWarnings("unchecked")

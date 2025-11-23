@@ -58,7 +58,7 @@ public class SerializacionUtil{
     }
     
     /**
-     * Vacía un archivo .DAT (lo deja sin contenido)
+     * Vacía un archivo .DAT 
      * Nombre del archivo a vaciar
      * true si se vació correctamente
      */

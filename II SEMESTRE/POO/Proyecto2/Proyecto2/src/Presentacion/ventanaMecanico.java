@@ -63,10 +63,10 @@ public class ventanaMecanico extends javax.swing.JDialog {
         mecanicos.clear();
         modelo.setRowCount(0);
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("data/mecanicos.xml");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/mecanicos.xml");
 
             if (is == null) {
-                throw new FileNotFoundException("No se encontró data/mecanicos.xml en el classpath");
+                throw new FileNotFoundException("No se encontró Export/mecanicos.xml en el classpath");
             }
 
             @SuppressWarnings("unchecked")

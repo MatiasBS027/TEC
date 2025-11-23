@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Representa una solicitud de servicio en el taller mecánico
+ * Representa una solicitud de servicio 
  * Contiene información del cliente, servicio principal, mecánico asignado,
  * estado actual y servicios adicionales
  * @author Matias 
@@ -26,7 +26,6 @@ public class Solicitud implements Serializable {
     private String observaciones;   // Observaciones del servicio
     private ArrayList<String> otrosServicios; // Lista de IDs de servicios adicionales
 
-    // Constructor vacío
     public Solicitud() {
         this.otrosServicios = new ArrayList<>();
         this.idEstado = "000"; // Estado inicial: Nuevo

@@ -15,7 +15,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Parser SAX para leer solicitudes desde XML
  * Lee el archivo solicitudes.xml y crea objetos Solicitud
  * 
- * @author Matias Benavides (2025102376)
+ * @author Matias 
  */
 public class solicitudParserHandler extends DefaultHandler {
     

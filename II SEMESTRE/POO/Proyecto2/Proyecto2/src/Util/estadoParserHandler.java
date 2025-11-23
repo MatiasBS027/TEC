@@ -15,7 +15,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Parser SAX para leer estados desde XML
  * Lee el archivo estados.xml y crea objetos Estado
  * 
- * @author Matias Benavides (2025102376)
+ * @author Matias 
  */
 public class estadoParserHandler extends DefaultHandler {
     

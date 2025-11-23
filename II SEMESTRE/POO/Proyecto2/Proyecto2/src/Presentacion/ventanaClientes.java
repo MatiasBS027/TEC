@@ -60,9 +60,9 @@ public class ventanaClientes extends javax.swing.JDialog {
         clientes.clear();
         modelo.setRowCount(0);
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("data/clientes.xml");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/clientes.xml");
             if (is == null) {
-                throw new FileNotFoundException("No se encontró data/clientes.xml en el classpath");
+                throw new FileNotFoundException("No se encontró Export/clientes.xml en el classpath");
             }
             @SuppressWarnings("unchecked")
             ArrayList<Cliente> datos = (ArrayList<Cliente>) Util.cargadorXML.Cargar(is, "cliente");

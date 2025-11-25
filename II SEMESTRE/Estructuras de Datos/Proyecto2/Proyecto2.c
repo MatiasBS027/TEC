@@ -229,7 +229,7 @@ struct Articulo* leer_articulo_desde_linea(char* linea) {
     strncpy(nuevo->apellido_autor, apellido, 20);
     nuevo->apellido_autor[20] = '\0';
     
-    strncpy(nuevo->titulo, titulo, 50);
+    strncpy(nuevo->titulo, titulo, 500);
     nuevo->titulo[500] = '\0';
     
     strncpy(nuevo->ruta, ruta, 60);
@@ -238,7 +238,7 @@ struct Articulo* leer_articulo_desde_linea(char* linea) {
     strncpy(nuevo->anio, anio, 10);
     nuevo->anio[10] = '\0';
     
-    strncpy(nuevo->abstract, abstract, 100);
+    strncpy(nuevo->abstract, abstract, 1000);
     nuevo->abstract[1000] = '\0';
     
     // Limpiar espacios al final de cada campo

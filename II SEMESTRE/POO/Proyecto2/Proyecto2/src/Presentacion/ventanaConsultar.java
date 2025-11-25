@@ -6,21 +6,35 @@ package Presentacion;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
+import Conceptos.*;
+import Util.GestorDatos;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
 /**
  *
  * @author Matias
  */
 public class ventanaConsultar extends javax.swing.JDialog {
-
+    private GestorDatos gestor;
+    private DefaultTableModel modeloTabla;
+    
     /**
      * Creates new form VentanaSolicitar
      */
     public ventanaConsultar(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        gestor = GestorDatos.getInstancia();
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
+        
+        configurarTabla();
+        cargarComboEstado();
+        buscarSolicitudes();
     }
 
     /**
@@ -47,6 +61,7 @@ public class ventanaConsultar extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTabla = new javax.swing.JTable();
         jButtonSalir = new javax.swing.JButton();
+        jButtonLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(" Consultar Solicitudes de Servicio");
@@ -114,6 +129,8 @@ public class ventanaConsultar extends javax.swing.JDialog {
             }
         });
 
+        jButtonLimpiar.setText("Limpiar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,7 +162,9 @@ public class ventanaConsultar extends javax.swing.JDialog {
                         .addGap(269, 269, 269)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                    .addComponent(jButtonLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(38, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -180,8 +199,10 @@ public class ventanaConsultar extends javax.swing.JDialog {
                             .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(17, 17, 17)
+                        .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(31, 31, 31)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,6 +285,7 @@ public class ventanaConsultar extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButtonLimpiar;
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JComboBox<String> jComboBoxEstado;
     private javax.swing.JLabel jLabel1;

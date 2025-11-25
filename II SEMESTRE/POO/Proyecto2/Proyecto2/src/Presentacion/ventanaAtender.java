@@ -6,12 +6,25 @@ package Presentacion;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+
+import javax.swing.table.DefaultTableModel;
+
+import Conceptos.Estado;
+import Conceptos.Mecanico;
+import Conceptos.Servicio;
+import Conceptos.Solicitud;
+import Util.GestorDatos;
 
 /**
  *
  * @author Matias
  */
 public class ventanaAtender extends javax.swing.JDialog {
+    GestorDatos gestor;
+    Solicitud solicitudActual;
+    DefaultTableModel modeloTabla;
+
 
     /**
      * Creates new form ventanaAtender
@@ -21,6 +34,93 @@ public class ventanaAtender extends javax.swing.JDialog {
         initComponents();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
+        
+        gestor = GestorDatos.getInstancia();
+        solicitudActual = null;
+        
+        modeloTabla = new DefaultTableModel(
+            new Object[]{"Tipo", "Servicio"},
+            0
+        );
+        jTable1.setModel(modeloTabla);
+        
+        jTextFieldPlaca.setEditable(false);
+        jComboBoxTipoServicio.setEnabled(false);
+        
+        cargarSolicitudes();
+        cargarMecanicos();
+        cargarEstados();
+    }
+
+    private void cargarSolicitudes() {
+        jComboBoxServicio.removeAllItems();
+        for (Solicitud s : gestor.getSolicitudes()) {
+            if ("000".equals(s.getIdEstado())) {
+                jComboBoxServicio.addItem(s.getId());
+            }
+        }
+    }
+
+    // Método para cargar mecánicos
+    private void cargarMecanicos() {
+        jComboBoxMecanico.removeAllItems();
+        for (Mecanico m : gestor.getMecanicos()) {
+            jComboBoxMecanico.addItem(m.getId() + " - " + m.getNombre());
+        }
+    }
+
+    private void cargarEstados() {
+        jComboBoxEstado.removeAllItems();
+        for (Estado e : gestor.getEstados()) {
+            jComboBoxEstado.addItem(e.getId() + " - " + e.getNombre());
+        }
+    }
+
+    private void cargarDatosSolicitud() {
+        String idSolicitud = (String) jComboBoxServicio.getSelectedItem();
+        if (idSolicitud == null) return;
+        
+        solicitudActual = null;
+        for (Solicitud s : gestor.getSolicitudes()) {
+            if (s.getId().equals(idSolicitud)) {
+                solicitudActual = s;
+                break;
+            }
+        }
+        
+        if (solicitudActual != null) {
+            jTextFieldPlaca.setText(solicitudActual.getPlaca());
+            jTextArea1.setText(solicitudActual.getObservaciones() != null ? solicitudActual.getObservaciones() : "");
+            
+            Servicio servicio = gestor.buscarServicioPorId(solicitudActual.getIdServicio());
+            if (servicio != null) {
+                jComboBoxTipoServicio.removeAllItems();
+                jComboBoxTipoServicio.addItem(servicio.getNombre());
+            }
+            
+            // Seleccionar mecánico si existe
+            if (solicitudActual.getIdMecanico() != null) {
+                Mecanico mecanico = gestor.buscarMecanicoPorId(solicitudActual.getIdMecanico());
+                if (mecanico != null) {
+                    for (int i = 0; i < jComboBoxMecanico.getItemCount(); i++) {
+                        String item = (String) jComboBoxMecanico.getItemAt(i);
+                        if (item.startsWith(mecanico.getId())) {
+                            jComboBoxMecanico.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Cargar servicios adicionales
+            modeloTabla.setRowCount(0);
+            for (String idServicioAdicional : solicitudActual.getOtrosServicios()) {
+                Servicio sAdicional = gestor.buscarServicioPorId(idServicioAdicional);
+                if (sAdicional != null) {
+                    modeloTabla.addRow(new Object[]{sAdicional.getId(), sAdicional.getNombre()});
+                }
+            }
+        }
     }
 
     /**
@@ -149,49 +249,48 @@ public class ventanaAtender extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                        .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel4)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jComboBoxServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(30, 30, 30)
+                                        .addComponent(jLabel6)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jComboBoxMecanico, 0, 160, Short.MAX_VALUE)
+                                            .addComponent(jComboBoxTipoServicio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonSalvar)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBoxServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jComboBoxMecanico, 0, 160, Short.MAX_VALUE)
-                                    .addComponent(jComboBoxTipoServicio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(4, 4, 4)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonSalvar)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonCancelar)
-                    .addComponent(jButtonMas, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonMenos, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jButtonCancelar)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jButtonMas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(jButtonMenos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)))))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -219,16 +318,14 @@ public class ventanaAtender extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jButtonMas)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonMenos)))
-                .addGap(18, 18, 18)
+                        .addComponent(jButtonMas, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSalvar)
                     .addComponent(jButtonCancelar))
@@ -239,7 +336,7 @@ public class ventanaAtender extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxServicioActionPerformed
-        // TODO add your handling code here:
+        cargarDatosSolicitud();
     }//GEN-LAST:event_jComboBoxServicioActionPerformed
 
     private void jComboBoxTipoServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoServicioActionPerformed
@@ -259,15 +356,68 @@ public class ventanaAtender extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBoxEstadoActionPerformed
 
     private void jButtonMasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMasActionPerformed
-        // TODO add your handling code here:
+        if (solicitudActual == null) return;
+        
+        ArrayList<String> disponibles = new ArrayList<>();
+        for (Servicio s : gestor.getServicios()) {
+            if (!s.getId().equals(solicitudActual.getIdServicio()) && 
+                !solicitudActual.getOtrosServicios().contains(s.getId())) {
+                disponibles.add(s.getId() + " - " + s.getNombre());
+            }
+        }
+        
+        if (disponibles.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay servicios disponibles");
+            return;
+        }
+        
+        String[] opciones = disponibles.toArray(new String[0]);
+        String seleccion = (String) javax.swing.JOptionPane.showInputDialog(
+            this, "Seleccione servicio:", "Agregar", 
+            javax.swing.JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+        
+        if (seleccion != null) {
+            String idServicio = seleccion.split(" - ")[0];
+            Servicio s = gestor.buscarServicioPorId(idServicio);
+            if (s != null) {
+                solicitudActual.addOtroServicio(idServicio);
+                modeloTabla.addRow(new Object[]{s.getId(), s.getNombre()});
+            }
+        }
     }//GEN-LAST:event_jButtonMasActionPerformed
 
     private void jButtonMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMenosActionPerformed
-        // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+        if (fila >= 0) {
+            String idServicio = (String) modeloTabla.getValueAt(fila, 0);
+            solicitudActual.removeOtroServicio(idServicio);
+            modeloTabla.removeRow(fila);
+        }
     }//GEN-LAST:event_jButtonMenosActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        // TODO add your handling code here:
+        if (solicitudActual == null) return;
+        
+        // Asignar mecánico
+        String mecanicoSeleccionado = (String) jComboBoxMecanico.getSelectedItem();
+        if (mecanicoSeleccionado != null) {
+            String idMecanico = mecanicoSeleccionado.split(" - ")[0];
+            solicitudActual.setIdMecanico(idMecanico);
+        }
+        
+        // Asignar estado
+        String estadoSeleccionado = (String) jComboBoxEstado.getSelectedItem();
+        if (estadoSeleccionado != null) {
+            String idEstado = estadoSeleccionado.split(" - ")[0];
+            solicitudActual.setIdEstado(idEstado);
+        }
+        
+        solicitudActual.setObservaciones(jTextArea1.getText());
+        
+        if (gestor.guardarSolicitudes()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Solicitud #" + solicitudActual.getId() + " guardada");
+        }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed

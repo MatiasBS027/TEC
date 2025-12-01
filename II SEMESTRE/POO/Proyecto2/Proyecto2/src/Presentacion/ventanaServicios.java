@@ -5,8 +5,7 @@
 package Presentacion;
 
 import Conceptos.Servicio;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import Util.GestorDatos;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -21,7 +20,7 @@ import java.awt.Toolkit;
  */
 public class ventanaServicios extends javax.swing.JDialog {
 
-    private final ArrayList<Servicio> servicios = new ArrayList<>();
+    private final ArrayList<Servicio> servicios = GestorDatos.getInstancia().getServicios();
     private DefaultTableModel modelo;
 
     // Constructor
@@ -56,31 +55,14 @@ public class ventanaServicios extends javax.swing.JDialog {
         });
     }
 
-    // Llena la tabla con los datos cargados desde el archivo XML
     private void llenarTabla() {
-        servicios.clear();
+        // Cargar servicios desde GestorDatos
         modelo.setRowCount(0);
-        try {
-
-            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/servicios.xml");
-            if (is == null) {
-                throw new FileNotFoundException("No se encontró Export/servicios.xml en el classpath");
-            }
-
-            @SuppressWarnings("unchecked")
-            ArrayList<Servicio> datos = (ArrayList<Servicio>) Util.cargadorXML.Cargar(is, "servicio");
-            servicios.addAll(datos);
-
-            for (Servicio s : servicios) {
-                modelo.addRow(new Object[] { s.getId(), s.getNombre(), s.getPrecio() });
-            }
-
-            if (!servicios.isEmpty()) {
-                jTable1.setRowSelectionInterval(0, 0);
-            }
-
-        } catch (FileNotFoundException e) {
-            mostrarError("Error al leer servicios: " + e.getMessage());
+        for (Servicio s : servicios) {
+            modelo.addRow(new Object[] { s.getId(), s.getNombre(), s.getPrecio() });
+        }
+        if (!servicios.isEmpty()) {
+            jTable1.setRowSelectionInterval(0, 0);
         }
     }
 
@@ -344,7 +326,7 @@ public class ventanaServicios extends javax.swing.JDialog {
 
         servicios.add(servicio);
         modelo.addRow(new Object[] { servicio.getId(), servicio.getNombre(), servicio.getPrecio() });
-        Util.GuardarArchivo.guardarServicios(servicios);
+        GestorDatos.getInstancia().guardarServicios();
         mostrarInfo("Servicio agregado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonNuevoActionPerformed
@@ -375,7 +357,7 @@ public class ventanaServicios extends javax.swing.JDialog {
         modelo.setValueAt(actualizado.getId(), index, 0);
         modelo.setValueAt(actualizado.getNombre(), index, 1);
         modelo.setValueAt(actualizado.getPrecio(), index, 2);
-        Util.GuardarArchivo.guardarServicios(servicios);
+        GestorDatos.getInstancia().guardarServicios();
         mostrarInfo("Servicio modificado correctamente");
     }// GEN-LAST:event_jButtonModificarActionPerformed
 
@@ -397,7 +379,7 @@ public class ventanaServicios extends javax.swing.JDialog {
         int index = jTable1.convertRowIndexToModel(fila);
         servicios.remove(index);
         modelo.removeRow(index);
-        Util.GuardarArchivo.guardarServicios(servicios);
+        GestorDatos.getInstancia().guardarServicios();
         mostrarInfo("Servicio eliminado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonBorrarActionPerformed

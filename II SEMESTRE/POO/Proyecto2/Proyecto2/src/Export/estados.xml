@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <estados>
     <estado id="000">
         <nombre>Nuevo</nombre>
@@ -14,5 +14,8 @@
     </estado>
     <estado id="004">
         <nombre>Completado</nombre>
+    </estado>
+    <estado id="005">
+        <nombre>Cancelado</nombre>
     </estado>
 </estados>

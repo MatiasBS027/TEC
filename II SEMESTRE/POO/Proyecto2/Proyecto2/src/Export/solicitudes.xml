@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<solicitudes>
+    <solicitud id="000000001">
+        <placa>AAA100</placa>
+        <servicio>1000</servicio>
+        <cliente>300000111</cliente>
+        <mecanico>200</mecanico>
+        <estado>000</estado>
+        <observaciones>Solicitud inicial de cambio de aceite</observaciones>
+        <otros_servicios>
+            <id>103</id>
+            <id>105</id>
+        </otros_servicios>
+    </solicitud>
+    <solicitud id="000000002">
+        <placa>TEST123</placa>
+        <servicio>1300</servicio>
+        <cliente>300003333</cliente>
+        <mecanico>2300</mecanico>
+        <estado>001</estado>
+        <observaciones>Prueba de diagnóstico completo</observaciones>
+        <otros_servicios>
+            <id>107</id>
+        </otros_servicios>
+    </solicitud>
+    <solicitud id="000000003">
+        <placa>CCC300</placa>
+        <servicio>104</servicio>
+        <cliente>300000333</cliente>
+        <mecanico/>
+        <estado>005</estado>
+        <observaciones>Solicitud cancelada por el cliente</observaciones>
+        <otros_servicios/>
+    </solicitud>
+</solicitudes>

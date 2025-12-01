@@ -37,6 +37,7 @@ public class GestorDatos {
      * Carga los datos desde archivos .DAT al iniciar
      */
     private GestorDatos() {
+        asegurarArchivos();
         cargarTodosDatos();
     }
 
@@ -69,6 +70,14 @@ public class GestorDatos {
         System.out.println("- Mecánicos: " + mecanicos.size());
         System.out.println("- Solicitudes: " + solicitudes.size());
         System.out.println("- Estados: " + estados.size());
+    }
+
+    private void asegurarArchivos() {
+        SerializacionUtil.crearArchivoSiNoExiste(ARCHIVO_CLIENTES);
+        SerializacionUtil.crearArchivoSiNoExiste(ARCHIVO_SERVICIOS);
+        SerializacionUtil.crearArchivoSiNoExiste(ARCHIVO_MECANICOS);
+        SerializacionUtil.crearArchivoSiNoExiste(ARCHIVO_SOLICITUDES);
+        SerializacionUtil.crearArchivoSiNoExiste(ARCHIVO_ESTADOS);
     }
 
     // ==================== GETTERS DE LAS LISTAS ====================
@@ -153,6 +162,43 @@ public class GestorDatos {
      */
     public boolean guardarEstados() {
         return SerializacionUtil.guardarLista(estados, ARCHIVO_ESTADOS);
+    }
+
+    public void limpiarDatos() {
+        clientes.clear();
+        servicios.clear();
+        mecanicos.clear();
+        solicitudes.clear();
+        estados.clear();
+        guardarTodosDatos();
+    }
+
+    public void importarDatos(ArrayList<Cliente> nuevosClientes,
+                              ArrayList<Servicio> nuevosServicios,
+                              ArrayList<Mecanico> nuevosMecanicos,
+                              ArrayList<Solicitud> nuevasSolicitudes,
+                              ArrayList<Estado> nuevosEstados) {
+        if (nuevosClientes != null) {
+            clientes.clear();
+            clientes.addAll(nuevosClientes);
+        }
+        if (nuevosServicios != null) {
+            servicios.clear();
+            servicios.addAll(nuevosServicios);
+        }
+        if (nuevosMecanicos != null) {
+            mecanicos.clear();
+            mecanicos.addAll(nuevosMecanicos);
+        }
+        if (nuevasSolicitudes != null) {
+            solicitudes.clear();
+            solicitudes.addAll(nuevasSolicitudes);
+        }
+        if (nuevosEstados != null) {
+            estados.clear();
+            estados.addAll(nuevosEstados);
+        }
+        guardarTodosDatos();
     }
 
     // ==================== MÉTODOS AUXILIARES ====================

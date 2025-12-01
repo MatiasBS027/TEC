@@ -17,6 +17,13 @@ public class SerializacionUtil{
     
     // Ruta base donde se guardan los archivos .DAT
     private static final String RUTA_BASE = "src/data/";
+
+    private static void asegurarRutaBase() {
+        File base = new File(RUTA_BASE);
+        if (!base.exists()) {
+            base.mkdirs();
+        }
+    }
     
     /**
      * Guarda un ArrayList de objetos en un archivo .DAT
@@ -24,6 +31,7 @@ public class SerializacionUtil{
      * nombreArchivo Nombre del archivo (ej: "CLIENTES.DAT")
      */
     public static boolean guardarLista(ArrayList<?> lista, String nombreArchivo) {
+        asegurarRutaBase();
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(RUTA_BASE + nombreArchivo))) {
             oos.writeObject(lista);
@@ -41,6 +49,7 @@ public class SerializacionUtil{
      */
     @SuppressWarnings("unchecked")
     public static <T> ArrayList<T> cargarLista(String nombreArchivo) {
+        asegurarRutaBase();
         File archivo = new File(RUTA_BASE + nombreArchivo);
         
         // Si el archivo no existe o está vacío, retornar lista vacía
@@ -63,6 +72,7 @@ public class SerializacionUtil{
      * true si se vació correctamente
      */
     public static boolean vaciarArchivo(String nombreArchivo) {
+        asegurarRutaBase();
         try (FileOutputStream fos = new FileOutputStream(RUTA_BASE + nombreArchivo)) {
             // Simplemente abre y cierra el archivo, dejándolo vacío
             return true;
@@ -87,6 +97,7 @@ public class SerializacionUtil{
      * true si se creó o ya existía
      */
     public static boolean crearArchivoSiNoExiste(String nombreArchivo) {
+        asegurarRutaBase();
         File archivo = new File(RUTA_BASE + nombreArchivo);
         if (!archivo.exists()) {
             try {

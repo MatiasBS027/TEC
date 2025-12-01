@@ -5,8 +5,7 @@
 package Presentacion;
 
 import Conceptos.Servicio;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import Util.GestorDatos;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ventanaServiciosValidados extends javax.swing.JDialog {
 
-    private final ArrayList<Servicio> servicios = new ArrayList<>();
+    private final ArrayList<Servicio> servicios = GestorDatos.getInstancia().getServicios();
     private final ArrayList<String> seleccionInicial = new ArrayList<>();
     private final ArrayList<String> seleccionTrabajo = new ArrayList<>();
     private DefaultTableModel modelo;
@@ -59,27 +58,12 @@ public class ventanaServiciosValidados extends javax.swing.JDialog {
         jTable1.setModel(modelo);
     }
 
-    // Llena la tabla con los servicios cargados desde el archivo XML
     private void llenarTabla() {
-        servicios.clear();
+        // Cargar servicios desde GestorDatos y mostrar estado de selección
         modelo.setRowCount(0);
-        try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("data/servicios.xml");
-            if (is == null) {
-                throw new FileNotFoundException("No se encontró data/servicios.xml en el classpath");
-            }
-
-            @SuppressWarnings("unchecked")
-            ArrayList<Servicio> datos = (ArrayList<Servicio>) Util.cargadorXML.Cargar(is, "servicio");
-            servicios.addAll(datos);
-
-            for (Servicio s : servicios) {
-                boolean marcado = seleccionTrabajo.contains(s.getId());
-                modelo.addRow(new Object[] { marcado, s.getNombre() });
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        for (Servicio s : servicios) {
+            boolean marcado = seleccionTrabajo.contains(s.getId());
+            modelo.addRow(new Object[] { marcado, s.getNombre() });
         }
     }
 

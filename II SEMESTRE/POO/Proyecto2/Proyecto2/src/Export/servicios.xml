@@ -56,4 +56,8 @@
         <nombre>Revision General</nombre>
         <precio>12000</precio>
     </servicio>
+    <servicio id="1300">
+        <nombre>Diagnostico Computarizado</nombre>
+        <precio>32000</precio>
+    </servicio>
 </servicios>

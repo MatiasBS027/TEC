@@ -5,8 +5,7 @@
 package Presentacion;
 
 import Conceptos.Cliente;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import Util.GestorDatos;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -14,7 +13,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Vector;
 
 /**
  *
@@ -22,7 +20,7 @@ import java.util.Vector;
  */
 public class ventanaClientes extends javax.swing.JDialog {
 
-    private final ArrayList<Cliente> clientes = new ArrayList<>();
+    private final ArrayList<Cliente> clientes = GestorDatos.getInstancia().getClientes();
     private DefaultTableModel modelo;
 
     // Constructor
@@ -55,26 +53,14 @@ public class ventanaClientes extends javax.swing.JDialog {
         });
     }
 
-    // Llenar la tabla con datos desde el XML
     private void llenarTabla() {
-        clientes.clear();
+        // Cargar clientes desde GestorDatos (listas en memoria)
         modelo.setRowCount(0);
-        try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/clientes.xml");
-            if (is == null) {
-                throw new FileNotFoundException("No se encontró Export/clientes.xml en el classpath");
-            }
-            @SuppressWarnings("unchecked")
-            ArrayList<Cliente> datos = (ArrayList<Cliente>) Util.cargadorXML.Cargar(is, "cliente");
-            clientes.addAll(datos);
-            for (Cliente c : clientes) {
-                modelo.addRow(new Object[] { c.getId(), c.getNombre(), c.getPlaca(), c.getTelefono(), c.getEmail() });
-            }
-            if (!clientes.isEmpty()) {
-                jTable1.setRowSelectionInterval(0, 0);
-            }
-        } catch (FileNotFoundException e) {
-            mostrarError("Error al leer clientes: " + e.getMessage());
+        for (Cliente c : clientes) {
+            modelo.addRow(new Object[] { c.getId(), c.getNombre(), c.getPlaca(), c.getTelefono(), c.getEmail() });
+        }
+        if (!clientes.isEmpty()) {
+            jTable1.setRowSelectionInterval(0, 0);
         }
     }
 
@@ -375,8 +361,8 @@ public class ventanaClientes extends javax.swing.JDialog {
 
         clientes.add(cliente);
         modelo.addRow(new Object[] { cliente.getId(), cliente.getNombre(), cliente.getPlaca(), cliente.getTelefono(),
-                cliente.getEmail() });
-        Util.GuardarArchivo.guardarClientes(clientes);
+            cliente.getEmail() });
+        GestorDatos.getInstancia().guardarClientes();
         mostrarInfo("Cliente agregado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonNuevoActionPerformed
@@ -408,7 +394,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         modelo.setValueAt(actualizado.getPlaca(), index, 2);
         modelo.setValueAt(actualizado.getTelefono(), index, 3);
         modelo.setValueAt(actualizado.getEmail(), index, 4);
-        Util.GuardarArchivo.guardarClientes(clientes);
+        GestorDatos.getInstancia().guardarClientes();
         mostrarInfo("Cliente modificado correctamente");
     }// GEN-LAST:event_jButtonModificarActionPerformed
 
@@ -427,7 +413,7 @@ public class ventanaClientes extends javax.swing.JDialog {
         int index = jTable1.convertRowIndexToModel(fila);
         clientes.remove(index);
         modelo.removeRow(index);
-        Util.GuardarArchivo.guardarClientes(clientes);
+        GestorDatos.getInstancia().guardarClientes();
         mostrarInfo("Cliente eliminado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonBorrarActionPerformed

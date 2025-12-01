@@ -180,4 +180,16 @@
         <telefono>7777-1810</telefono>
         <email>claudia.r@gmail.com</email>
     </cliente>
+    <cliente id="300003333">
+        <nombre>Prueba Demo</nombre>
+        <placa>TEST123</placa>
+        <telefono>8000-0000</telefono>
+        <email>demo@test.com</email>
+    </cliente>
+    <cliente id="3000003334343434">
+        <nombre>Pedro Arnaezwrwerwerwer</nombre>
+        <placa>CCC300eeeeee</placa>
+        <telefono>7777-3000werwerwer</telefono>
+        <email>pedro.a@gmail.com</email>
+    </cliente>
 </clientes>

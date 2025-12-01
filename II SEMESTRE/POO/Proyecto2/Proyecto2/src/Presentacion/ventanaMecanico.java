@@ -5,8 +5,7 @@
 package Presentacion;
 
 import Conceptos.Mecanico;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import Util.GestorDatos;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -21,7 +20,7 @@ import java.awt.Toolkit;
  */
 public class ventanaMecanico extends javax.swing.JDialog {
 
-    private final ArrayList<Mecanico> mecanicos = new ArrayList<>();
+    private final ArrayList<Mecanico> mecanicos = GestorDatos.getInstancia().getMecanicos();
     private final ArrayList<String> serviciosSeleccionados = new ArrayList<>();
     private DefaultTableModel modelo;
 
@@ -58,31 +57,14 @@ public class ventanaMecanico extends javax.swing.JDialog {
         actualizarEtiquetaServicios();
     }
 
-    // Llena la tabla con los datos de los mecanicos desde el archivo XML
     private void llenarTabla() {
-        mecanicos.clear();
+        // Cargar mecánicos desde GestorDatos
         modelo.setRowCount(0);
-        try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("Export/mecanicos.xml");
-
-            if (is == null) {
-                throw new FileNotFoundException("No se encontró Export/mecanicos.xml en el classpath");
-            }
-
-            @SuppressWarnings("unchecked")
-            ArrayList<Mecanico> datos = (ArrayList<Mecanico>) Util.cargadorXML.Cargar(is, "mecanico");
-            mecanicos.addAll(datos);
-
-            for (Mecanico m : mecanicos) {
-                modelo.addRow(new Object[] { m.getId(), m.getNombre(), m.getPuesto() });
-            }
-
-            if (!mecanicos.isEmpty()) {
-                jTable1.setRowSelectionInterval(0, 0);
-            }
-
-        } catch (FileNotFoundException e) {
-            mostrarError("Error al leer mecanicos: " + e.getMessage());
+        for (Mecanico m : mecanicos) {
+            modelo.addRow(new Object[] { m.getId(), m.getNombre(), m.getPuesto() });
+        }
+        if (!mecanicos.isEmpty()) {
+            jTable1.setRowSelectionInterval(0, 0);
         }
     }
 
@@ -374,7 +356,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
 
         mecanicos.add(mecanico);
         modelo.addRow(new Object[] { mecanico.getId(), mecanico.getNombre(), mecanico.getPuesto() });
-        Util.GuardarArchivo.guardarMecanicos(mecanicos);
+        GestorDatos.getInstancia().guardarMecanicos();
         mostrarInfo("Mecánico agregado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonNuevoActionPerformed
@@ -422,7 +404,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         modelo.setValueAt(original.getId(), index, 0);
         modelo.setValueAt(original.getNombre(), index, 1);
         modelo.setValueAt(original.getPuesto(), index, 2);
-        Util.GuardarArchivo.guardarMecanicos(mecanicos);
+        GestorDatos.getInstancia().guardarMecanicos();
         mostrarInfo("Mecánico modificado correctamente");
     }// GEN-LAST:event_jButtonModificarActionPerformed
 
@@ -443,7 +425,7 @@ public class ventanaMecanico extends javax.swing.JDialog {
         int index = jTable1.convertRowIndexToModel(fila);
         mecanicos.remove(index);
         modelo.removeRow(index);
-        Util.GuardarArchivo.guardarMecanicos(mecanicos);
+        GestorDatos.getInstancia().guardarMecanicos();
         mostrarInfo("Mecánico eliminado correctamente");
         limpiarCampos();
     }// GEN-LAST:event_jButtonBorrarActionPerformed

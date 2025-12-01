@@ -230,4 +230,12 @@
             <id>110</id>
         </servicios>
     </mecanico>
+    <mecanico id="2300">
+        <nombre>Roberto Pruebas</nombre>
+        <puesto>Especialista Diagnóstico</puesto>
+        <servicios>
+            <id>1300</id>
+            <id>107</id>
+        </servicios>
+    </mecanico>
 </mecanicos>

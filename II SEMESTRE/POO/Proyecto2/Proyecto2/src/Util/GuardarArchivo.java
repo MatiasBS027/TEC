@@ -28,12 +28,12 @@ import org.w3c.dom.Element;
  */
 public class GuardarArchivo {
     
-    // Rutas de los archivos XML (en src/export/)
-    private static final String RUTA_CLIENTES = "src/export/clientes.xml";
-    private static final String RUTA_MECANICOS = "src/export/mecanicos.xml";
-    private static final String RUTA_SERVICIOS = "src/export/servicios.xml";
-    private static final String RUTA_ESTADOS = "src/export/estados.xml";
-    private static final String RUTA_SOLICITUDES = "src/export/solicitudes.xml";
+    // Rutas de los archivos XML (en src/Export/)
+    private static final String RUTA_CLIENTES = "src/Export/clientes.xml";
+    private static final String RUTA_MECANICOS = "src/Export/mecanicos.xml";
+    private static final String RUTA_SERVICIOS = "src/Export/servicios.xml";
+    private static final String RUTA_ESTADOS = "src/Export/estados.xml";
+    private static final String RUTA_SOLICITUDES = "src/Export/solicitudes.xml";
     
     /**
      * Guarda la lista de clientes en un archivo XML
@@ -212,12 +212,17 @@ public class GuardarArchivo {
      * TransformerException Si hay error al escribir
      */
     private static void escribirDocumento(Document doc, String ruta) throws TransformerException {
+        File archivo = new File(ruta);
+        if (archivo.getParentFile() != null) {
+            archivo.getParentFile().mkdirs();
+        }
+
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(ruta));
+        StreamResult result = new StreamResult(archivo);
         transformer.transform(source, result);
     }
 }

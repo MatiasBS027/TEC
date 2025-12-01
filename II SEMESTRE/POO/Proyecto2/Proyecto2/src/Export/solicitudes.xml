@@ -4,9 +4,10 @@
         <placa>AAA100</placa>
         <servicio>1000</servicio>
         <cliente>300000111</cliente>
-        <mecanico>200</mecanico>
-        <estado>000</estado>
-        <observaciones>Solicitud inicial de cambio de aceite</observaciones>
+        <mecanico>2280</mecanico>
+        <estado>003</estado>
+        <observaciones>=== OBSERVACIONES ===
+Solicitud inicial de cambio de aceite</observaciones>
         <otros_servicios>
             <id>103</id>
             <id>105</id>
@@ -31,5 +32,75 @@
         <estado>005</estado>
         <observaciones>Solicitud cancelada por el cliente</observaciones>
         <otros_servicios/>
+    </solicitud>
+    <solicitud id="000000004">
+        <placa>AAA100</placa>
+        <servicio>1300</servicio>
+        <cliente>300000111</cliente>
+        <mecanico>2300</mecanico>
+        <estado>002</estado>
+        <observaciones>=== OBSERVACIONES ===
+Revision Completa</observaciones>
+        <otros_servicios>
+            <id>102</id>
+        </otros_servicios>
+    </solicitud>
+    <solicitud id="000000005">
+        <placa>123545</placa>
+        <servicio>103</servicio>
+        <cliente>300000111</cliente>
+        <mecanico/>
+        <estado>000</estado>
+        <observaciones>Sin observaciones</observaciones>
+        <otros_servicios/>
+    </solicitud>
+    <solicitud id="000000006">
+        <placa>12451</placa>
+        <servicio>1000</servicio>
+        <cliente>300003333</cliente>
+        <mecanico/>
+        <estado>000</estado>
+        <observaciones>Sin observaciones</observaciones>
+        <otros_servicios/>
+    </solicitud>
+    <solicitud id="000000007">
+        <placa>09865</placa>
+        <servicio>103</servicio>
+        <cliente>300000555</cliente>
+        <mecanico>203</mecanico>
+        <estado>000</estado>
+        <observaciones>=== INFORMACIÓN DEL CLIENTE ===
+Cliente: Ricardo Torres
+Teléfono: 7777-5000
+Email: ricardo.t@gmail.com
+
+=== OBSERVACIONES ===
+Sin observaciones</observaciones>
+        <otros_servicios>
+            <id>1000</id>
+            <id>10001</id>
+        </otros_servicios>
+    </solicitud>
+    <solicitud id="000000008">
+        <placa>132123123</placa>
+        <servicio>102</servicio>
+        <cliente>000000000</cliente>
+        <mecanico/>
+        <estado>000</estado>
+        <observaciones>Sin observaciones</observaciones>
+        <otros_servicios/>
+    </solicitud>
+    <solicitud id="000000009">
+        <placa>12312</placa>
+        <servicio>104</servicio>
+        <cliente>300000222</cliente>
+        <mecanico>2001</mecanico>
+        <estado>004</estado>
+        <observaciones>=== OBSERVACIONES ===
+Sin observaciones</observaciones>
+        <otros_servicios>
+            <id>1000</id>
+            <id>109</id>
+        </otros_servicios>
     </solicitud>
 </solicitudes>

@@ -12,7 +12,7 @@ ExitProcess proto
     align 16
     vectorA real4 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 0.0
     align 16
-    vectorB real4 2.0, 1.0, 0.5, 1.5, 2.5, 0.5, 0.0, 0.0
+    vectorB real4 2.0, 1.0, 0.5, 2.0, 2.5, 0.5, 0.0, 0.0
    
    ; Vector C: Almacena resultados intermedios de multiplicación
     align 16

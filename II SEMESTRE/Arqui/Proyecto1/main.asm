@@ -50,6 +50,7 @@ main ENDP
 ; =========================================================
 obtener_primo PROC
     sub RSP, 40        ; (Espacio para los argumentos de printf, shadow space) 32, (alineacion) 8
+    mov qword ptr [RSP + 48], 0    ; Inicializar el espacio para el número primo
     lea RCX, string
     call printf
     lea RCX, short_format_string
@@ -156,7 +157,7 @@ ciclo_busqueda_raices_primitivas:
     ; RSP + 24 : numero_primo
     ; RSP + 16 : variable local base_actual
     ; RSP + 8  : alineación
-    ; RSP      : return value verificacion_raiz_primitiva
+    ; RSP      : return verificacion_raiz_primitiva
     ; =========================================================
     pop R8              ; R8 contiene el resultado, Cambio en el stack frame: RSP : alineación
     add RSP, 8          ; Eliminar espacio para la alineación, Cambio en el stack frame: RSP : base_actual
@@ -199,60 +200,11 @@ no_raiz_primitiva:
 calculo_raices_primitivas ENDP
 
 
+
 ; =========================================================
 ; MÓDULO: verificacion_raiz_primitiva
 ; =========================================================
-; Verifica si un número dado (base) es raiz primitiva de un numero primo dado 
-; Retorna 1 si el número es una raíz primitiva, 0 sino.
-; Stack Frame:
-; RSP + 40 : return value
-; RSP + 32 : numero_primo
-; RSP + 24 : exponente_final
-; RSP + 16 : base
-; RSP +  8 : return adress
-; RSP      : exponente_actual
-; =========================================================
-verificacion_raiz_primitiva PROC
-    sub RSP, 8          ; (variable local: exponente_actual) 8
-    mov qword ptr [RSP], 2   ; exponente_actual = 2
-
-ciclo_verificacion_potencias:
-    ;Preparar el stack frame para el segundo modulo
-    mov R11, [RSP + 32]      ; R11 <- numero_primo
-    mov R12, [RSP]           ; R12 <- exponente_actual
-    mov R13, [RSP + 16]      ; R13 <- base
-    sub RSP, 16          ; (alineación) 8, (return value exponenciacion_modular) 8
-    push R11             ; Parámetro 1: módulo = numero_primo
-    push R12             ; Parámetro 2: exponente_actual 
-    push R13             ; Parámetro 3: base
-    call exponenciacion_modular
-
-    pop R8              ; R8 contiene el resultado, Cambio en el stack frame: RSP : alineación
-    add RSP, 8          ; Eliminar la alineación, Cambio en el stack frame: RSP : exponente_actual
-    cmp R8, qword ptr [RSP + 16]    ; cmp resultado exponenciación modular, base 
-    je fin_ciclo_no_raiz_primitiva  ; resultado exponenciación modular = base 
-
-    add qword ptr [RSP], 1          ; exponente_actual = exponente_actual + 1
-    mov R12, [RSP]                  ; R12 <- exponente_actual
-    cmp R12, qword ptr [RSP + 24]   ; cmp exponente_actual, exponente_final          
-    jle ciclo_verificacion_potencias    ; exponente_actual <= exponente_final
-    
-    ;Es raiz primitiva del número primo
-    mov qword ptr [RSP + 40], 1         ; return value = 1
-    add RSP, 8                          ; Eliminar variables locales
-    ret 24
-
-fin_ciclo_no_raiz_primitiva:
-    ;No es raiz primitiva del número primo
-    mov qword ptr [RSP + 40], 0         ; return value = 0
-    add RSP, 8                          ; Eliminar variables locales
-    ret 24
-verificacion_raiz_primitiva ENDP
-
-; =========================================================
-; MÓDULO: exponenciacion_modular
-; =========================================================
-; Calcula: base^exponente mod modulo
+; Verifica si una base dada es una raíz primitiva de un número primo dado.
 ;
 ; Stack Frame:
 ; RSP + 32: valor de retorno (resultado)
@@ -261,12 +213,9 @@ verificacion_raiz_primitiva ENDP
 ; RSP + 8 : base
 ; RSP     : return address
 ; =========================================================
-exponenciacion_modular PROC
+verificacion_raiz_primitiva PROC
     xor RCX, RCX
-    ; Casos especiales
     mov RCX, [RSP+16]   ; RCX = exponente
-    cmp RCX, 0
-    je exp_cero         ; Si exponente = 0, resultado = 1
     
     ; Inicializar variables
     xor RAX, RAX
@@ -276,6 +225,7 @@ exponenciacion_modular PROC
     xor R9, R9
     mov R9, [RSP+24]    ; R9 = módulo
     ; RCX ya tiene el exponente
+    xor R10, R10        ; R10 = 0 -> contador 
     
 ciclo_multiplicacion:
     ; Multiplicar resultado por base 
@@ -287,21 +237,29 @@ ciclo_multiplicacion:
     xor RDX, RDX        ; Limpiar RDX antes de dividir
     div R9              ; RAX = RAX  / módulo, RDX = RAX mod módulo (sin signo)
     mov RAX, RDX        ; RAX = residuo (resultado mod módulo)
-    
-    ;  Verificar 
+    ; Incrementar contador de iteraciones
+    inc R10                    ; contador = contador + 1
+    cmp R10, 1
+    je siguiente_iteracion    ; omitir comparación cuando contador == 1
+
+    ;Comparar si se repite la base durante la exponenciación, se realiza desde la segunda iteración
+    cmp RAX, RBX
+    je no_es_raiz_primitiva
+
+siguiente_iteracion:
+    ;Verificar si se finalizó la exponenciación
     dec RCX             ; exponente = exponente - 1
     cmp RCX, 0
     jg ciclo_multiplicacion  ; Si exponente > 0, continuar
     
-    ; Guardar resultado y retornar 
-fin_exponenciacion:
-    mov [RSP+32], RAX   ; Guardar resultado en stack frame
+    ; Guardar resultado correspondiente y retornar 
+es_raiz_primitiva:
+    mov qword ptr [RSP+32], 1   ; Guardar resultado en stack frame
     ret 24              ; Limpiar 3 parámetros (8 bytes cada uno)
     
-exp_cero:
-    ; Caso especial: cualquier número^0 = 1
-    mov qword ptr [RSP+32], 1
+no_es_raiz_primitiva:
+    mov qword ptr [RSP+32], 0
     ret 24
-exponenciacion_modular ENDP
+verificacion_raiz_primitiva ENDP
 
 END

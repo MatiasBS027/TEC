@@ -18,10 +18,10 @@ outer_loop:
 inner_loop:
         @ Cargar vector[i] y vector[i+1]
         ADD     r4, r1, r3, LSL #1     @ dirección de vector[i]
-        LDRH    r7, [r4]
+        LDRSH    r7, [r4]
 
         ADD     r5, r4, #2             @ dirección de vector[i+1]
-        LDRH    r8, [r5]
+        LDRSH    r8, [r5]
 
         @ Comparar: si v[i] > v[i+1], intercambiar
         CMP     r7, r8

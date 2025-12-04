@@ -22,8 +22,6 @@ ExitProcess proto
 
 .code
 main PROC
-    sub rsp, 32                   ; Reservar  espacio
-    and rsp, 0FFFFFFFFFFFFFFF0h   ; Forzar alineacion 16 bytes
 
     ; =========================================================
     ; Etapa 1: multiplicacion elemento por elemento
@@ -79,7 +77,6 @@ main PROC
     ;==================================================================
     
     ; limpieza y salida
-    add     rsp, 32
     xor     ecx, ecx
     call    ExitProcess
 

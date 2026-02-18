@@ -6,7 +6,7 @@ Last Stand para ver si se capta Djisktra (o como se llame), haciendo uso de Matr
 
 #define infinito 99999999 //Valor absurdamente alto, para denominar a aquellos valores que no puedo llegar desde un nodo, o al inicializar 
 // "Y voy a hacer copypaste de ese infinito un monton de veces " ~ Prof. Aurelio Sanabria
-#define n_nodos 5     //Numero de nodos, no se me ocurrio alguna funcion en el poco tiempo
+#define n_nodos 7     //Numero de nodos, no se me ocurrio alguna funcion en el poco tiempo
 
 
 /*
@@ -184,12 +184,17 @@ void mostrar_laberinto(int matriz[n_nodos][n_nodos]) {
 }
 
 int main() {
+    // Matriz de adyacencia 7x7 ASIMETRICA DENSA (mayoría de nodos con 3+ conexiones)
+    // Esto prueba que Dijkstra funciona con grafos más complejos y densamente conectados
     int matriz_adyacencia[n_nodos][n_nodos] = {
-        {0, 10, 0, 30, 100},
-        {10, 0, 50, 0, 0},
-        {0, 50, 0, 20, 10},
-        {30, 0, 20, 0, 60},
-        {100, 0, 10, 60, 0}
+        //  0   1   2   3   4   5   6
+        {   0,  5,  3,  0, 12,  0,  0},  // Nodo 0: 3 conexiones (1,2,4)
+        {   7,  0,  0,  9,  0,  2,  0},  // Nodo 1: 3 conexiones (0,3,5)
+        {   0,  4,  0,  6,  0,  8,  0},  // Nodo 2: 3 conexiones (1,3,5)
+        {   0,  0, 10,  0,  1, 15,  3},  // Nodo 3: 4 conexiones (2,4,5,6)
+        {   0,  0,  0,  5,  0,  0, 11},  // Nodo 4: 2 conexiones (3,6)
+        {   0,  0,  7,  0,  4,  0,  2},  // Nodo 5: 3 conexiones (2,4,6)
+        {   8,  0,  0,  0,  0,  6,  0}   // Nodo 6: 2 conexiones (0,5)
     };
 
     int opcion;

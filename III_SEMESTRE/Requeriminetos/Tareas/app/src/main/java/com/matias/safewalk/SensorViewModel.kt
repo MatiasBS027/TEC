@@ -47,6 +47,16 @@ class SensorViewModel(
     private val _cuentaRegresiva = MutableStateFlow(10)
     val cuentaRegresiva: StateFlow<Int> = _cuentaRegresiva
 
+    private var numeroEmergencia: String = ""
+
+    init {
+        viewModelScope.launch {
+            dataStoreManager.contactoEmergencia.collect { numero ->
+                numeroEmergencia = numero ?: ""
+            }
+        }
+    }
+
     fun toggleModoVigilancia() {
         _modoVigilancia.value = !_modoVigilancia.value
     }
@@ -96,10 +106,9 @@ class SensorViewModel(
     }
 
     private fun enviarSmsAlerta() {
-        val numero = "+50684359151"
+        if (numeroEmergencia.isEmpty()) return
         val mensaje = "ALERTA: AYUDA NO RESPONDO"
         val sms = SmsManager.getDefault()
-        sms.sendTextMessage(numero, null, mensaje, null, null)
+        sms.sendTextMessage(numeroEmergencia, null, mensaje, null, null)
     }
-
 }

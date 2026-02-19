@@ -18,7 +18,7 @@ fun NavGraph(viewModel: SensorViewModel, dataStoreManager: DataStoreManager) {
             AlarmScreen(viewModel = viewModel, navController = navController)
         }
         composable("settings") {
-            SettingsScreen(dataStoreManager = dataStoreManager)
+            SettingsScreen(dataStoreManager = dataStoreManager, navController = navController)
         }
     }
 }

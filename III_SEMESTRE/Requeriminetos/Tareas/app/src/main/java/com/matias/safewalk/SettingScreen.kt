@@ -5,10 +5,11 @@ import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(dataStoreManager: DataStoreManager) {
+fun SettingsScreen(dataStoreManager: DataStoreManager, navController: NavController) {
 
     val contactoGuardado by dataStoreManager.contactoEmergencia.collectAsState(initial = "")
     var numeroContacto by remember(contactoGuardado) { mutableStateOf(contactoGuardado ?: "") }
@@ -40,6 +41,10 @@ fun SettingsScreen(dataStoreManager: DataStoreManager) {
                 }
             }) {
                 Text("Guardar")
+            }
+
+            Button(onClick = { navController.popBackStack() }) {
+                Text("Volver")
             }
         }
     }

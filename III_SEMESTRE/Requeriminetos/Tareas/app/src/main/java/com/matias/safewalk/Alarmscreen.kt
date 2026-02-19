@@ -27,11 +27,13 @@ import androidx.navigation.NavController
 fun AlarmScreen(viewModel: SensorViewModel, navController: NavController) {
     val modoVigilancia by viewModel.modoVigilancia.collectAsState()
     val caídaDetectada by viewModel.caídaDetectada.collectAsState()
+    val cuentaRegresiva by viewModel.cuentaRegresiva.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
+
     ) {
         Text(
             text = "SafeWalk",
@@ -65,7 +67,7 @@ fun AlarmScreen(viewModel: SensorViewModel, navController: NavController) {
         AlertDialog(
             onDismissRequest = { },
             title = { Text("¡Caída Detectada!") },
-            text = { Text("Se enviará una alerta en 10 segundos") },
+            text = { Text("Se enviará una alerta en $cuentaRegresiva segundos") },
             confirmButton = {
                 Button(onClick = { viewModel.resetCaida() }) {
                     Text("Cancelar Alerta")

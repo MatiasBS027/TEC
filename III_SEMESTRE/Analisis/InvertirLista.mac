@@ -1,0 +1,11 @@
+/*
+INVERTIR LISTA
+*/
+
+inv(lista):=block
+(
+    if lista = [] then
+        []
+    else
+        endcons(first(lista), inv(rest(lista)))
+);      

@@ -1,0 +1,14 @@
+/*
+Largo
+*/
+
+largo(lista):=block
+( [res],
+    res : 0,
+    for i in lista do
+    (
+        print(i),
+        res : res + 1
+    ),
+    return (res)
+);

@@ -1,0 +1,13 @@
+/*
+INVERTIR LISTA
+*/
+
+inv(lista):=block
+( [res],
+    res: [],
+    for i in lista do
+    (
+        res : cons(i, res)
+    ),
+    return (res)
+);      

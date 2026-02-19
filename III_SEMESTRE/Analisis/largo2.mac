@@ -1,0 +1,16 @@
+/*
+Largo
+*/
+
+largo(lista):=block
+(
+    largoAux(lista,0)
+);
+
+largoAux(lista,res):=block
+(
+    if lista =[] then
+        res
+    else
+        largoAux(rest(lista),res+1)
+);

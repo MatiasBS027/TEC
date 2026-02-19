@@ -1,0 +1,14 @@
+/*
+Largo
+*/
+
+largo(lista):=block
+( [res],
+    res : 0,
+    while lista #[] do  
+    (
+        res : res + 1,
+        lista : rest(lista)
+    ),
+    return (res)
+);

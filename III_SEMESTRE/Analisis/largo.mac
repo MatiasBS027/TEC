@@ -1,0 +1,11 @@
+/*
+Largo
+*/
+
+largo(lista):=block
+(
+    if lista =[] then
+        0
+    else
+        1 + largo(rest(lista))
+);

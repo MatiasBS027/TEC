@@ -1,0 +1,16 @@
+/*
+INVERTIR LISTA
+*/
+
+inv(lista):=block
+(
+    invAux(lista, [])
+);      
+
+invAux(lista, res):=block
+(
+    if lista = [] then
+        res
+    else
+        invAux(rest(lista), cons(first(lista), res))
+);

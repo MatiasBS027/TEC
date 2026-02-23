@@ -7,8 +7,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
@@ -19,15 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun AlarmScreen(
-    viewModel: SensorViewModel,
-    navController: NavController,
-    dataStorage: DataStoreManager
-
-) {
+fun AlarmScreen(viewModel: SensorViewModel, navController: NavController, dataStorage: DataStoreManager) {
     val modoVigilancia by viewModel.modoVigilancia.collectAsState()
     val caídaDetectada by viewModel.caídaDetectada.collectAsState()
     val cuentaRegresiva by viewModel.cuentaRegresiva.collectAsState()
@@ -55,17 +55,20 @@ fun AlarmScreen(
                 onCheckedChange = { viewModel.toggleModoVigilancia() }
             )
         }
-        Button(
-            onClick = {
-                viewModel.enviarSmsAlertaPanico()
+        Spacer(modifier = Modifier.height(40.dp))
 
-            },
+        Button(
+            onClick = { viewModel.enviarSmsAlertaPanico() },
+            modifier = Modifier
+                .size(width = 200.dp, height = 200.dp),
+            shape = CircleShape,
             colors = buttonColors(
                 containerColor = if (modoVigilancia) Color.Red else Color.Gray
             )
         ) {
-            Text(text = "PÁNICO")
+            Text(text = "PÁNICO", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
+        Spacer(modifier = Modifier.height(80.dp))
 
         Button(onClick = { navController.navigate("settings") }) {
             Text("Configurar Contacto")

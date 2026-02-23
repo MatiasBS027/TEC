@@ -1,10 +1,9 @@
 package com.matias.safewalk
 
+
+import android.provider.ContactsContract
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
@@ -24,10 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 
 @Composable
-fun AlarmScreen(viewModel: SensorViewModel, navController: NavController) {
+fun AlarmScreen(
+    viewModel: SensorViewModel,
+    navController: NavController,
+    dataStorage: DataStoreManager
+
+) {
     val modoVigilancia by viewModel.modoVigilancia.collectAsState()
     val caídaDetectada by viewModel.caídaDetectada.collectAsState()
     val cuentaRegresiva by viewModel.cuentaRegresiva.collectAsState()
+    val alertaEnviada by viewModel.alertaEnviada.collectAsState()
+    val nombreContacto by dataStorage.nombreEmergencia.collectAsState(initial = "")
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -51,7 +56,10 @@ fun AlarmScreen(viewModel: SensorViewModel, navController: NavController) {
             )
         }
         Button(
-            onClick = { },
+            onClick = {
+                viewModel.enviarSmsAlertaPanico()
+
+            },
             colors = buttonColors(
                 containerColor = if (modoVigilancia) Color.Red else Color.Gray
             )
@@ -71,6 +79,20 @@ fun AlarmScreen(viewModel: SensorViewModel, navController: NavController) {
             confirmButton = {
                 Button(onClick = { viewModel.resetCaida() }) {
                     Text("Cancelar Alerta")
+                }
+            }
+        )
+    }
+    if (alertaEnviada) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.resetCaida()
+            },
+            title = { Text("Alerta enviada") },
+            text = { Text("Alerta enviada al contacto: $nombreContacto") },
+            confirmButton = {
+                Button(onClick = { viewModel.resetCaida() }) {
+                    Text("Aceptar")
                 }
             }
         )

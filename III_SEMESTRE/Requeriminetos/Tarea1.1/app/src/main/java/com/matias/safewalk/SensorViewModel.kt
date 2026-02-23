@@ -18,6 +18,7 @@ import androidx.annotation.RequiresPermission
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,8 +33,11 @@ class SensorViewModel(
     private val umbral = 15f
     private var ultimoFueFuerte = false
 
+    private val _alertaEnviada = MutableStateFlow(false);
+    val alertaEnviada: StateFlow<Boolean> = _alertaEnviada
     private val context = getApplication<Application>()
 
+    private lateinit var alertaJob: Job
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
     private val _modoVigilancia = MutableStateFlow(false)
@@ -62,9 +66,15 @@ class SensorViewModel(
     }
 
     fun resetCaida() {
+        if (::alertaJob.isInitialized) { //referencia a la variable, para asi cancelar el sub proceso ese
+            alertaJob.cancel()
+        }
+
         _caídaDetectada.value = false
         alertaEnProceso = false
+        vibrator.cancel()
         ultimoFueFuerte = false
+        _alertaEnviada.value = false
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -92,23 +102,34 @@ class SensorViewModel(
                 val efecto = VibrationEffect.createOneShot(10_000, VibrationEffect.DEFAULT_AMPLITUDE)
                 vibrator.vibrate(efecto)
 
-                viewModelScope.launch {
+                alertaJob = viewModelScope.launch {
+
                     for (i in 10 downTo 0) {
                         _cuentaRegresiva.value = i
                         delay(1000)
                     }
+
                     enviarSmsAlerta()
                     _caídaDetectada.value = false
+                    _alertaEnviada.value = true
                     alertaEnProceso = false
                 }
             }
         }
     }
 
-    private fun enviarSmsAlerta() {
+    fun enviarSmsAlerta() {
         if (numeroEmergencia.isEmpty()) return
         val mensaje = "ALERTA: AYUDA NO RESPONDO"
         val sms = SmsManager.getDefault()
         sms.sendTextMessage(numeroEmergencia, null, mensaje, null, null)
     }
+    fun enviarSmsAlertaPanico() {
+        if (numeroEmergencia.isEmpty()) return
+        val mensaje = "ALERTA: AYUDA NO RESPONDO"
+        val sms = SmsManager.getDefault()
+        sms.sendTextMessage(numeroEmergencia, null, mensaje, null, null)
+        _alertaEnviada.value = true
+    }
+
 }

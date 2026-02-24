@@ -1,11 +1,38 @@
 /*  
 Fibonacci
 */
-
+/*  
 fibo(n):=block
 (
     if (n <= 1) then
         n
     else
         fibo(n-1) + fibo(n-2)
+);
+*/
+
+/*
+Asi encapsulamos la memoria 
+*/
+fibo(n):=block
+(
+    [memo],
+    memo:[[0,0], [1,1]];
+    fiboMem(n)
+);
+/*
+Aqui sacrificamos memoria por velocidad, ya que al guardar los resultados de cada numero, evitamos tener que volver a calcularlos cada vez que se necesitan.
+*/
+fiboMem(n):=block
+(
+    [res],
+    res:assoc(n, memo),
+    if res # false then
+        res
+    else
+    (
+        res: fiboMem(n-1) + fiboMem(n-2),
+        memo: endcons([n, res], memo),
+        res
+    )
 );

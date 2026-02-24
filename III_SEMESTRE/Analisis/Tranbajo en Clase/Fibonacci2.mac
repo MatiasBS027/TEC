@@ -1,0 +1,12 @@
+/*  
+Fibonacci
+*/
+
+fibo[n]:=block
+(
+    if (n <= 1) then
+        n
+    else
+        fibo[n-1] + fibo[n-2]  /* Note los corchetes [] eso le dice a max que haga "Memoization" */
+);
+

@@ -1,0 +1,77 @@
+/*****
+Chomper intentos
+*/
+
+/*
+Largo
+E: lista
+S: Largo de esta
+Sera usada para despues hacer funciones que cuenten numeros de 1 hasta la mitad.
+Por derecha e izquierda.
+*/
+largo(lista):=block
+(
+	if  lista=[] then 
+		0
+	else
+		1 + largo(rest(lista))
+);
+
+
+/*
+Encuentra a chomper y devuelve su posicion
+E: Lista
+S: Posicion empezando en 0 de Chomper
+Sera usada para encontrar a Chomper y contar unos de derecha o a la izqueirda.
+*/
+ChomperFind(lista):block
+(
+	[res],
+	res:1,
+	while lista#[] and first(lista)#R and first(lista)#L and first(lista)#X do
+	(
+		res: res + 1,
+		lista: rest(lista)
+	);
+);
+			
+	
+/*
+*/
+unosDer(lista,pos):=block
+(
+	[indice,contador],
+	indice: pos + 1,
+	contador: 0,
+
+	while i <= largo(lista) do 
+	(
+		if lista[i] = 1 then c: c+1,
+		i: i+1
+	),
+	c
+);
+
+/*
+*/
+unosIzq(lista,pos):=block
+(
+        [indice,contador],
+        indice: 1,
+        contador: 0,
+
+        while i <= pos do
+        (
+                if lista[i] = 1 then c: c+1,
+                i: i+1
+        ),
+        c
+);
+
+
+
+
+
+
+
+

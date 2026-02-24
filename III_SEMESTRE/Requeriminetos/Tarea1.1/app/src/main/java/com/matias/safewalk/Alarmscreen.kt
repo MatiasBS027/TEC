@@ -58,7 +58,7 @@ fun AlarmScreen(viewModel: SensorViewModel, navController: NavController, dataSt
         Spacer(modifier = Modifier.height(40.dp))
 
         Button(
-            onClick = { viewModel.enviarSmsAlertaPanico() },
+            onClick = { if(modoVigilancia)viewModel.enviarSmsAlertaPanico() },
             modifier = Modifier
                 .size(width = 200.dp, height = 200.dp),
             shape = CircleShape,

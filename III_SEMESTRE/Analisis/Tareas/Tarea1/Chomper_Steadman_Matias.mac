@@ -1,5 +1,8 @@
 /*****
-Chomper intentos
+01 Tarea de Chomper
+Autores: Steadman Murillo y Matias Benavidez
+IC3002 Análisis Algoritmos 2026
+Prof: Jose Helo Guzman
 */
 
 /*
@@ -36,6 +39,12 @@ ChomperFind(lista):=block
     res
 );
 
+/*
+Cuenta la cantidad de unos que hay a la derecha de una posicion
+E: lista y posicion
+S: cantidad de unos a la derecha (pos+1) de la posicion en la lista
+Sera utilizada, para contar la cantidad de unos a la derecha de Chomper tras saber su pos
+*/
 unosDer(lista,pos):=block
 (
     [indice,contador],
@@ -50,6 +59,12 @@ unosDer(lista,pos):=block
     contador
 );
 
+/*
+Cuenta la cantidad de unos que hay a la izquierda de una posicion
+E: lista y posicion
+S: cantidad de unos a izquierda (pos-1) de la posicion en la lista
+Sera utilizada, para contar la cantidad de unos a la derecha de Chomper tras saber su pos
+*/
 unosIzq(lista,pos):=block
 (
     [indice,contador],
@@ -64,6 +79,14 @@ unosIzq(lista,pos):=block
     contador
 );
 
+/*
+----------------------------------------------------------------------------------------------
+
+Funcion que mueve a Chomper ya sea a la izquierda(L) o derecha(R)
+E: lista y direccion
+S: simula movimiento al hacer cambios en donde va chomper
+Sera usada para junto a prints simular el cambio de Chomper o su movimiento
+*/
 mover(lista, direccion):=block
 (
     [pos],
@@ -76,6 +99,9 @@ mover(lista, direccion):=block
     lista
 );
 
+/*
+Funcion que decide la direccion de chomper
+*/
 decidirDireccion(lista):=block
 (
     [pos, izq, der],
@@ -88,6 +114,12 @@ decidirDireccion(lista):=block
         R
 );
 
+/*
+Funcion que regresa la cantidad de unos que hay segun una direccion
+E: lista y direccion
+S: cantidad de unos en dicha direccion
+Usada para ciclar a chomper hasta que la cantidad de unos sea 0 durante su mov
+*/
 unosEnDireccion(lista, dir):=block
 (
     [pos],
@@ -98,6 +130,12 @@ unosEnDireccion(lista, dir):=block
         unosDer(lista, pos)
 );
 
+/*
+Funcion que hace la logica principal, y cumplimiento de reglas
+E: lista
+S: prints hasta que no hayan 1s y estado final de lista
+Modifica la lista y muestra prints mientras lo hace, haciendo uso de ciclos y las funciones pasadas, de las formas que se dijo que serian usadas. 
+*/
 chomper(lista):=block
 (
     [pos, dir, dirContraria],

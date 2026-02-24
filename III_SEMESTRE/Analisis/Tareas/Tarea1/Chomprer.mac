@@ -24,54 +24,133 @@ E: Lista
 S: Posicion empezando en 0 de Chomper
 Sera usada para encontrar a Chomper y contar unos de derecha o a la izqueirda.
 */
-ChomperFind(lista):block
+ChomperFind(lista):=block
 (
-	[res],
-	res:1,
-	while lista#[] and first(lista)#R and first(lista)#L and first(lista)#X do
-	(
-		res: res + 1,
-		lista: rest(lista)
-	);
+    [res],
+    res:1,
+    while lista#[] and first(lista)#R and first(lista)#L and first(lista)#X do
+    (
+        res: res + 1,
+        lista: rest(lista)
+    ),
+    res
 );
-			
-	
-/*
-*/
+
 unosDer(lista,pos):=block
 (
-	[indice,contador],
-	indice: pos + 1,
-	contador: 0,
-
-	while i <= largo(lista) do 
-	(
-		if lista[i] = 1 then c: c+1,
-		i: i+1
-	),
-	c
+    [indice,contador],
+    indice: pos + 1,
+    contador: 0,
+    while indice <= largo(lista) do 
+    (
+        if lista[indice] = 1 then 
+            contador: contador+1,
+        indice: indice+1
+    ),
+    contador
 );
 
-/*
-*/
 unosIzq(lista,pos):=block
 (
-        [indice,contador],
-        indice: 1,
-        contador: 0,
-
-        while i <= pos do
-        (
-                if lista[i] = 1 then c: c+1,
-                i: i+1
-        ),
-        c
+    [indice,contador],
+    indice: 1,
+    contador: 0,
+    while indice <= pos-1 do
+    (
+        if lista[indice] = 1 then 
+            contador: contador+1,
+        indice: indice+1
+    ),
+    contador
 );
 
+mover(lista, direccion):=block
+(
+    [pos],
+    pos: ChomperFind(lista),
+    lista[pos]: 0,
+    if direccion = L then
+        lista[pos-1]: L
+    else
+        lista[pos+1]: R,
+    lista
+);
 
+decidirDireccion(lista):=block
+(
+    [pos, izq, der],
+    pos: ChomperFind(lista),
+    izq: unosIzq(lista, pos),
+    der: unosDer(lista, pos),
+    if izq >= der then 
+        L 
+    else 
+        R
+);
 
+unosEnDireccion(lista, dir):=block
+(
+    [pos],
+    pos: ChomperFind(lista),
+    if dir = L then
+        unosIzq(lista, pos)
+    else
+        unosDer(lista, pos)
+);
 
+chomper(lista):=block
+(
+    [pos, dir, dirContraria],
+    pos: ChomperFind(lista),
 
-
-
-
+    if unosIzq(lista, pos) + unosDer(lista, pos) = 0 then
+    (
+        print(lista),
+        end
+    )
+    else
+    (
+        print(lista),
+        
+        /* decidir dirección inicial */
+        if lista[pos] = X then
+        (
+            dir: decidirDireccion(lista),
+            lista[pos]: dir,
+            print(lista)
+        )
+        else
+            dir: lista[pos],
+        
+        /* moverse en esa dirección */
+        while unosEnDireccion(lista, dir) > 0 do
+        (
+            lista: mover(lista, dir),
+            print(lista)
+        ),
+        
+        /* cambiar a X, luego dirección contraria */
+        pos: ChomperFind(lista),
+        lista[pos]: X,
+        print(lista),
+        if dir = L then 
+            dirContraria: R 
+        else 
+            dirContraria: L,
+        lista[pos]: dirContraria,
+        print(lista),
+        
+        /* moverse en dirección contraria */
+        while unosEnDireccion(lista, dirContraria) > 0 do
+        (
+            lista: mover(lista, dirContraria),
+            print(lista)
+        ),
+        
+        /* terminar */
+        pos: ChomperFind(lista),
+        lista[pos]: X,
+        print(lista),
+        end
+    )
+);

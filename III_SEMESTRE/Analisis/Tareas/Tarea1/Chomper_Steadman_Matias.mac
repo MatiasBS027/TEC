@@ -142,7 +142,9 @@ chomper(lista):=block
     pos: ChomperFind(lista),
 
     if unosIzq(lista, pos) + unosDer(lista, pos) = 0 then
-    (
+    (     
+        print(lista),  
+        lista[pos]: X,
         print(lista),
         end
     )

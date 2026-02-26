@@ -4,7 +4,22 @@ Fibonacci
 
 fibo(n):=block
 (
-    for 
+    [temp, fm1, fm2, res],
+    if n<=1 then 
+        n
+    else
+    (
+        fm1: 1,
+        fm2: 0,
+        for i: 2 thru n do
+        (
+            res: fm1 + fm2,
+            temp: fm1,
+            fm1: res,
+            fm2: temp
+        ),
+        return (res)
+    )
 );
 
 

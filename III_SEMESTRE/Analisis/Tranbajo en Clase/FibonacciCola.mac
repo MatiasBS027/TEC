@@ -1,0 +1,21 @@
+/*  
+Fibonacci
+*/
+
+fibo(n):=block
+(
+    if (n <= 1) then
+        n
+    else
+        fiboAux(2, n, 1, 0)
+);
+
+fiboAux(ini, n, a, b):=block
+(
+    print (ini, n, a, b),
+    if ini = n then
+        a+b
+    else
+        fiboAux(ini+1, n, a+b, a)
+);
+

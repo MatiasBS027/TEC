@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Buen Café – Cajero</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --espresso: #2C1A0E;
+    --roast: #4A2C17;
+    --caramel: #C07C3A;
+    --cream: #F5ECD7;
+    --foam: #FDF8F0;
+    --green: #2D7A4F;
+    --green-light: #3A9E65;
+    --red: #C0392B;
+    --red-light: #E74C3C;
+    --shadow: rgba(44,26,14,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--espresso);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--roast);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 64px;
+    border-bottom: 2px solid var(--caramel);
+    flex-shrink: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--caramel);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream);
+    font-size: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .logo-text span { color: var(--caramel); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* TOGGLE ORIGEN */
+  .origin-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 30px;
+    padding: 6px 14px;
+    border: 1px solid rgba(192,124,58,0.3);
+  }
+
+  .origin-label {
+    font-size: 12px;
+    color: var(--cream);
+    opacity: 0.7;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toggle-text {
+    font-size: 13px;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  .toggle-text.active { color: var(--caramel); }
+  .toggle-text.inactive { color: rgba(255,255,255,0.4); }
+
+  .switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .switch input { display: none; }
+
+  .slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    border-radius: 24px;
+    border: 1px solid rgba(192,124,58,0.4);
+    transition: background 0.3s;
+  }
+
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--caramel);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+  }
+
+  .switch input:checked + .slider { background: rgba(192,124,58,0.25); }
+  .switch input:checked + .slider::before { transform: translateX(20px); }
+
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 24px;
+    padding: 6px 14px 6px 8px;
+    border: 1px solid rgba(192,124,58,0.2);
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    background: var(--caramel);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--espresso);
+  }
+
+  .user-info { line-height: 1.2; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--cream); }
+  .user-role { font-size: 10px; color: var(--caramel); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* MAIN */
+  main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 0;
+  }
+
+  /* CATÁLOGO */
+  .catalog {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    background: var(--espresso);
+  }
+
+  .catalog h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream);
+    font-size: 16px;
+    margin-bottom: 18px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .product-btn {
+    background: var(--roast);
+    border: 1.5px solid rgba(192,124,58,0.2);
+    border-radius: 16px;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(192,124,58,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .product-btn:hover {
+    border-color: var(--caramel);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .product-btn:hover::before { opacity: 1; }
+
+  .product-btn:active { transform: scale(0.97); }
+
+  .product-emoji { font-size: 40px; display: block; margin-bottom: 10px; }
+
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .product-desc {
+    font-size: 11px;
+    color: rgba(245,236,215,0.5);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .product-price {
+    display: inline-block;
+    background: var(--caramel);
+    color: var(--espresso);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* CARRITO */
+  .cart {
+    width: 300px;
+    background: var(--foam);
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid var(--caramel);
+    flex-shrink: 0;
+  }
+
+  .cart-header {
+    padding: 20px 20px 14px;
+    border-bottom: 1px solid rgba(44,26,14,0.15);
+  }
+
+  .cart-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--espresso);
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cart-count {
+    background: var(--caramel);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .origin-badge {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(44,26,14,0.08);
+    color: var(--roast);
+    border: 1px solid rgba(44,26,14,0.15);
+  }
+
+  .origin-badge.social { background: rgba(41,128,185,0.1); color: #1a6fa0; border-color: rgba(41,128,185,0.3); }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+  }
+
+  .cart-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(44,26,14,0.35);
+  }
+
+  .cart-empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .cart-empty p { font-size: 14px; }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    background: white;
+    border: 1px solid rgba(44,26,14,0.08);
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .item-emoji { font-size: 22px; }
+
+  .item-info { flex: 1; }
+  .item-name { font-size: 13px; font-weight: 600; color: var(--espresso); }
+  .item-price { font-size: 12px; color: var(--caramel); font-weight: 500; }
+
+  .item-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(44,26,14,0.2);
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--roast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: all 0.15s;
+    line-height: 1;
+    padding-bottom: 1px;
+  }
+
+  .qty-btn:hover { background: var(--caramel); color: white; border-color: var(--caramel); }
+
+  .qty-num { font-size: 13px; font-weight: 700; color: var(--espresso); min-width: 16px; text-align: center; }
+
+  .item-total { font-size: 13px; font-weight: 700; color: var(--espresso); min-width: 50px; text-align: right; }
+
+  /* TOTAL */
+  .cart-footer {
+    border-top: 2px solid rgba(44,26,14,0.12);
+    padding: 16px 20px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .total-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--espresso);
+  }
+
+  .total-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--espresso);
+  }
+
+  .action-btns {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-confirm, .btn-cancel {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-confirm {
+    background: var(--green);
+    color: white;
+  }
+
+  .btn-confirm:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(45,122,79,0.4); }
+
+  .btn-cancel {
+    background: var(--red);
+    color: white;
+  }
+
+  .btn-cancel:hover { background: var(--red-light); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(192,57,43,0.4); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(192,124,58,0.4); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">☕</div>
+    <div class="logo-text">El <span>Buen</span> Café</div>
+  </div>
+  <div class="header-right">
+    <div class="origin-toggle">
+      <span class="origin-label">Origen:</span>
+      <div class="toggle-wrap">
+        <span class="toggle-text active" id="lbl-presencial">Presencial</span>
+        <label class="switch">
+          <input type="checkbox" id="origin-switch" onchange="toggleOrigin()">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-text inactive" id="lbl-social">Redes Sociales</span>
+      </div>
+    </div>
+    <div class="user-badge">
+      <div class="avatar">C</div>
+      <div class="user-info">
+        <div class="user-name">Ana Pérez</div>
+        <div class="user-role">Cajera</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="catalog">
+    <h2>☕ Seleccionar Producto</h2>
+    <div class="grid" id="catalog-grid"></div>
+  </section>
+
+  <aside class="cart">
+    <div class="cart-header">
+      <h2>Orden <span class="cart-count" id="cart-count">0</span></h2>
+      <div class="origin-badge" id="origin-badge">📍 Presencial</div>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Agrega productos<br>al pedido</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-amount" id="total">₡0</span>
+      </div>
+      <div class="action-btns">
+        <button class="btn-confirm" onclick="confirmOrder()">✓ Confirmar</button>
+        <button class="btn-cancel" onclick="cancelOrder()">✕ Cancelar</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  { id:1, name:'Espresso', desc:'Intenso y concentrado', price:1200, emoji:'☕' },
+  { id:2, name:'Latte', desc:'Suave con leche vaporizada', price:1800, emoji:'🥛' },
+  { id:3, name:'Capuchino', desc:'Espuma densa y cremosa', price:1900, emoji:'🫧' },
+  { id:4, name:'Americano', desc:'Espresso con agua caliente', price:1400, emoji:'☕' },
+  { id:5, name:'Mocha', desc:'Chocolate y espresso', price:2100, emoji:'🍫' },
+  { id:6, name:'Macchiato', desc:'Toque de leche en espresso', price:1600, emoji:'🌰' },
+  { id:7, name:'Frappé', desc:'Frío y batido con crema', price:2400, emoji:'🧋' },
+  { id:8, name:'Flat White', desc:'Doble espresso y microespuma', price:2000, emoji:'☕' },
+  { id:9, name:'Chai Latte', desc:'Especias y té negro', price:1950, emoji:'🍵' },
+];
+
+let cart = {};
+
+// Render catalog
+const grid = document.getElementById('catalog-grid');
+products.forEach(p => {
+  const btn = document.createElement('button');
+  btn.className = 'product-btn';
+  btn.innerHTML = `
+    <span class="product-emoji">${p.emoji}</span>
+    <div class="product-name">${p.name}</div>
+    <div class="product-desc">${p.desc}</div>
+    <span class="product-price">₡${p.price.toLocaleString()}</span>
+  `;
+  btn.onclick = () => addToCart(p);
+  grid.appendChild(btn);
+});
+
+function addToCart(p) {
+  if (cart[p.id]) {
+    cart[p.id].qty++;
+  } else {
+    cart[p.id] = { ...p, qty: 1 };
+  }
+  renderCart();
+}
+
+function renderCart() {
+  const items = Object.values(cart);
+  const container = document.getElementById('cart-items');
+  const countEl = document.getElementById('cart-count');
+  const totalEl = document.getElementById('total');
+
+  const totalQty = items.reduce((s, i) => s + i.qty, 0);
+  const totalAmt = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  countEl.textContent = totalQty;
+  totalEl.textContent = '₡' + totalAmt.toLocaleString();
+
+  if (items.length === 0) {
+    container.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Agrega productos<br>al pedido</p></div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(i => `
+    <div class="cart-item">
+      <span class="item-emoji">${i.emoji}</span>
+      <div class="item-info">
+        <div class="item-name">${i.name}</div>
+        <div class="item-price">₡${i.price.toLocaleString()} c/u</div>
+      </div>
+      <div class="item-qty">
+        <button class="qty-btn" onclick="changeQty(${i.id}, -1)">−</button>
+        <span class="qty-num">${i.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${i.id}, 1)">+</button>
+      </div>
+      <div class="item-total">₡${(i.price * i.qty).toLocaleString()}</div>
+    </div>
+  `).join('');
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  renderCart();
+}
+
+function toggleOrigin() {
+  const isChecked = document.getElementById('origin-switch').checked;
+  document.getElementById('lbl-presencial').className = 'toggle-text ' + (!isChecked ? 'active' : 'inactive');
+  document.getElementById('lbl-social').className = 'toggle-text ' + (isChecked ? 'active' : 'inactive');
+  const badge = document.getElementById('origin-badge');
+  badge.textContent = isChecked ? '📱 Redes Sociales' : '📍 Presencial';
+  badge.className = 'origin-badge' + (isChecked ? ' social' : '');
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? '#C0392B' : '#2D7A4F';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function confirmOrder() {
+  if (Object.keys(cart).length === 0) { showToast('⚠️ Agrega productos primero', true); return; }
+  showToast('✓ Pedido confirmado exitosamente');
+  cart = {};
+  renderCart();
+}
+
+function cancelOrder() {
+  cart = {};
+  renderCart();
+  showToast('Pedido cancelado', true);
+}
+</script>
+</body>
+</html>

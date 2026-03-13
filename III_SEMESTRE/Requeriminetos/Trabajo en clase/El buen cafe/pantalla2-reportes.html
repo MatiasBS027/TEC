@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Buen Café – Reportes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F1EC;
+    --surface: #FFFFFF;
+    --espresso: #2C1A0E;
+    --roast: #4A2C17;
+    --caramel: #C07C3A;
+    --caramel-light: rgba(192,124,58,0.1);
+    --muted: #8A7A6E;
+    --green: #2D7A4F;
+    --green-bg: rgba(45,122,79,0.1);
+    --red: #C0392B;
+    --red-bg: rgba(192,57,43,0.1);
+    --border: rgba(44,26,14,0.1);
+    --shadow: 0 2px 12px rgba(44,26,14,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--espresso);
+  }
+
+  /* HEADER */
+  header {
+    background: var(--espresso);
+    padding: 0 32px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--caramel);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--caramel);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    color: #F5ECD7;
+    font-size: 18px;
+  }
+
+  .logo-text span { color: var(--caramel); }
+
+  .page-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(245,236,215,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--caramel);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-pdf:hover { background: #D4893F; box-shadow: 0 4px 14px rgba(192,124,58,0.4); transform: translateY(-1px); }
+
+  .btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(245,236,215,0.8);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-logout:hover { background: rgba(192,57,43,0.3); border-color: rgba(192,57,43,0.5); color: #ff8a80; }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 24px;
+  }
+
+  /* FILTROS */
+  .filters-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .filter-group { display: flex; flex-direction: column; }
+
+  .filter-input, .filter-select {
+    height: 40px;
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--espresso);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .filter-input:focus, .filter-select:focus { border-color: var(--caramel); }
+
+  .filter-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+    margin-top: 22px;
+  }
+
+  .filter-stats {
+    margin-left: auto;
+    display: flex;
+    gap: 16px;
+  }
+
+  .stat-pill {
+    text-align: center;
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .stat-val { font-size: 18px; font-weight: 700; }
+  .stat-val.pos { color: var(--green); }
+  .stat-val.neg { color: var(--red); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  /* TABLA */
+  .table-card {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .table-header-bar {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .table-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--espresso);
+  }
+
+  .table-count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--bg);
+  }
+
+  th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(44,26,14,0.05);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr {
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: rgba(192,124,58,0.04); }
+
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .type-cobro { background: var(--green-bg); color: var(--green); }
+  .type-retiro { background: var(--red-bg); color: var(--red); }
+
+  .amount-pos { color: var(--green); font-weight: 700; }
+  .amount-neg { color: var(--red); font-weight: 700; }
+
+  .date-cell { color: var(--muted); font-size: 13px; }
+
+  /* BALANCE */
+  .balance-card {
+    background: var(--espresso);
+    border-radius: 16px;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(44,26,14,0.2);
+    border: 1px solid rgba(192,124,58,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .balance-card::before {
+    content: '₡';
+    position: absolute;
+    right: 24px;
+    top: -10px;
+    font-size: 100px;
+    font-family: 'Playfair Display', serif;
+    color: rgba(192,124,58,0.08);
+    line-height: 1;
+  }
+
+  .balance-left {}
+
+  .balance-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--caramel);
+    margin-bottom: 6px;
+  }
+
+  .balance-sublabel {
+    font-size: 12px;
+    color: rgba(245,236,215,0.45);
+    margin-top: 6px;
+  }
+
+  .balance-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #F5ECD7;
+  }
+
+  .balance-right { text-align: right; z-index: 1; }
+
+  .balance-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #F5ECD7;
+    line-height: 1;
+  }
+
+  .balance-amount.positive { color: #5DD98A; }
+  .balance-amount.negative { color: #FF8A80; }
+
+  .balance-change {
+    font-size: 13px;
+    color: rgba(245,236,215,0.5);
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">☕</div>
+    <div class="logo-text">El <span>Buen</span> Café</div>
+  </div>
+  <span class="page-title">📊 Reportes &amp; Auditoría</span>
+  <div class="header-actions">
+    <button class="btn-pdf" onclick="showToast('Generando PDF...')">
+      ⬇ Generar PDF
+    </button>
+    <button class="btn-logout" onclick="showToast('Cerrando sesión...')">
+      ⎋ Cerrar Sesión
+    </button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- FILTROS -->
+  <div class="filters-card">
+    <div class="filter-group">
+      <div class="filter-label">Desde</div>
+      <input type="date" class="filter-input" id="date-from" value="2025-07-01" onchange="applyFilters()">
+    </div>
+    <div class="filter-group">
+      <div class="filter-label">Hasta</div>
+      <input type="date" class="filter-input" id="date-to" value="2025-07-12" onchange="applyFilters()">
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <div class="filter-label">Período</div>
+      <select class="filter-select" id="period-select" onchange="applyFilters()">
+        <option value="dia">📅 Día</option>
+        <option value="semana" selected>📆 Semana</option>
+        <option value="mes">🗓 Mes</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label">Tipo</div>
+      <select class="filter-select" id="type-filter" onchange="applyFilters()">
+        <option value="todos">Todos</option>
+        <option value="Cobro">Solo Cobros</option>
+        <option value="Retiro">Solo Retiros</option>
+      </select>
+    </div>
+    <div class="filter-stats" id="filter-stats">
+      <div class="stat-pill">
+        <div class="stat-val pos" id="stat-ingresos">₡0</div>
+        <div class="stat-lbl">Ingresos</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val neg" id="stat-retiros">₡0</div>
+        <div class="stat-lbl">Retiros</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-card">
+    <div class="table-header-bar">
+      <span class="table-title">Movimientos</span>
+      <span class="table-count" id="row-count">0 registros</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+          <th>Origen</th>
+          <th style="text-align:right">Monto</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <!-- BALANCE NETO -->
+  <div class="balance-card">
+    <div class="balance-left">
+      <div class="balance-label">Balance Neto Total</div>
+      <div class="balance-title">Resumen del Período</div>
+      <div class="balance-sublabel" id="balance-period">Semana del 01 al 12 de Julio 2025</div>
+    </div>
+    <div class="balance-right">
+      <div class="balance-amount positive" id="balance-amount">₡0</div>
+      <div class="balance-change" id="balance-detail">Ingresos − Retiros</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2C1A0E;color:white;padding:12px 28px;border-radius:30px;font-weight:600;font-size:14px;transition:transform 0.3s;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.3);border:1px solid rgba(192,124,58,0.4)"></div>
+
+<script>
+const rawData = [
+  { date:'2025-07-12', type:'Cobro',  desc:'Ventas matutinas – espresso y lattes',   origin:'Presencial',    amount: 28500 },
+  { date:'2025-07-12', type:'Cobro',  desc:'Pedido por Instagram Stories',           origin:'Redes Sociales', amount: 7200  },
+  { date:'2025-07-11', type:'Retiro', desc:'Compra de granos de café premium',       origin:'Proveedor',      amount: -15000},
+  { date:'2025-07-11', type:'Cobro',  desc:'Ventas tarde – capuchinos y mochás',     origin:'Presencial',     amount: 19800 },
+  { date:'2025-07-10', type:'Cobro',  desc:'Pedido corporativo (10 personas)',       origin:'WhatsApp',       amount: 32000 },
+  { date:'2025-07-10', type:'Retiro', desc:'Pago de servicios locales',              origin:'Administrativo', amount: -8500 },
+  { date:'2025-07-09', type:'Cobro',  desc:'Ventas fin de semana',                   origin:'Presencial',     amount: 41200 },
+  { date:'2025-07-09', type:'Retiro', desc:'Salario personal de turno',              origin:'Administrativo', amount: -18000},
+  { date:'2025-07-08', type:'Cobro',  desc:'Pedidos delivery – aplicación móvil',   origin:'App',            amount: 12400 },
+  { date:'2025-07-07', type:'Cobro',  desc:'Ventas regulares lunes',                origin:'Presencial',     amount: 16500 },
+  { date:'2025-07-07', type:'Retiro', desc:'Reposición de insumos (leche, azúcar)', origin:'Proveedor',      amount: -6200 },
+  { date:'2025-07-05', type:'Cobro',  desc:'Evento privado – catering café',        origin:'Evento',         amount: 55000 },
+  { date:'2025-07-04', type:'Cobro',  desc:'Ventas regulares viernes',              origin:'Presencial',     amount: 22300 },
+  { date:'2025-07-03', type:'Retiro', desc:'Mantenimiento máquina espresso',        origin:'Servicio',       amount: -12000},
+  { date:'2025-07-02', type:'Cobro',  desc:'Pedido por Facebook Marketplace',       origin:'Redes Sociales', amount: 9800  },
+  { date:'2025-07-01', type:'Cobro',  desc:'Apertura mensual – ventas primer día',  origin:'Presencial',     amount: 18700 },
+];
+
+function formatDate(d) {
+  const [y,m,day] = d.split('-');
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function originIcon(o) {
+  const map = { 'Presencial':'📍','Redes Sociales':'📱','WhatsApp':'💬','App':'📲','Proveedor':'🏭','Administrativo':'📋','Evento':'🎉','Servicio':'🔧' };
+  return (map[o]||'•') + ' ' + o;
+}
+
+function applyFilters() {
+  const tf = document.getElementById('type-filter').value;
+  let filtered = rawData.filter(r => tf === 'todos' || r.type === tf);
+
+  const tbody = document.getElementById('table-body');
+  const rowCount = document.getElementById('row-count');
+  const statIngresos = document.getElementById('stat-ingresos');
+  const statRetiros = document.getElementById('stat-retiros');
+  const balanceEl = document.getElementById('balance-amount');
+  const balanceDetail = document.getElementById('balance-detail');
+
+  let totalIngresos = 0, totalRetiros = 0;
+  filtered.forEach(r => {
+    if (r.type === 'Cobro') totalIngresos += r.amount;
+    else totalRetiros += Math.abs(r.amount);
+  });
+
+  const neto = totalIngresos - totalRetiros;
+
+  statIngresos.textContent = '₡' + totalIngresos.toLocaleString();
+  statRetiros.textContent = '₡' + totalRetiros.toLocaleString();
+  balanceEl.textContent = (neto >= 0 ? '+' : '-') + '₡' + Math.abs(neto).toLocaleString();
+  balanceEl.className = 'balance-amount ' + (neto >= 0 ? 'positive' : 'negative');
+  balanceDetail.textContent = `₡${totalIngresos.toLocaleString()} ingresos − ₡${totalRetiros.toLocaleString()} retiros`;
+  rowCount.textContent = filtered.length + ' registros';
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td class="date-cell">${formatDate(r.date)}</td>
+      <td>
+        <span class="type-badge type-${r.type.toLowerCase()}">
+          ${r.type === 'Cobro' ? '↑' : '↓'} ${r.type}
+        </span>
+      </td>
+      <td>${r.desc}</td>
+      <td style="color:var(--muted);font-size:13px">${originIcon(r.origin)}</td>
+      <td style="text-align:right" class="${r.amount >= 0 ? 'amount-pos' : 'amount-neg'}">
+        ${r.amount >= 0 ? '+' : ''}₡${Math.abs(r.amount).toLocaleString()}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => t.style.transform = 'translateX(-50%) translateY(80px)', 2500);
+}
+
+applyFilters();
+</script>
+</body>
+</html>

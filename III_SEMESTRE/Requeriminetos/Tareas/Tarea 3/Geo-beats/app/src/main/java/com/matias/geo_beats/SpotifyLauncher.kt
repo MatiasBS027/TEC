@@ -4,12 +4,11 @@ package com.matias.geo_beats
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.content.pm.PackageManager
+import android.content.ActivityNotFoundException
+import android.util.Log
 
 fun launchRandomPlaylist(context: Context): Boolean {
-    val packageManager = context.packageManager
-    val launchIntent = packageManager.getLaunchIntentForPackage("com.spotify.music")
-    if (launchIntent != null) {
+    return try {
         val playlists = listOf(
             "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M",
             "spotify:playlist:37i9dQZF1DX0XUsuxWHRQd",
@@ -19,8 +18,9 @@ fun launchRandomPlaylist(context: Context): Boolean {
         val randomUri = playlists.random()
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(randomUri))
         context.startActivity(intent)
-        return true
-    } else {
-        return false
+        true
+    } catch (e: ActivityNotFoundException) {
+        Log.e("SpotifyLauncher", "Spotify no está instalado", e)
+        false
     }
 }

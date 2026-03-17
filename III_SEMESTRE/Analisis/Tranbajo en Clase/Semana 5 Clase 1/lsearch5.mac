@@ -1,0 +1,37 @@
+/*****
+lsearch
+*/
+
+lsearch(num, vec):=block
+( [res],
+    res : false,
+    for i:1 thru length(vec) do
+    (
+        if num = vec[i] then 
+        (
+            res = i,
+            return (res)
+        )
+    )
+    return (res)
+)
+
+
+
+/***** Big O 
+lsearch(num, vec):=block........................t(n) = n + 1
+                                                O(n)
+( [res],
+    res : false,............................1
+    for i:1 thru length(vec) do.......n*1
+    (
+        if num = vec[i] then ......1
+        (
+            res = i,.........1
+            return (res).....1
+        )
+    )
+    return (res)............................1
+
+
+*/

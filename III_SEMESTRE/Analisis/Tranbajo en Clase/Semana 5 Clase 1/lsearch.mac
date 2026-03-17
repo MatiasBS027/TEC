@@ -1,0 +1,38 @@
+/*****
+lsearch
+*/
+
+lsearch(num, vec):=block
+(
+    catch(lsearchAux(num, vec))
+)
+
+lsearchAux(num, vec):=block
+(
+    ifvec[] = num then 
+        throw(false)
+    elseif num =first(vec) then 
+        1
+    else 
+        1 + lsearchAux(num, rest(vec))
+)
+
+/***** Big O 
+lsearch(num, vec):=block........................t(n) = n + 1
+                                                O(n)
+(
+    catch(lsearchAux(num, vec))......... n + 1
+)
+                                                                        t(1) = 1
+lsearchAux(num, vec):=block.............................................t(n) = 1 + t(n-1)
+                                                                        t(n) = n + 1
+                                                                        O(n) 
+(
+    if vec[] = num then ....................................1 + t(n-1)
+        throw(false) ..........................1
+    elseif num =first(vec) then 
+        1 ....................................1
+    else 
+        1 + lsearchAux(num, rest(vec))........1 + t(n-1)
+)
+*/

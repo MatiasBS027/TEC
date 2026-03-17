@@ -1,4 +1,4 @@
-package com.matias.geo_beats
+    package com.matias.geo_beats
 
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.*

@@ -24,7 +24,7 @@
         android:theme="@style/Theme.GeoBeats">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBixDeK5rFdiAYJpFMUblup_HC4R95_QKo" /> <!--NECESITO CAMBIAR ESTO. PARA PRUEBAS LO DEJE ASI PORQUE EL LOCAL PROPERTIES NO ESTA FUNCIONANDO -->
+            android:value="${MAPS_API_KEY}" /> <!--NECESITO CAMBIAR ESTO. PARA PRUEBAS LO DEJE ASI PORQUE EL LOCAL PROPERTIES NO ESTA FUNCIONANDO -->
 
        <!-- <meta-data  quite esto momentaneamente porque esta incompleto
             android:name="com.spotify.sdk.client." /> -->

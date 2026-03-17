@@ -31,7 +31,7 @@ import androidx.compose.material3.Text
 // Funcion que solicita la ubicacion actual del dispositivo
 @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
 fun obtenerUbicacionActual(contexto: android.content.Context,
-    alObtenerUbicacion: (LatLng) -> Unit
+                           alObtenerUbicacion: (LatLng) -> Unit
 ) {
     val cliente = LocationServices.getFusedLocationProviderClient(contexto)
 
@@ -57,7 +57,7 @@ fun MapaScreen() {
     //variable que empieza en null (sin ubicacion) y que puede guardar coordenadas (latitud y longitud(LatLng))
     //el rembember es para que no se restee cada que la pantalla se redibuja
     var ubiUsuario by remember { mutableStateOf<LatLng?>(null) }
-    
+
     // Estado para mostrar el diálogo cuando Spotify no esté instalado
     val showDialog = remember { mutableStateOf(false) }
 
@@ -68,6 +68,14 @@ fun MapaScreen() {
         if (concedido) {
             obtenerUbicacionActual(contexto) { ubicacion ->
                 ubiUsuario = ubicacion
+
+                // Ver si el user esta cerca de algun punto de interes
+                puntosDeInteres.forEach { punto ->
+                    val distancia = calcularDistancia(ubicacion, punto.coordenadas)
+                    if (distancia < 50) {
+                        launchPlaylist(contexto, punto.uriSpotify)
+                    }
+                }
             }
         }
     }
@@ -82,9 +90,15 @@ fun MapaScreen() {
             obtenerUbicacionActual(contexto) { ubicacion ->
                 ubiUsuario = ubicacion
 
-                //
+                // Ver si el user esta cerca de algun punto de interes
+                puntosDeInteres.forEach { punto ->
+                    val distancia = calcularDistancia(ubicacion, punto.coordenadas)
+                    if (distancia < 50) {
+                        launchPlaylist(contexto, punto.uriSpotify)
+                    }
+                }
             }
-        } else {
+        }else {
             // No tiene permiso, le pedimos el permiso al usuario
             launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -110,23 +124,23 @@ fun MapaScreen() {
             }
 
 
-        //Los markers de puntos de interes
-        puntosDeInteres.forEach { punto ->
-            Marker (
-                state = MarkerState (position = punto.coordenadas),
-                title = punto.nombre,
-                onClick = {
-                    if (!launchPlaylist(contexto, punto.uriSpotify)) {
-                        showDialog.value = true
+            //Los markers de puntos de interes
+            puntosDeInteres.forEach { punto ->
+                Marker (
+                    state = MarkerState (position = punto.coordenadas),
+                    title = punto.nombre,
+                    onClick = {
+                        if (!launchPlaylist(contexto, punto.uriSpotify)) {
+                            showDialog.value = true
+                        }
+                        true
                     }
-                    true
-                }
-            )
-        }
+                )
+            }
 
         }
     }
-    
+
     // Diálogo que aparece cuando Spotify no está instalado
     if (showDialog.value) {
         AlertDialog(

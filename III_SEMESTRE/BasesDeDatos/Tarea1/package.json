@@ -1,0 +1,32 @@
+{
+  "name": "tarea1-bd",
+  "version": "1.0.0",
+  "description": "ITCR | Escuela de Ingeniería en Computación | Base de Datos 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatiasBS027/Tarea1-BD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MatiasBS027/Tarea1-BD/issues"
+  },
+  "homepage": "https://github.com/MatiasBS027/Tarea1-BD#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mssql": "^12.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mssql": "^9.1.9",
+    "@types/node": "^25.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -30,24 +30,27 @@ import androidx.compose.material3.Text
 
 // Funcion que solicita la ubicacion actual del dispositivo
 @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-fun obtenerUbicacionActual(contexto: android.content.Context,
-                           alObtenerUbicacion: (LatLng) -> Unit
-) {
+fun obtenerUbicacionActual(
+    contexto: android.content.Context,
+    alObtenerUbicacion: (LatLng) -> Unit
+): Pair<com.google.android.gms.location.FusedLocationProviderClient, LocationCallback> {
     val cliente = LocationServices.getFusedLocationProviderClient(contexto)
 
-    val solicitud = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
-        .setMaxUpdates(1)
+    //solicita la ubicacion cada 5 seg, con un minimo de 3 seg entre actualizaciones, cambio que hice con respecto a como estaba.
+    val solicitud = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+        .setMinUpdateIntervalMillis(3000)
         .build()
 
+    //Este callback se ejecuta cada vez que llega a una nueva ubicacion
     val callback = object : LocationCallback() {
         override fun onLocationResult(resultado: LocationResult) {
             resultado.lastLocation?.let { location ->
                 alObtenerUbicacion(LatLng(location.latitude, location.longitude))
             }
-            cliente.removeLocationUpdates(this)
         }
     }
     cliente.requestLocationUpdates(solicitud, callback, android.os.Looper.getMainLooper())
+    return Pair(cliente, callback)
 }
 @Composable
 fun MapaScreen() {
@@ -61,12 +64,16 @@ fun MapaScreen() {
     // Estado para mostrar el diálogo cuando Spotify no esté instalado
     val showDialog = remember { mutableStateOf(false) }
 
+    //guardamos el cliente y el callback para cancelarlos cuando la pantalla se cieree
+    var locationClient by remember { mutableStateOf<com.google.android.gms.location.FusedLocationProviderClient?>(null) }
+    var locationCallback by remember { mutableStateOf<LocationCallback?>(null) }
+
     // Launcher que maneja la respuesta del usuario al pedir permiso
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission())
 
     { concedido ->
         if (concedido) {
-            obtenerUbicacionActual(contexto) { ubicacion ->
+            val (cliente, callback) =obtenerUbicacionActual(contexto) { ubicacion ->
                 ubiUsuario = ubicacion
 
                 // Ver si el user esta cerca de algun punto de interes
@@ -77,6 +84,8 @@ fun MapaScreen() {
                     }
                 }
             }
+            locationClient = cliente
+            locationCallback = callback
         }
     }
 
@@ -87,7 +96,7 @@ fun MapaScreen() {
         )
         //Si ya tiene permiso, obtenemos la ubicacion directo
         if (permiso == PackageManager.PERMISSION_GRANTED) {
-            obtenerUbicacionActual(contexto) { ubicacion ->
+            val (cliente,callback) = obtenerUbicacionActual(contexto) { ubicacion ->
                 ubiUsuario = ubicacion
 
                 // Ver si el user esta cerca de algun punto de interes
@@ -98,7 +107,9 @@ fun MapaScreen() {
                     }
                 }
             }
-        }else {
+            locationClient = cliente
+            locationCallback = callback
+        } else {
             // No tiene permiso, le pedimos el permiso al usuario
             launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -138,6 +149,13 @@ fun MapaScreen() {
                 )
             }
 
+        }
+    }
+
+    // Cancelar actualizaciones de ubicacion cuando la pantalla se cierre
+    DisposableEffect(Unit) {
+        onDispose {
+            locationClient?.removeLocationUpdates(locationCallback!!)
         }
     }
 

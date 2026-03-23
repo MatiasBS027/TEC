@@ -13,7 +13,7 @@ val puntosDeInteres = listOf(
     PuntoDeInteres(
         nombre = "TEC Cartago",
         coordenadas = LatLng(9.855538623075114, -83.91243989944289),
-        uriSpotify ="spotify:playlist:37i9dQZF1DX4WYpdgoIcn6"
+        uriSpotify ="spotify:playlist:3NZmK2cRzjWoxFz9vskf14"
 
     ),
     PuntoDeInteres(

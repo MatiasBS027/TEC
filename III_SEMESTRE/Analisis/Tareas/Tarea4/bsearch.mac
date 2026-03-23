@@ -1,0 +1,55 @@
+/*  
+bsearch
+Matias Benavides - 2025102376
+Steadman
+*/
+
+bsearch(n, vect) := block(
+    [menor, mayor, medio],
+    menor : 1,
+    mayor : length(vect),
+    catch(
+        while menor <= mayor do(
+            medio : ceiling((menor + mayor)/2),
+            print("Lista"),
+            print(concat("Menor: ", string(menor), " Mayor: ", string(mayor), " Medio: ", string(medio))),
+            print(vect),
+            print("-----------------------------------------------------------"),
+            if vect[medio] = n then
+                throw(medio)
+            else if vect[medio] < n then
+                menor : medio + 1
+            else
+                mayor : medio - 1
+        ),
+        false
+    )
+);
+
+
+/*
+Analisis del Big O:
+bsearch(n, vect) := block(
+    [menor, mayor, medio],
+    menor : 1,
+    mayor : length(vect),
+    catch(
+        while menor <= mayor do block(
+            [dummy],
+            medio : ceiling((menor + mayor)/2),
+            print("Lista"),
+            print(vect),
+            print(concat("Menor: ", string(menor), " Mayor: ", string(mayor), " Medio: ", string(medio))),
+            print("-----------------------------------------------------------"),
+            if vect[medio] = n then
+                throw(medio)
+            else if vect[medio] < n then
+                menor : medio + 1
+            else
+                mayor : medio - 1
+        ),
+        false
+    )
+);
+
+*/

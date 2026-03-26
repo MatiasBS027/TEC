@@ -1,7 +1,7 @@
 /*  
 bsearch
-Matias Benavides - 2025102376
-Steadman
+Matias Benavides Sandoval - 2025102376
+Steadman Jose Murillo Parrales - 2025097768
 */
 
 bsearch(n, vect) := block(
@@ -11,10 +11,8 @@ bsearch(n, vect) := block(
     catch(
         while menor <= mayor do(
             medio : ceiling((menor + mayor)/2),
-            print("Lista"),
-            print(concat("Menor: ", string(menor), " Mayor: ", string(mayor), " Medio: ", string(medio))),
+            print("Lista: ", string(menor), " ", string(mayor), "  m:", string(medio)),
             print(vect),
-            print("-----------------------------------------------------------"),
             if vect[medio] = n then
                 throw(medio)
             else if vect[medio] < n then
@@ -28,27 +26,30 @@ bsearch(n, vect) := block(
 
 
 /*
-Analisis del Big O:
-bsearch(n, vect) := block(
+Analisis del BigOh:
+
+bsearch(n, vect) := block(.................................................................................................... t(n) = log2(n) + 1
+														     	       O(n) = log2(n)
     [menor, mayor, medio],
-    menor : 1,
-    mayor : length(vect),
-    catch(
-        while menor <= mayor do block(
-            [dummy],
-            medio : ceiling((menor + mayor)/2),
-            print("Lista"),
-            print(vect),
-            print(concat("Menor: ", string(menor), " Mayor: ", string(mayor), " Medio: ", string(medio))),
-            print("-----------------------------------------------------------"),
-            if vect[medio] = n then
-                throw(medio)
+    menor : 1, ............................................................................................................... 1
+    mayor : length(vect), .................................................................................................... 1
+
+    catch( ................................................................................................................... log2(n) + 1
+
+        while menor <= mayor do( .......................................................................... log2(n)
+
+            medio : ceiling((menor + mayor)/2), ................................................ 1
+            print("Lista: ", string(menor), " ",string(mayor), "  m:", string(medio)),.......... 1
+            print(vect), ....................................................................... 1
+
+            if vect[medio] = n then ............................................................ 1
+                throw(medio) ............... 1
             else if vect[medio] < n then
-                menor : medio + 1
+                menor : medio + 1 .......... 1
             else
-                mayor : medio - 1
+                mayor : medio - 1 .......... 1
         ),
-        false
+        false ............................................................................................. 1
     )
 );
 

@@ -1,0 +1,50 @@
+/*  
+Selection Sort 
+*/
+
+valorMinn(lsita):=block
+(
+    apply(min, lsita)
+);
+
+borrarElemento(ele, lista):= block
+(
+    delete(ele, lista, 1)
+);
+
+selectionSort(lista):= block
+(   [minn, newLista]
+    if lista = [] then  
+        [],
+    else (
+        minn: valorMinn(lista),
+        newLista: borrarElemento(minn, lista),
+        cons(minn, selectionSort(newLista))
+    )
+)
+
+
+/* Big Oh
+valorMinn(lista):= block(.............................. t(n) = n + 1
+                                                        O(n)
+    apply(min, lista)................... n + 1
+)
+borrarElemento(ele, lista):= block(......................... t(n) = n + 1
+                                                        O(n)
+    delete(ele, lista, 1)............... n + 1
+)
+
+selectionSort(lista):= block(.......................... t(n) = t(n-1) + 2*n + 3
+                                                        t(n)
+                                                        O(n^2)
+    [minn, newLista]
+    if lista = [] then  ............................... t(n-1) + 2*n + 
+        [],....................................... 1
+    else (
+        minn: valorMinn(lista),................... n + 1
+        newLista: borrarElemento(minn, lista),.... n + 1
+        cons(minn, selectionSort(newLista))....... t(n-1) + 1
+    )
+)
+
+*/

@@ -1,0 +1,53 @@
+/*
+Encontrar el minimo
+*/
+
+minn(lista):= block(
+    [min],
+    if lista = [] then  
+        false,
+    else (
+        min: first(lista),
+        minnAux(min, rest(lista))
+    )
+)
+
+minnAux(min, lista):= block(
+    if lista = [] then  
+        min,
+    elseif min < first(lista) then  
+        minnAux(min, rest(lista)),
+    else  
+        minnAux(first(lista), rest(lista))
+    
+)
+
+
+
+/*  Big Oh
+
+
+minn(lista):= block(............................... t(n) = n + 1
+                                                    0(n)
+    [min],
+    if lista = [] then  ........................... n+1
+        false,......................... 1
+    else (
+        min: first(lista),............. 1
+        minnAux(min, rest(lista))...... n+1
+    )
+)
+                                                            t(0) = 1
+minnAux(min, lista):= block(............................... t(n) = t(n-1) + 1
+                                                            t(n) = n + 1
+                                                            0(n)
+    if lista = [] then  ................................... t(n-1) + 1
+        min, .............................. 1 
+    elseif min < first(lista) then  
+        minnAux(min, rest(lista)),......... t(n-1) + 1
+    else  
+        minnAux(first(lista), rest(lista)). t(n-1) + 1
+    
+)
+
+*/

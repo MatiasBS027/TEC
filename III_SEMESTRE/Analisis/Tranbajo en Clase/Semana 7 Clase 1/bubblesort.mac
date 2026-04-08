@@ -1,0 +1,38 @@
+bubbleSort(vec):=block 
+(   [temp], 
+    largo : length(vec),
+
+    for i:1 thru largo-1 do 
+
+        for j:1 thru largo-i do 
+
+            if vec[j] > vec[j+1] then
+
+                temp:vec[j], 
+                vec[j]:vec[j+1], 
+                vec[j+1]:temp
+    return vec
+
+)
+
+/* Big Oh
+bubbleSort(vec):=block ............................................ t(n) = (3/2) * n^2 - (3/2) * n + 2
+                                                                    O(n^2)
+(   [temp], 
+
+    largo : length(vec),...................................... 1
+
+    for i:1 thru largo-1 do .................................. (3/2) * n^2 - (3/2) * n
+    
+        for j:1 thru largo-i do  .................. 3 * (n-i)
+
+            if vec[j] > vec[j+1] then ...... 3
+
+                temp:vec[j], ........ 1
+                vec[j]:vec[j+1], .... 1
+                vec[j+1]:temp........ 1
+    return vec
+
+)
+
+*/

@@ -1,0 +1,56 @@
+partir(p, lista):=block(
+    []
+    [firstn(lista, p), rest(lista, p)]
+)
+
+mergeSort(lista):=block(
+    [p,res, lista1, lista2, newLista1, newLista2],
+
+    if lista = [] or rest(lista) = [] then
+        lista,
+    else (
+        p: ceiling(length(lista)/2),
+        res: partir(p, lista),
+        lista1: first(res),
+        lista2: second(res),
+
+        newLista1: mergeSort(lista1),
+        newLista2: mergeSort(lista2),
+
+        merge(newLista1, newLista2)
+    )
+
+)
+
+/*  Big Oh
+
+partir(p, lista):=block(....... t(n) = n/2 + n/2
+                                t(n) = n
+    []
+    [firstn(lista, p), ........ n/2
+    rest(lista, p)] ........... n/2
+)
+
+                                                                            t(0) = 1
+mergeSort(lista):=block(................................................... t(n) = 2*t(n/2) + 2*n +3
+                                                                            t(n) = 2*n*log2(n)
+                                                                            O(n*log2(n))
+    [p,res, lista1, lista2, newLista1, newLista2],
+
+    if lista = [] or rest(lista) = [] then.... ...............2*t(n/2) + 2*n +3
+        lista,................................ 1
+    else (
+        p: ceiling(length(lista)/2),.......... 1
+        res: partir(p, lista), ............... n
+        lista1: first(res), .................. 1
+        lista2: second(res), ................. 1
+
+        newLista1: mergeSort(lista1), ........ t(n/2)
+        newLista2: mergeSort(lista2), ........ t(n/2)
+
+        merge(newLista1, newLista2)........... n 
+    )
+
+)
+
+*/

@@ -1,5 +1,5 @@
 {
-  "name": "tarea1-bd",
+  "name": "tarea2-bd",
   "version": "1.0.0",
   "description": "ITCR | Escuela de Ingeniería en Computación | Base de Datos 1",
   "main": "index.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MatiasBS027/Tarea1-BD.git"
+    "url": "git+https://github.com/MatiasBS027/Tarea2-BD.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/MatiasBS027/Tarea1-BD/issues"
+    "url": "https://github.com/MatiasBS027/Tarea2-BD/issues"
   },
-  "homepage": "https://github.com/MatiasBS027/Tarea1-BD#readme",
+  "homepage": "https://github.com/MatiasBS027/Tarea2-BD#readme",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",

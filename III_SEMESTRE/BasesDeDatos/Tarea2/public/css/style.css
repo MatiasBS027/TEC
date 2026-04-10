@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container {
+    background: #fff;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 480px;
+}
+
+h1 {
+    margin-bottom: 24px;
+    font-size: 1.4rem;
+    color: #1a56db;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+input {
+    padding: 8px 12px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: #1a56db;
+}
+
+.error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.botones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#btn-insertar { background: #1a56db; color: white; }
+#btn-insertar:hover { background: #1e429f; }
+#btn-insertar:disabled { background: #9ca3af; }
+#btn-regresar { background: #e5e7eb; color: #374151; }
+#btn-regresar:hover { background: #d1d5db; }
+
+.mensaje { padding: 10px; border-radius: 6px; margin-bottom: 16px; }
+.exito { background: #f0fdf4; color: #16a34a; }
+.error-msg { background: #fef2f2; color: #dc2626; }
+.hidden { display: none; }

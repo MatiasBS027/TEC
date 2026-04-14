@@ -1,0 +1,91 @@
+/* Quick Sort en Maxima */
+
+
+pivot(lista):= block(
+    [],
+    [first(lista), rest(lista)]
+);
+
+
+partir(p, lista):=block(
+    [], 
+    partirAux(p, lista, [], [])
+);
+
+
+partirAux(p,lista, menores, mayores):=block(
+    [], 
+    if lista = [] then 
+        [menores, mayores]
+    elseif first(lista)<=p then
+        partirAux(p, rest(lista), cons(first(lista), menores), mayores)
+    else
+        partirAux(p, rest(lista), menores, cons(first(lista), mayores))
+);
+
+quickSort(lista):= block(
+    [res, p, newList, menores, mayores],
+    if lista = [] then 
+        []
+    else (
+        res:pivot(lista),
+        p: first(res),
+        newList: second(res),
+
+        res: partir(p, newList),
+        menores: first(res),
+        mayores: second(res),
+        append(quickSort(menores), [p], quickSort(mayores))
+    )
+);
+
+
+/* Analisis de Big O
+
+pivot(lista):= block( ............................ 1
+    [],
+    [first(lista), rest(lista)] ...... 1
+);
+
+
+partir(p, lista):=block( ....................t(n) = n + 1 
+    [], 
+    partirAux(p, lista, [], []) .... n + 1 
+);
+
+                                                                                                    t(0) = 1
+partirAux(p,lista, menores, mayores):=block( ...................................................... t(n) = t(n - 1) + 1
+                                                                                                    t(n) = (1/2) * (n - 1) * (n-2)
+                                                                                                    t(n) = (1/2) * n^2 - (3/2) * n + 1
+                                                                                                    0(n^2) 
+    [], 
+    if lista = [] then .............................................................. t(n - 1) + 1
+        [menores, mayores] ................................. 1
+    elseif first(lista)<=p then
+        partirAux(p, rest(lista), cons(first(lista), menores), mayores) ........ t(n-1) + 1
+    else
+        partirAux(p, rest(lista), menores, cons(first(lista), mayores)) ........ t(n-1) + 1
+);
+                                                                            t(0) = 1
+quickSort(lista):= block( ................................................. t(n) = t(n-1) + n + 7
+                                                                            tn(n) = t(0) + n + 7
+    [res, p, newList, menores, mayores],
+    if lista = [] then .................................... t(n-1) + n + 7
+        [].............................. 1
+    else (
+        res:pivot(lista),............... 1
+        p: first(res), ................. 1
+        newList: second(res), .......... 1
+
+        res: partir(p, newList), ....... n + 1
+        menores: first(res), ........... 1
+        mayores: second(res), .......... 1
+
+
+        append(quickSort(menores),  .... t(0)
+            [p],........................ 1
+            quickSort(mayores)) ........ t(n-1)
+    )............................................ t(n-1) + 1
+);
+
+*/

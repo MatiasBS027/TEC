@@ -70,7 +70,7 @@ naturalSort(lista) := block(
         fusion: merge(first(resultado),second(resultado)),
         resultado: cons(fusion, rest(rest(resultado))),
         print(fusion, espacio, rest(resultado))
-    ),
+    ),Per
 
     return(first(resultado))
 
@@ -108,7 +108,7 @@ natural(lista) := block(........................................... t(n) = n + 1
                                                                     O(n)
     [resultado: [], actual: [], j],
 
-    for j in lista do (........................................... n
+    for j in lista do (............................................ n + 1
 
         if actual = [] then(................................ 1
             actual: [j]................................ 1
@@ -131,23 +131,23 @@ natural(lista) := block(........................................... t(n) = n + 1
     return(resultado)............................................. 1
 );
 
-DUDAAAAAAAAAAAAAAAAAAAAA
 
-naturalSort(lista) := block(....................................... t(n) = n^2 + n + 1
-					                                                O(n^2)
+naturalSort(lista) := block(....................................... t(n) = n^2 + 4n + 1
+								                                    O(n^2)
     [resultado:[], fusion: [], espacio: " ---------- "],
 
-    if lista = [] then(........................................... 1
-        return(resultado)......................................... 1
+    if lista = [] then(............................................ 1
+        return(resultado)................................... 1
     ),
 
-    resultado: natural(lista),.................................... n
+    resultado: natural(lista),..................................... n + 1
 
-    print([],espacio,resultado),.................................. 1
-    print(first(resultado), espacio, rest(resultado)),............ 1
+    print([],espacio,resultado),................................... 1
+    print(first(resultado), espacio, rest(resultado)),............. 1
 
-    while length(resultado) > 1 do (.............................. n^2 + 1
-        fusion: merge(first(resultado),second(resultado)),... n
+								                                    n*(n+3) + 1
+    while length(resultado) > 1 do (............................... n^2 + 3n + 1
+        fusion: merge(first(resultado),second(resultado)),... n + 1
         resultado: cons(fusion, rest(rest(resultado))),...... 1
         print(fusion, espacio, rest(resultado)).............. 1
     ),

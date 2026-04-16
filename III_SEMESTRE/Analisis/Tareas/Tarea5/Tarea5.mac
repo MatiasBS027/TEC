@@ -70,7 +70,7 @@ naturalSort(lista) := block(
         fusion: merge(first(resultado),second(resultado)),
         resultado: cons(fusion, rest(rest(resultado))),
         print(fusion, espacio, rest(resultado))
-    ),Per
+    ),
 
     return(first(resultado))
 
@@ -78,81 +78,81 @@ naturalSort(lista) := block(
 
 /* Big Oh
 
-merge(lista1,lista2) := block(..................................... t(n) = n + 1
-                                                                    O(n)
+merge(lista1,lista2) := block(................................. t(n) = n + 1
+                                                                O(n)
     [l1: lista1, l2: lista2, resultado: []],
-    while l1 # [] and l2 # [] do (................................. n + 1
-        if first(l1) <= first(l2) then (...................... 1
-            resultado: endcons(first(l1), resultado),...... 1
-            l1: rest(l1)................................... 1
+    while l1 # [] and l2 # [] do (............................. n + 1
+        if first(l1) <= first(l2) then (................... 1
+            resultado: endcons(first(l1), resultado),... 1
+            l1: rest(l1)................................ 1
         )
         else (
-            resultado: endcons(first(l2), resultado),...... 1
-            l2: rest(l2)................................... 1
+            resultado: endcons(first(l2), resultado),... 1
+            l2: rest(l2)................................ 1
         )
     ),
 
-    if l1 # [] then (............................................. 1
+    if l1 # [] then (.......................................... 1
         resultado: append(resultado, l1)................... 1
     ),
 
-    if l2 # [] then (............................................. 1
+    if l2 # [] then (.......................................... 1
         resultado: append(resultado, l2)................... 1
     ),
 
-    return(resultado)............................................. 1
+    return(resultado)........................................... 1
 
 );
 
-natural(lista) := block(........................................... t(n) = n + 1
-                                                                    O(n)
+natural(lista) := block(....................................... t(n) = n + 1
+                                                                O(n)
     [resultado: [], actual: [], j],
 
-    for j in lista do (............................................ n + 1
+    for j in lista do (.................................... n + 1
 
-        if actual = [] then(................................ 1
-            actual: [j]................................ 1
+        if actual = [] then(............................ 1
+            actual: [j]............................. 1
         )
 
         else if j >= last(actual) then (
-            actual: endcons(j,actual).................. 1
+            actual: endcons(j,actual)............... 1
         )
 
         else (
-            resultado: endcons(actual,resultado),...... 1
-            actual: [j]................................ 1
+            resultado: endcons(actual,resultado),... 1
+            actual: [j]............................. 1
         )
     ),
 
-    if actual # [] then(.......................................... 1
-        resultado: endcons(actual,resultado)........... 1
+    if actual # [] then(................................... 1
+        resultado: endcons(actual,resultado)............ 1
     ),
 
-    return(resultado)............................................. 1
+    return(resultado)......................................... 1
 );
 
 
 naturalSort(lista) := block(....................................... t(n) = n^2 + 4n + 1
-								                                    O(n^2)
+                                                                    O(n^2)
     [resultado:[], fusion: [], espacio: " ---------- "],
 
-    if lista = [] then(............................................ 1
-        return(resultado)................................... 1
+    if lista = [] then(..................................... 1
+        return(resultado)............................. 1
     ),
 
-    resultado: natural(lista),..................................... n + 1
+    resultado: natural(lista),.............................. n + 1
 
-    print([],espacio,resultado),................................... 1
-    print(first(resultado), espacio, rest(resultado)),............. 1
+    print([],espacio,resultado),............................ 1
+    print(first(resultado), espacio, rest(resultado)),...... 1
 
-								                                    n*(n+3) + 1
+                                                                    n*(n+3) + 1
     while length(resultado) > 1 do (............................... n^2 + 3n + 1
-        fusion: merge(first(resultado),second(resultado)),... n + 1
-        resultado: cons(fusion, rest(rest(resultado))),...... 1
-        print(fusion, espacio, rest(resultado)).............. 1
+        fusion: merge(first(resultado),second(resultado)),.... n + 1
+        resultado: cons(fusion, rest(rest(resultado))),....... 1
+        print(fusion, espacio, rest(resultado))............... 1
     ),
 
-    return(first(resultado))...................................... 1
+    return(first(resultado))................................. 1
 
 );
 

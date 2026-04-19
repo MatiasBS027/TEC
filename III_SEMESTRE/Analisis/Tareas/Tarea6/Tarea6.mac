@@ -22,8 +22,9 @@ Intercambia los elementos en posiciones i y j de una lista.
 Retorna una nueva lista con el intercambio realizado.
 */
 intercambiar(lista, i, j) := block(
-    [temp, resultado],
-    resultado: copylist(lista),
+    [temp, resultado, templista],
+    templista: append([], lista),
+    resultado: templista,
     temp: resultado[i+1],
     resultado[i+1]: resultado[j+1],
     resultado[j+1]: temp,
@@ -38,16 +39,18 @@ intercambiándolo con su padre mientras sea mayor que este.
 Mantiene la propiedad de MAX HEAP.
 */
 bubbleUp(lista, indice) :=block(
-    [resultado, indicePadre],
-    resultado: copylist(lista),
+    [resultado, indicePadre, templista],
+    templista: append([], lista),
+    resultado: templista,
     if indice = 0 then
         resultado
-    else block(
+    else (
         indicePadre: obtenerPadre(indice),
         if resultado[indice + 1] > resultado[indicePadre + 1] then (
         resultado: intercambiar(resultado, indice, indicePadre),
         bubbleUp(resultado, indicePadre)
-        ) else
+        ) 
+    else
         resultado
     )
 );
@@ -61,7 +64,7 @@ insertHeap(ele, lista) :=block(
     
     if lista = [] then
         [ele]
-    else block(
+    else (
         nuevaLista: append(lista, [ele]),
         ultimoIndice: length(nuevaLista) - 1,
         bubbleUp(nuevaLista, ultimoIndice)

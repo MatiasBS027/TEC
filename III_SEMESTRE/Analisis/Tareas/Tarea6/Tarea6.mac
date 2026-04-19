@@ -1,0 +1,69 @@
+/* =====================================================
+TAREA 6: HEAP SORT
+=====================================================
+Matias Benavides Sandoval - 2025102376
+
+
+*/
+
+/*
+FUNCIÓN AUXILIAR: obtenerPadre(indice)
+Retorna el índice del padre en un heap representado como lista (0-based).
+Para índice i, el padre está en (i-1)//2.
+*/
+obtenerPadre(indice) := block(
+    floor((indice - 1) / 2)
+);
+
+
+/* 
+FUNCIÓN AUXILIAR: intercambiar
+Intercambia los elementos en posiciones i y j de una lista.
+Retorna una nueva lista con el intercambio realizado.
+*/
+intercambiar(lista, i, j) := block(
+    [temp, resultado],
+    resultado: copylist(lista),
+    temp: resultado[i+1],
+    resultado[i+1]: resultado[j+1],
+    resultado[j+1]: temp,
+    resultado
+);
+
+
+/* 
+FUNCIÓN AUXILIAR: bubbleUp
+Sube un elemento desde la posición 'indice' hacia la raíz
+intercambiándolo con su padre mientras sea mayor que este.
+Mantiene la propiedad de MAX HEAP.
+*/
+bubbleUp(lista, indice) :=block(
+    [resultado, indicePadre],
+    resultado: copylist(lista),
+    if indice = 0 then
+        resultado
+    else block(
+        indicePadre: obtenerPadre(indice),
+        if resultado[indice + 1] > resultado[indicePadre + 1] then (
+        resultado: intercambiar(resultado, indice, indicePadre),
+        bubbleUp(resultado, indicePadre)
+        ) else
+        resultado
+    )
+);
+/* 
+FUNCIÓN PRINCIPAL: insertHeap
+Inserta un elemento en el heap manteniendo la propiedad de MAX HEAP.
+*/
+
+insertHeap(ele, lista) :=block(
+    [nuevaLista, ultimoIndice],
+    
+    if lista = [] then
+        [ele]
+    else block(
+        nuevaLista: append(lista, [ele]),
+        ultimoIndice: length(nuevaLista) - 1,
+        bubbleUp(nuevaLista, ultimoIndice)
+    )
+);

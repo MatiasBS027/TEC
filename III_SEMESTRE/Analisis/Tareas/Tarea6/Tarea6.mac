@@ -2,7 +2,7 @@
 TAREA 6: HEAP SORT
 =====================================================
 Matias Benavides Sandoval - 2025102376
-
+Steadman Jose Murillo Parrales - 2025097768
 
 */
 
@@ -69,4 +69,86 @@ insertHeap(ele, lista) :=block(
         ultimoIndice: length(nuevaLista) - 1,
         bubbleUp(nuevaLista, ultimoIndice)
     )
+);
+
+/*
+FUNCION AUXILIAR: bubbledown
+Baja un elemento desde la posición 'indice' hacia las hojas
+intercambiándolo con su hijo mayor mientras alguno de ellos
+sea mayor que este.
+Mantiene la propiedad de MAX HEAP.
+*/
+bubbleDown(lista, indice) := block(
+    [resultado, hijoIzq, hijoDer, indiceMayor, templista, tam],
+    templista: append([], lista),
+    resultado: templista,
+    tam: length(resultado),
+
+    hijoIzq: 2 * indice + 1,
+    hijoDer: 2 * indice + 2,
+    indiceMayor: indice,
+
+    if hijoIzq < tam then
+        if resultado[hijoIzq + 1] > resultado[indiceMayor + 1] then
+            indiceMayor: hijoIzq,
+
+    if hijoDer < tam then
+        if resultado[hijoDer + 1] > resultado[indiceMayor + 1] then
+            indiceMayor: hijoDer,
+
+    if indiceMayor # indice then (
+        resultado: intercambiar(resultado, indice, indiceMayor),
+        bubbleDown(resultado, indiceMayor)
+    )
+    else
+        resultado
+);
+
+/* FUNCIÓN PRINCIPAL: deleteHeap  
+    Extrae el elemento mayor del heap, mantiene MAX HEAP
+*/
+deleteHeap(lista) := block(
+    [tam, maximo, nuevaLista],
+    
+    tam: length(lista),
+
+    if tam = 0 then
+        []
+    elseif tam = 1 then
+        [lista[1], []]
+    else (
+        maximo: lista[1],
+        lista[1]: lista[tam],
+        nuevaLista: reverse(rest(reverse(lista))),
+        nuevaLista: bubbleDown(nuevaLista, 0),
+        [maximo, nuevaLista]
+    )
+);
+
+/* FUNCIÓN PRINCIPAL: heapSort(lista)
+    Imprime como se pidio
+*/
+heapSort(lista) := block(
+    [heapActual, ordenada, extraccion, ele],
+
+    heapActual: [],
+    ordenada: [],
+
+    for ele in lista do (
+        print(heapActual),
+        heapActual: insertHeap(ele, heapActual)
+    ),
+
+    print(heapActual),
+    print("-----"),
+
+    while heapActual # [] do (
+        print(heapActual),
+        extraccion: deleteHeap(heapActual),
+        ordenada: cons(extraccion[1], ordenada),
+        heapActual: extraccion[2]
+    ),
+
+    print([]),
+    ordenada
 );

@@ -3,7 +3,6 @@ TAREA 6: HEAP SORT
 =====================================================
 Matias Benavides Sandoval - 2025102376
 Steadman Jose Murillo Parrales - 2025097768
-
 */
 
 /*
@@ -14,7 +13,6 @@ Para índice i, el padre está en (i-1)//2.
 obtenerPadre(indice) := block(
     floor((indice - 1) / 2)
 );
-
 
 /* 
 FUNCIÓN AUXILIAR: intercambiar
@@ -30,7 +28,6 @@ intercambiar(lista, i, j) := block(
     resultado[j+1]: temp,
     resultado
 );
-
 
 /* 
 FUNCIÓN AUXILIAR: bubbleUp

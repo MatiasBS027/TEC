@@ -6,7 +6,6 @@ Steadman Jose Murillo Parrales - 2025097768
 */
 
 /*
-FUNCIÓN AUXILIAR: obtenerPadre(indice)
 Retorna el índice del padre en un heap representado como lista (0-based).
 Para índice i, el padre está en (i-1)//2.
 */
@@ -15,7 +14,6 @@ obtenerPadre(indice) := block(
 );
 
 /* 
-FUNCIÓN AUXILIAR: intercambiar
 Intercambia los elementos en posiciones i y j de una lista.
 Retorna una nueva lista con el intercambio realizado.
 */
@@ -30,10 +28,8 @@ intercambiar(lista, i, j) := block(
 );
 
 /* 
-FUNCIÓN AUXILIAR: bubbleUp
 Sube un elemento desde la posición 'indice' hacia la raíz
 intercambiándolo con su padre mientras sea mayor que este.
-Mantiene la propiedad de MAX HEAP.
 */
 bubbleUp(lista, indice) :=block(
     [resultado, indicePadre, templista],
@@ -51,11 +47,10 @@ bubbleUp(lista, indice) :=block(
         resultado
     )
 );
+
 /* 
-FUNCIÓN PRINCIPAL: insertHeap
 Inserta un elemento en el heap manteniendo la propiedad de MAX HEAP.
 */
-
 insertHeap(ele, lista) :=block(
     [nuevaLista, ultimoIndice],
     
@@ -69,11 +64,8 @@ insertHeap(ele, lista) :=block(
 );
 
 /*
-FUNCION AUXILIAR: bubbledown
 Baja un elemento desde la posición 'indice' hacia las hojas
-intercambiándolo con su hijo mayor mientras alguno de ellos
-sea mayor que este.
-Mantiene la propiedad de MAX HEAP.
+intercambiándolo con su hijo mayor mientras alguno de ellos sea mayor que este.
 */
 bubbleDown(lista, indice) := block(
     [resultado, hijoIzq, hijoDer, indiceMayor, templista, tam],
@@ -101,8 +93,8 @@ bubbleDown(lista, indice) := block(
         resultado
 );
 
-/* FUNCIÓN PRINCIPAL: deleteHeap  
-    Extrae el elemento mayor del heap, mantiene MAX HEAP
+/* 
+Extrae el elemento mayor del heap, mantiene MAX HEAP
 */
 deleteHeap(lista) := block(
     [tam, maximo, nuevaLista],
@@ -122,8 +114,8 @@ deleteHeap(lista) := block(
     )
 );
 
-/* FUNCIÓN PRINCIPAL: heapSort(lista)
-    Imprime como se pidio
+/*
+Imprime el proceso de ordenamiento 
 */
 heapSort(lista) := block(
     [heapActual, ordenada, extraccion, ele],

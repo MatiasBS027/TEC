@@ -1,81 +1,72 @@
 /* 
-DFS 
+El problema de las Reinas
+Matias Benavides - 2025102376
 
 
+Algoritmo: Backtracking con vecinos/extender basado en DFS
 */
 
-grafo : [[a,[b, c,]]
-        [b, [a, d, e,]]
-        [c, [a, d, e]]
-        [d, [b, c, x]]
-        [e, [b, c, x]]
-        [x, [d]]
-        [z, [e]]
-        ];
-
-solucion(fin, ruta):=block(
-    is(last(ruta) = fin),
-);
-
-vecinos(ele, grafo):=block(
-    [vec],
-    vec: assoc(ele, grafo),
-    if (vec = false) then
-        []
-    else
-        vec
-);
-
-agregarNodo(ele, ruta):=block(
-    if (member(ele, ruta)) then
-        []
-    else
-        endcons(ele, ruta)
-);
-
-extender(ruta, grafo):=block(
+/* 
+CONFLICTO (Validación)
+Verifica si la nueva reina entra en conflicto con las reinas ya colocadas. 
+*/
+conflicto(reina, posiciones):=block(
+    [filaNueva, colNueva, reinaAntigua, filaAntigua, colAntigua],
+    filaNueva: reina[1],
+    colNueva: reina[2],
     
-    map(lambda[x] agregarNodo(x, ruta), vecinos(last(ruta), grafo))
+    if (posiciones = []) then
+        false
+    else (
+        reinaAntigua: first(posiciones),
+        filaAntigua: reinaAntigua[1],
+        colAntigua: reinaAntigua[2],
+    
+        if (colNueva = colAntigua or abs(filaNueva - filaAntigua) = abs(colNueva - colAntigua)) then
+            true
+        else
+            conflicto(reina, rest(posiciones))
+    )
 );
 
-prof(ini, fin, grafo):=block(
-
-    profAux([[ini]], fin, grafo)
+/* 
+VECINOS (Posiciones de la siguiente fila)
+Devuelve lista de TODOS los pares [fila+1, col].
+*/
+vecinos(n, reina):=block(
+    [fila],
+    fila: reina[1] + 1,
+    vecinosAux(1, n, fila)
 );
 
-profAux(listaR, fin, grafo):=block(
-    if (listaR = []) then
+/* 
+VECINOS AUXILIAR (Generador recursivo de columnas)
+*/
+vecinosAux(col, n, fila):=block(
+    if (col > n) then
         []
     else
-        if (solucion(fin, first(listaR))) then(
-            print(listaR),
-            print("------")
-            first(listaR)
-        )   
-        else(
-            print(listaR),
-            ruta: first(listaR),
-            profAux(append(extender(ruta, grafo), rest(listaR)), fin, grafo)
-        )
+        cons([fila, col], vecinosAux(col + 1, n, fila))
 );
 
-profTodas(ini, fin, grafo):=block(
-
-    profAuxTodas([[ini]], fin, grafo, [])
+/* 
+EXTENDER (Extiende una ruta con vecinos válidos)
+Devuelve lista de rutas extendidas.
+*/
+extender(n, ruta):=block(
+    extenderAux(vecinos(n, last(ruta)), ruta)
 );
 
-profAuxTodas(listaR, fin, grafo, soluciones):=block(
-    if (listaR = []) then
-        soluciones
+/* 
+EXTENDER AUXILIAR (Filtra vecinos sin conflictos)
+*/
+extenderAux(vecinos_lista, ruta):=block(
+    if (vecinos_lista = []) then
+        []
     else
-        if (solucion(fin, first(listaR))) then(
-            print(listaR),
-            print("------"),
-            profAuxTodas(rest(listaR), fin, grafo, endcons(first(listaR), soluciones))
-        )   
-        else(
-            print(listaR),
-            ruta: first(listaR),
-            profAuxTodas(append(extender(ruta, grafo), rest(listaR)), fin, grafo, soluciones)
-        )
+        if (conflicto(first(vecinos_lista), ruta)) then
+            extenderAux(rest(vecinos_lista), ruta)
+        else
+            cons(endcons(first(vecinos_lista), ruta), extenderAux(rest(vecinos_lista), ruta))
 );
+

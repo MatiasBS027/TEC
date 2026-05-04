@@ -1,47 +1,61 @@
 /* 
 El problema de las Reinas
-Matias Benavides - 2025102376
-
+Matias Benavides Sandoval - 2025102376
+Steadman Jose Murillo Parrales - 2025097768
 
 Algoritmo: Backtracking con vecinos/extender basado en DFS
 */
 
-/* 
+/*
 CONFLICTO (Validación)
 Verifica si la nueva reina entra en conflicto con las reinas ya colocadas. 
 */
+
 conflicto(reina, posiciones):=block(
     [filaNueva, colNueva, reinaAntigua, filaAntigua, colAntigua],
-    filaNueva: reina[1],
-    colNueva: reina[2],
-    
-    if (posiciones = []) then
+
+    if (reina = []) then
         false
     else (
-        reinaAntigua: first(posiciones),
-        filaAntigua: reinaAntigua[1],
-        colAntigua: reinaAntigua[2],
-    
-        if (colNueva = colAntigua or abs(filaNueva - filaAntigua) = abs(colNueva - colAntigua)) then
-            true
-        else
-            conflicto(reina, rest(posiciones))
+        filaNueva: reina[1],
+        colNueva: reina[2],
+
+        if (posiciones = []) then
+            false
+        else (
+            reinaAntigua: first(posiciones),
+            filaAntigua: reinaAntigua[1],
+            colAntigua: reinaAntigua[2],
+        
+            if (colNueva = colAntigua or abs(filaNueva - filaAntigua) = abs(colNueva - colAntigua)) then
+                true
+            else
+                conflicto(reina, rest(posiciones))
+        )
     )
 );
 
-/* 
-VECINOS (Posiciones de la siguiente fila)
+
+/*
+VECINOS (Posiciones de la siguiente fila)	
 Devuelve lista de TODOS los pares [fila+1, col].
 */
+
 vecinos(n, reina):=block(
     [fila],
-    fila: reina[1] + 1,
-    vecinosAux(1, n, fila)
+    if (reina = []) then
+        []
+    else (
+        fila: reina[1] + 1,
+        vecinosAux(1, n, fila)
+    )
 );
 
-/* 
+
+/*	
 VECINOS AUXILIAR (Generador recursivo de columnas)
 */
+
 vecinosAux(col, n, fila):=block(
     if (col > n) then
         []
@@ -49,17 +63,25 @@ vecinosAux(col, n, fila):=block(
         cons([fila, col], vecinosAux(col + 1, n, fila))
 );
 
-/* 
+
+/*
+
 EXTENDER (Extiende una ruta con vecinos válidos)
 Devuelve lista de rutas extendidas.
 */
+
 extender(n, ruta):=block(
-    extenderAux(vecinos(n, last(ruta)), ruta)
+    if (ruta = []) then
+        []
+    else
+        extenderAux(vecinos(n, last(ruta)), ruta)
 );
 
-/* 
+
+/*	
 EXTENDER AUXILIAR (Filtra vecinos sin conflictos)
 */
+
 extenderAux(vecinos_lista, ruta):=block(
     if (vecinos_lista = []) then
         []
@@ -70,3 +92,120 @@ extenderAux(vecinos_lista, ruta):=block(
             cons(endcons(first(vecinos_lista), ruta), extenderAux(rest(vecinos_lista), ruta))
 );
 
+
+/*
+RUTAS INICIALES
+Genera las rutas iniciales de la primera fila.
+Para n = 4 genera:
+[[[1,1]], [[1,2]], [[1,3]], [[1,4]]]
+*/
+
+rutasIniciales(n):=block(
+    if (n <= 0) then
+        []
+    else
+        rutasInicialesAux(1, n)
+);
+
+
+/* 
+RUTAS INICIALES AUXILIAR
+Genera recursivamente las posiciones iniciales.
+*/
+
+rutasInicialesAux(col, n):=block(
+    if (col > n) then
+        []
+    else
+        cons([[1, col]], rutasInicialesAux(col + 1, n))
+);
+
+
+/* 
+PROF
+Busca UNA solución usando profundidad primero.	
+Si encuentra una ruta con n reinas, la devuelve.
+Si no existe solución, devuelve [].
+*/
+
+prof(n):=block(
+    if (n <= 0) then
+        []
+    else
+        profAux(n, rutasIniciales(n))
+);
+
+
+/*
+PROF AUXILIAR
+rutas es la lista de rutas pendientes.
+Se toma la primera ruta:
+Si ya tiene n reinas, es solución.
+Si no, se extiende.
+Las rutas nuevas se colocan al inicio de la lista.
+*/
+
+profAux(n, rutas):=block(
+    [rutaActual, nuevasRutas],
+
+    if (rutas = []) then
+        []
+    else (
+        rutaActual: first(rutas),
+
+        if (rutaActual = []) then
+            profAux(n, rest(rutas))
+        else
+            if (length(rutaActual) = n) then
+                rutaActual
+            else (
+                nuevasRutas: extender(n, rutaActual),
+                profAux(n, append(nuevasRutas, rest(rutas)))
+            )
+    )
+);
+
+
+/* 
+PROF TODAS
+Busca TODAS las soluciones usando profundidad primero.
+*/
+
+profTodas(n):=block(
+    if (n <= 0) then
+        []
+    else
+        profTodasAux(n, rutasIniciales(n))
+);
+
+/* 
+PROF TODAS AUXILIAR
+Recorre todas las rutas pendientes.	
+Si una ruta tiene n reinas, se guarda como solución.
+Si no, se extiende y se continúa buscando.
+*/
+
+profTodasAux(n, rutas):=block(
+    if (rutas = []) then
+        []
+    else
+        append(
+            solucionesDesde(n, first(rutas)),
+            profTodasAux(n, rest(rutas))
+        )
+);
+
+/* 
+SOLUCIONES DESDE
+Busca todas las soluciones que nacen desde una ruta.
+(Se rompia por la cantidad de llamadas recursivas)
+*/
+solucionesDesde(n, ruta):=block(
+    if (ruta = []) then
+        []
+    else
+        if (length(ruta) = n) then
+            [ruta]
+        else
+            profTodasAux(n, extender(n, ruta))
+);

@@ -1,0 +1,15 @@
+/**     
+pSet.mac
+*/
+
+pset(conjunto):= block(
+    [p, r]
+    if (conjunto = []) then
+        [[]]
+    else (
+        p: first(conjunto),
+        r: pset(rest(conjunto)),
+        
+        append(map((lambda[x], cons(p, x)), r), r)
+    )
+)

@@ -1,0 +1,238 @@
+/*
+Knapsack Problem - Problema de la Mochila
+Algoritmos Greedy (Ambiciosos)
+*/
+
+/* ========================================
+SOLUCIÓN 1: GREEDY SIN ORDENAR - O(n²)
+======================================== */
+
+/*
+Estrategia: Seleccionar iterativamente el artículo de mayor valor que cabe en la mochila.
+Desventaja: Debe buscar el máximo en cada iteración.
+*/
+
+knapsackGreedyNoOrdenado(capacidad, objetos):=block
+(
+    [mochila, pesoActual, valorActual, i, maxIndice, maxValor, objActual],
+    
+    mochila: [],
+    pesoActual: 0,
+    valorActual: 0,
+    
+    /* Mientras haya objetos disponibles */
+    while length(objetos) > 0 do
+    (
+        maxIndice: -1,
+        maxValor: -1,
+        
+        /* Buscar el objeto de mayor valor que cabe en la mochila */
+        for i:1 thru length(objetos) do
+        (
+            objActual: objetos[i],
+            /* objActual = [nombre, [valor, peso]] */
+            if objActual[2][2] + pesoActual <= capacidad then
+                if objActual[2][1] > maxValor then
+                (
+                    maxValor: objActual[2][1],
+                    maxIndice: i
+                )
+        ),
+        
+        /* Si encontramos un objeto que cabe, agregarlo a la mochila */
+        if maxIndice > 0 then
+        (
+            objActual: objetos[maxIndice],
+            mochila: append(mochila, [objActual]),
+            pesoActual: pesoActual + objActual[2][2],
+            valorActual: valorActual + objActual[2][1],
+            objetos: delete(objActual, objetos)
+        )
+        else
+            objetos: [] /* Salir del bucle si no cabe nada */
+    ),
+    
+    return [mochila, [valorActual, pesoActual]]
+);
+
+
+/* ========================================
+SOLUCIÓN 2: GREEDY CON ORDENAMIENTO - O(n*log(n))
+======================================== */
+
+/*
+Estrategia: Ordenar por valor descendente, luego recorrer una sola vez.
+Ventaja: Más eficiente que la versión anterior.
+*/
+
+knapsackGreedy(capacidad, objetos):=block
+(
+    [objetosOrdenados, mochila, pesoActual, valorActual, i, objActual],
+    
+    /* Ordenar objetos por valor (descendente) */
+    objetosOrdenados: sort(objetos, lambda([a, b], a[2][1] > b[2][1])),
+    
+    mochila: [],
+    pesoActual: 0,
+    valorActual: 0,
+    
+    /* Recorrer la lista ordenada una sola vez */
+    for i:1 thru length(objetosOrdenados) do
+    (
+        objActual: objetosOrdenados[i],
+        
+        /* Si el objeto cabe en la mochila, agregarlo */
+        if objActual[2][2] + pesoActual <= capacidad then
+        (
+            mochila: append(mochila, [objActual]),
+            pesoActual: pesoActual + objActual[2][2],
+            valorActual: valorActual + objActual[2][1]
+        )
+    ),
+    
+    return [mochila, [valorActual, pesoActual]]
+);
+
+
+/* ========================================
+SOLUCIÓN 3: GREEDY POR GANANCIA/PESO - O(n*log(n)) - MÁS ÓPTIMA
+======================================== */
+
+/*
+Estrategia: Ordenar por ganancia promedio por kilo (valor/peso).
+Esta estrategia es más efectiva que ordenar solo por valor.
+*/
+
+knapsackGreedyOptimizado(capacidad, objetos):=block
+(
+    [objetosConRatio, mochila, pesoActual, valorActual, i, objActual, ratio],
+    
+    /* Crear lista con [nombre, [valor, peso, ratio]] */
+    objetosConRatio: maplist(lambda([obj], 
+        [obj[1], [obj[2][1], obj[2][2], obj[2][1]/obj[2][2]]]), objetos),
+    
+    /* Ordenar por ratio valor/peso (descendente) */
+    objetosConRatio: sort(objetosConRatio, lambda([a, b], a[2][3] > b[2][3])),
+    
+    mochila: [],
+    pesoActual: 0,
+    valorActual: 0,
+    
+    /* Recorrer la lista ordenada */
+    for i:1 thru length(objetosConRatio) do
+    (
+        objActual: objetosConRatio[i],
+        
+        if objActual[2][2] + pesoActual <= capacidad then
+        (
+            mochila: append(mochila, [[objActual[1], [objActual[2][1], objActual[2][2]]]]),
+            pesoActual: pesoActual + objActual[2][2],
+            valorActual: valorActual + objActual[2][1]
+        )
+    ),
+    
+    return [mochila, [valorActual, pesoActual]]
+);
+
+
+/* ========================================
+FUNCIONES DE PRUEBA
+======================================== */
+
+/* Crear los objetos del ejemplo del documento */
+crearObjetos():=block
+(
+    [objetos],
+    objetos: [
+        [apio, [10, 1]],
+        [papas, [40, 2]],
+        [bananos, [20, 1]],
+        [pan, [15, 3]],
+        [queso, [60, 5]]
+    ],
+    return objetos
+);
+
+
+/* Función para mostrar resultados de forma legible */
+mostrarResultado(algoritmo, resultado):=block
+(
+    [mochila, totales],
+    mochila: resultado[1],
+    totales: resultado[2],
+    
+    printf(true, "~%=== Resultado de ~w ===~%", [algoritmo]),
+    printf(true, "Artículos en la mochila:~%"),
+    foreach item in mochila do
+        printf(true, "  - ~w: valor=$~w, peso=~w kg~%", [item[1], item[2][1], item[2][2]]),
+    printf(true, "~%Valor Total: $~w~%", [totales[1]]),
+    printf(true, "Peso Total: ~w kg~%", [totales[2]]),
+    printf(true, "~%")
+);
+
+
+/* ========================================
+ANÁLISIS DE COMPLEJIDAD
+========================================
+
+SOLUCIÓN 1: GREEDY SIN ORDENAR - O(n²)
+───────────────────────────────────────
+knapsackGreedyNoOrdenado(capacidad, objetos):= .......... t(n) = O(n²)
+(
+    [... variables locales ...],
+    
+    while length(objetos) > 0 do ..................... hasta n iteraciones
+    (
+        for i:1 thru length(objetos) do ............. O(n) búsqueda del máximo
+        (
+            if ... then .............................. O(1) comparación
+                if ... > maxValor then .............. O(1)
+                ...
+        ),
+        
+        if maxIndice > 0 then ........................ O(1)
+            ...
+            objetos: delete(objActual, objetos) .... O(n) eliminar elemento
+        else
+            objetos: []
+    )
+)
+
+En el peor caso: n + (n-1) + (n-2) + ... + 1 = n(n+1)/2 = O(n²)
+
+
+SOLUCIÓN 2: GREEDY CON ORDENAMIENTO - O(n*log(n))
+──────────────────────────────────────────────────
+knapsackGreedy(capacidad, objetos):= .................. t(n) = O(n*log(n))
+(
+    objetosOrdenados: sort(objetos, ...) ............ O(n*log(n)) ordenamiento
+    
+    for i:1 thru length(objetosOrdenados) do ....... O(n) una sola pasada
+    (
+        if ... then ............................... O(1) operaciones
+            mochila: append(...)
+            ...
+    )
+)
+
+Total: O(n*log(n)) + O(n) = O(n*log(n))
+
+
+SOLUCIÓN 3: GREEDY OPTIMIZADO - O(n*log(n))
+─────────────────────────────────────────────
+knapsackGreedyOptimizado(capacidad, objetos):= ....... t(n) = O(n*log(n))
+(
+    objetosConRatio: maplist(...) .................. O(n) crear ratios
+    
+    objetosConRatio: sort(...) ..................... O(n*log(n)) ordenamiento
+    
+    for i:1 thru length(objetosConRatio) do ....... O(n) una sola pasada
+    (
+        if ... then ............................... O(1) operaciones
+            ...
+    )
+)
+
+Total: O(n) + O(n*log(n)) + O(n) = O(n*log(n))
+
+======================================== */

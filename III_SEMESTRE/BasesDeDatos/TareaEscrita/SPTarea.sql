@@ -4,7 +4,7 @@ CREATE PROCEDURE sp_ProcesarVacacionesBatch
 AS
 BEGIN
     SET NOCOUNT ON;
-    SET XACT_ABORT ON;
+    SET XACT_ABORT OFF;
 
 
     BEGIN TRY
@@ -32,9 +32,10 @@ BEGIN
         SET @UltimaLlaveProcesada = 0;
         SET @UltimaLlaveLote = 0;
 
-        SELECT @UltimaLlaveProcesada = ISNULL(MAX(UltimaLlave), 0)
+        SELECT TOP 1 @UltimaLlaveProcesada = ISNULL(UltimaLlave, 0)
         FROM EventLog
-        WHERE idEventType IN (1, 3);
+        WHERE idEventType IN (1, 3)
+        ORDER BY id DESC;
 
         SET @UltimaLlaveLote = @UltimaLlaveProcesada;
 
@@ -114,14 +115,13 @@ BEGIN
                     -- Insertar email de notificación
                     -- ============================================================
                     INSERT INTO Email (idEmpleado, Texto)
-                    VALUES (
+                    SELECT
                         @IdEmpleadoActual,
-                    'Esperamos que ud esta disfrutando de sus vacaciones, aun le faltan ' 
-                        + CAST(@DiasRestantesActual AS VARCHAR(10)) 
-                        + ' dias de vacaciones según su solicitud aprobada, su nuevo saldo de vacaciones de '
-                        + CAST(@SaldoActualEmpleadoActual - 1 AS VARCHAR(10))   -- saldo después del débito de hoy
-                        + ' dias.'
-                    );
+                        'Esperamos que ud esta disfrutando de sus vacaciones, aun le faltan '
+                            + CAST(@DiasRestantesActual AS VARCHAR(10))
+                            + ' dias de vacaciones según su solicitud aprobada, su nuevo saldo de vacaciones de '
+                            + CAST(@SaldoActualEmpleadoActual - 1 AS VARCHAR(10))   -- saldo después del débito de hoy
+                            + ' dias.';
 
                     SET @LastIdEmail = SCOPE_IDENTITY();
 
@@ -139,17 +139,16 @@ BEGIN
                         , IdPostByUser
                         , PostInIP
                     )
-                    VALUES (
-                    @IdEmpleadoActual
-                    , 5                     -- id del movimiento Debito de vacaciones (inventado ya que no tenemos acceso a las tablas). 
-                    , @LastIdEmail
-                    , @inFechaOperacion
-                    , 1
-                    , 0
-                    , @SaldoActualEmpleadoActual - 1
-                    , @IdUsuarioActual
-                    , @PostInIPActual
-                    );
+                    SELECT
+                        @IdEmpleadoActual
+                        , 5                     -- id del movimiento Debito de vacaciones (inventado ya que no tenemos acceso a las tablas). 
+                        , @LastIdEmail
+                        , @inFechaOperacion
+                        , 1
+                        , 0
+                        , @SaldoActualEmpleadoActual - 1
+                        , @IdUsuarioActual
+                        , @PostInIPActual;
 
                     SET @LastIdMovimiento = SCOPE_IDENTITY();
 

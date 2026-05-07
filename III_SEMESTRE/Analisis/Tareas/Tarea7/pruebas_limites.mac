@@ -1,0 +1,316 @@
+/* 
+PRUEBAS LÍMITE Y CASOS ESPECIALES - TAREA 7
+Pruebas exhaustivas con listas vacías y casos extremos
+*/
+
+/* Cargar el código principal */
+load("Tarea7.mac")$
+
+/* =====================================================
+   PRUEBAS CON LISTAS VACÍAS
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║         PRUEBAS CON LISTAS VACÍAS                         ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+/* Prueba E1: conflicto con lista vacía */
+print("Prueba E1.1 - conflicto([1,1], []):")$
+resultado_e1_1: conflicto([1,1], [])$
+print(resultado_e1_1)$
+print("¿Correcto (false)?:", is(resultado_e1_1 = false))$
+print("")$
+
+/* Prueba E1.2: conflicto con reina vacía */
+print("Prueba E1.2 - conflicto([], [[1,1]]):")$
+resultado_e1_2: conflicto([], [[1,1]])$
+print(resultado_e1_2)$
+print("¿Correcto (false)?:", is(resultado_e1_2 = false))$
+print("")$
+
+/* Prueba E2: vecinos con lista vacía */
+print("Prueba E2.1 - vecinos(4, []):")$
+resultado_e2_1: vecinos(4, [])$
+print(resultado_e2_1)$
+print("¿Es vacío?:", is(resultado_e2_1 = []))$
+print("")$
+
+/* Prueba E3: extender con lista vacía */
+print("Prueba E3.1 - extender(4, []):")$
+resultado_e3_1: extender(4, [])$
+print(resultado_e3_1)$
+print("¿Es vacío?:", is(resultado_e3_1 = []))$
+print("")$
+
+/* Prueba E4: extender lista vacía de vecinos */
+print("Prueba E4.1 - extenderAux([], [[1,1]]):")$
+resultado_e4_1: extenderAux([], [[1,1]])$
+print(resultado_e4_1)$
+print("¿Es vacío?:", is(resultado_e4_1 = []))$
+print("")$
+
+/* Prueba E5: rutasIniciales con n=0 */
+print("Prueba E5.1 - rutasIniciales(0):")$
+resultado_e5_1: rutasIniciales(0)$
+print(resultado_e5_1)$
+print("¿Es vacío?:", is(resultado_e5_1 = []))$
+print("")$
+
+/* Prueba E6: prof con lista vacía resultante */
+print("Prueba E6.1 - prof(0):")$
+resultado_e6_1: prof(0)$
+print(resultado_e6_1)$
+print("¿Es vacío?:", is(resultado_e6_1 = []))$
+print("")$
+
+/* Prueba E7: profTodas con n=0 */
+print("Prueba E7.1 - profTodas(0):")$
+resultado_e7_1: profTodas(0)$
+print(resultado_e7_1)$
+print("¿Es vacío?:", is(resultado_e7_1 = []))$
+print("")$
+
+/* =====================================================
+   PRUEBAS LÍMITE: Valores pequeños
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║         PRUEBAS LÍMITE: VALORES PEQUEÑOS                  ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+/* Prueba L1: n=1 */
+print("Prueba L1.1 - prof(1):")$
+resultado_l1_1: prof(1)$
+print(resultado_l1_1)$
+print("¿Tiene 1 reina?:", is(length(resultado_l1_1) = 1))$
+print("")$
+
+print("Prueba L1.2 - profTodas(1):")$
+resultado_l1_2: profTodas(1)$
+print("Cantidad de soluciones:", length(resultado_l1_2))$
+print(resultado_l1_2)$
+print("¿1 solución?:", is(length(resultado_l1_2) = 1))$
+print("")$
+
+/* Prueba L2: n=2 */
+print("Prueba L2.1 - prof(2):")$
+resultado_l2_1: prof(2)$
+print("Resultado:", resultado_l2_1)$
+print("¿Es vacío (no hay solución)?:", is(resultado_l2_1 = []))$
+print("")$
+
+print("Prueba L2.2 - profTodas(2):")$
+resultado_l2_2: profTodas(2)$
+print("Cantidad de soluciones:", length(resultado_l2_2))$
+print("¿0 soluciones (sin solución)?:", is(length(resultado_l2_2) = 0))$
+print("")$
+
+/* Prueba L3: n=3 */
+print("Prueba L3.1 - prof(3):")$
+resultado_l3_1: prof(3)$
+print("Resultado:", resultado_l3_1)$
+print("¿Es vacío (no hay solución)?:", is(resultado_l3_1 = []))$
+print("")$
+
+print("Prueba L3.2 - profTodas(3):")$
+resultado_l3_2: profTodas(3)$
+print("Cantidad de soluciones:", length(resultado_l3_2))$
+print("¿0 soluciones?:", is(length(resultado_l3_2) = 0))$
+print("")$
+
+/* Prueba L4: n=4 - Caso ya probado */
+print("Prueba L4.1 - profTodas(4):")$
+resultado_l4_1: profTodas(4)$
+print("Cantidad de soluciones:", length(resultado_l4_1))$
+print("¿2 soluciones?:", is(length(resultado_l4_1) = 2))$
+print("")$
+
+/* Prueba L5: n=5 */
+print("Prueba L5.1 - prof(5):")$
+resultado_l5_1: prof(5)$
+print("¿Tiene 5 reinas?:", is(length(resultado_l5_1) = 5))$
+if (resultado_l5_1 # []) then (
+    print("Solución encontrada:", resultado_l5_1),
+    valido_l5: true,
+    for i: 1 thru length(resultado_l5_1) do (
+        for j: i+1 thru length(resultado_l5_1) do (
+            r1: resultado_l5_1[i],
+            r2: resultado_l5_1[j],
+            if (r1[2] = r2[2] or abs(r1[1]-r2[1]) = abs(r1[2]-r2[2])) then
+                valido_l5: false
+        )
+    ),
+    print("¿Solución válida?:", valido_l5)
+)$
+print("")$
+
+/* Prueba L6: n=5 todas las soluciones */
+print("Prueba L5.2 - profTodas(5):")$
+resultado_l5_2: profTodas(5)$
+print("Cantidad de soluciones para n=5:", length(resultado_l5_2))$
+print("¿Hay soluciones?:", length(resultado_l5_2) > 0)$
+print("")$
+
+/* =====================================================
+   PRUEBAS LÍMITE: Rutas parciales
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║         PRUEBAS LÍMITE: RUTAS PARCIALES                   ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+/* Prueba R1: Ruta de una reina */
+print("Prueba R1.1 - extender(4, [[1,1]]):")$
+resultado_r1_1: extender(4, [[1,1]])$
+print("Cantidad de extensiones:", length(resultado_r1_1))$
+print(resultado_r1_1)$
+print("")$
+
+/* Prueba R2: Ruta con 2 reinas */
+print("Prueba R2.1 - extender(4, [[1,1],[2,3]]):")$
+resultado_r2_1: extender(4, [[1,1],[2,3]])$
+print("Cantidad de extensiones:", length(resultado_r2_1))$
+print(resultado_r2_1)$
+print("")$
+
+/* Prueba R3: Ruta con 3 reinas */
+print("Prueba R3.1 - extender(4, [[1,1],[2,3],[3,5]]):")$
+resultado_r3_1: extender(4, [[1,1],[2,3],[3,5]])$
+print("Cantidad de extensiones:", length(resultado_r3_1))$
+print(resultado_r3_1)$
+print("")$
+
+/* Prueba R4: Ruta con todas conflictivas */
+print("Prueba R4.1 - extender(4, [[1,1],[2,2],[3,3]]):")$
+resultado_r4_1: extender(4, [[1,1],[2,2],[3,3]])$
+print("Cantidad de extensiones:", length(resultado_r4_1))$
+print(resultado_r4_1)$
+print("")$
+
+/* =====================================================
+   PRUEBAS LÍMITE: Números negativos y especiales
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║    PRUEBAS LÍMITE: NÚMEROS NEGATIVOS Y ESPECIALES         ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+/* Prueba N1: n negativo en prof */
+print("Prueba N1.1 - prof(-1):")$
+resultado_n1_1: prof(-1)$
+print(resultado_n1_1)$
+print("¿Es vacío?:", is(resultado_n1_1 = []))$
+print("")$
+
+/* Prueba N2: n negativo en profTodas */
+print("Prueba N2.1 - profTodas(-1):")$
+resultado_n2_1: profTodas(-1)$
+print(resultado_n2_1)$
+print("¿Es vacío?:", is(resultado_n2_1 = []))$
+print("")$
+
+/* Prueba N3: n negativo en rutasIniciales */
+print("Prueba N3.1 - rutasIniciales(-5):")$
+resultado_n3_1: rutasIniciales(-5)$
+print(resultado_n3_1)$
+print("¿Es vacío?:", is(resultado_n3_1 = []))$
+print("")$
+
+/* =====================================================
+   PRUEBAS DE VALIDACIÓN: Conflictos específicos
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║      PRUEBAS DE VALIDACIÓN: CONFLICTOS ESPECÍFICOS        ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+/* Prueba C1: Mismo conflicto de columna */
+print("Prueba C1.1 - conflicto([2,1], [[1,1]]):")$
+resultado_c1_1: conflicto([2,1], [[1,1]])$
+print("¿Conflicto en columna?:", is(resultado_c1_1 = true))$
+print("")$
+
+/* Prueba C2: Conflicto diagonal izquierda */
+print("Prueba C2.1 - conflicto([2,2], [[1,1]]):")$
+resultado_c2_1: conflicto([2,2], [[1,1]])$
+print("¿Conflicto diagonal?:", is(resultado_c2_1 = true))$
+print("")$
+
+/* Prueba C3: Conflicto diagonal derecha */
+print("Prueba C3.1 - conflicto([3,3], [[1,1]]):")$
+resultado_c3_1: conflicto([3,3], [[1,1]])$
+print("¿Conflicto diagonal?:", is(resultado_c3_1 = true))$
+print("")$
+
+/* Prueba C4: Sin conflicto */
+print("Prueba C4.1 - conflicto([2,3], [[1,1]]):")$
+resultado_c4_1: conflicto([2,3], [[1,1]])$
+print("¿Sin conflicto?:", is(resultado_c4_1 = false))$
+print("")$
+
+/* Prueba C5: Múltiples reinas sin conflicto */
+print("Prueba C5.1 - conflicto([4,3], [[1,2],[2,4],[3,1]]):")$
+resultado_c5_1: conflicto([4,3], [[1,2],[2,4],[3,1]])$
+print("¿Sin conflicto?:", is(resultado_c5_1 = false))$
+print("")$
+
+/* Prueba C6: Múltiples reinas CON conflicto */
+print("Prueba C6.1 - conflicto([4,2], [[1,2],[2,4],[3,1]]):")$
+resultado_c6_1: conflicto([4,2], [[1,2],[2,4],[3,1]])$
+print("¿Con conflicto?:", is(resultado_c6_1 = true))$
+print("")$
+
+/* =====================================================
+   RESUMEN FINAL - PRUEBAS LÍMITE
+   ===================================================== */
+
+print("╔════════════════════════════════════════════════════════════╗")$
+print("║              RESUMEN FINAL - PRUEBAS LÍMITE               ║")$
+print("╚════════════════════════════════════════════════════════════╝")$
+print("")$
+
+print("✓ LISTAS VACÍAS:")$
+if (is(resultado_e1_1 = false) and is(resultado_e1_2 = false) and 
+    is(resultado_e2_1 = []) and is(resultado_e3_1 = []) and
+    is(resultado_e5_1 = []) and is(resultado_e6_1 = []) and
+    is(resultado_e7_1 = [])) then
+    print("  PASÓ - Todas las pruebas con listas vacías funcionan")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("✓ VALORES LÍMITE (n=0,1,2,3,4,5):")$
+if (is(resultado_l1_1 = [[1,1]]) and is(length(resultado_l1_2) = 1) and
+    is(resultado_l2_1 = []) and is(length(resultado_l2_2) = 0) and
+    is(resultado_l3_1 = []) and is(length(resultado_l3_2) = 0) and
+    is(length(resultado_l4_1) = 2) and length(resultado_l5_1) = 5) then
+    print("  PASÓ - Todos los valores límite funcionan correctamente")
+else
+    print("  PARCIAL - Ver detalles arriba")$
+print("")$
+
+print("✓ NÚMEROS NEGATIVOS:")$
+if (is(resultado_n1_1 = []) and is(resultado_n2_1 = []) and
+    is(resultado_n3_1 = [])) then
+    print("  PASÓ - Números negativos handled correctamente")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("✓ DETECCIÓN DE CONFLICTOS:")$
+if (is(resultado_c1_1 = true) and is(resultado_c2_1 = true) and
+    is(resultado_c3_1 = true) and is(resultado_c4_1 = false) and
+    is(resultado_c5_1 = false) and is(resultado_c6_1 = true)) then
+    print("  PASÓ - Conflictos detectados correctamente")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("═════════════════════════════════════════════════════════════")$
+print("FIN DE PRUEBAS")$
+print("═════════════════════════════════════════════════════════════")$

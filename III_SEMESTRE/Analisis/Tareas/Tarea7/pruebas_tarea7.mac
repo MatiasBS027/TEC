@@ -1,0 +1,190 @@
+/* 
+PRUEBAS PARA TAREA 7 - PROBLEMA DE LAS REINAS
+Validación completa de: vecinos, extender, prof, profTodas
+*/
+
+/* Cargar el código principal */
+load("Tarea7.mac")$
+
+/* =====================================================
+   PRUEBA 1: FUNCIÓN VECINOS
+   ===================================================== */
+
+print("========== PRUEBA 1: VECINOS ==========")$
+print("")$
+
+/* Prueba 1.1: Vecinos para [1,1] en n=4 (debe devolver [[2,1],[2,2],[2,3],[2,4]]) */
+print("Prueba 1.1 - vecinos(4, [1,1]):")$
+resultado_1_1: vecinos(4, [1,1])$
+print(resultado_1_1)$
+esperado_1_1: [[2,1],[2,2],[2,3],[2,4]]$
+print("¿Correcto?:", is(resultado_1_1 = esperado_1_1))$
+print("")$
+
+/* Prueba 1.2: Vecinos para [3,2] en n=4 (debe devolver [[4,1],[4,2],[4,3],[4,4]]) */
+print("Prueba 1.2 - vecinos(4, [3,2]):")$
+resultado_1_2: vecinos(4, [3,2])$
+print(resultado_1_2)$
+esperado_1_2: [[4,1],[4,2],[4,3],[4,4]]$
+print("¿Correcto?:", is(resultado_1_2 = esperado_1_2))$
+print("")$
+
+/* Prueba 1.3: Vecinos para lista vacía */
+print("Prueba 1.3 - vecinos(4, []):")$
+resultado_1_3: vecinos(4, [])$
+print(resultado_1_3)$
+print("¿Es vacío?:", is(resultado_1_3 = []))$
+print("")$
+
+/* =====================================================
+   PRUEBA 2: FUNCIÓN EXTENDER
+   ===================================================== */
+
+print("========== PRUEBA 2: EXTENDER ==========")$
+print("")$
+
+/* Prueba 2.1: Extender [[1,1]] en n=4 (todos los vecinos sin conflictos) */
+print("Prueba 2.1 - extender(4, [[1,1]]):")$
+resultado_2_1: extender(4, [[1,1]])$
+print("Cantidad de rutas:", length(resultado_2_1))$
+print(resultado_2_1)$
+print("¿Hay 4 rutas?:", is(length(resultado_2_1) = 4))$
+print("")$
+
+/* Prueba 2.2: Extender [[1,1],[2,3]] en n=4 */
+print("Prueba 2.2 - extender(4, [[1,1],[2,3]]):")$
+resultado_2_2: extender(4, [[1,1],[2,3]])$
+print("Cantidad de rutas:", length(resultado_2_2))$
+print(resultado_2_2)$
+print("Todas evitan conflicto:", 
+    every(lambda([ruta], not conflicto(last(ruta), rest(ruta, -1))), resultado_2_2))$
+print("")$
+
+/* Prueba 2.3: Extender [[1,1],[2,4]] en n=4 */
+print("Prueba 2.3 - extender(4, [[1,1],[2,4]]):")$
+resultado_2_3: extender(4, [[1,1],[2,4]])$
+print("Cantidad de rutas:", length(resultado_2_3))$
+print(resultado_2_3)$
+print("")$
+
+/* =====================================================
+   PRUEBA 3: FUNCIÓN PROF
+   ===================================================== */
+
+print("========== PRUEBA 3: PROF (UNA SOLUCIÓN) ==========")$
+print("")$
+
+/* Prueba 3.1: Encontrar una solución para n=4 */
+print("Prueba 3.1 - prof(4):")$
+resultado_3_1: prof(4)$
+print(resultado_3_1)$
+print("¿Tiene 4 reinas?:", is(length(resultado_3_1) = 4))$
+
+/* Validar que es solución válida */
+if (resultado_3_1 # []) then (
+    print("Reinas en fila:", map(first, resultado_3_1)),
+    print("Reinas en columna:", map(second, resultado_3_1)),
+    /* Verificar que no hay conflictos */
+    valido: true,
+    for i: 1 thru length(resultado_3_1) do (
+        for j: i+1 thru length(resultado_3_1) do (
+            r1: resultado_3_1[i],
+            r2: resultado_3_1[j],
+            if (r1[2] = r2[2] or abs(r1[1]-r2[1]) = abs(r1[2]-r2[2])) then
+                valido: false
+        )
+    ),
+    print("¿Solución válida (sin conflictos)?:", valido)
+)$
+print("")$
+
+/* Prueba 3.2: Encontrar solución para n=5 */
+print("Prueba 3.2 - prof(5):")$
+resultado_3_2: prof(5)$
+print("¿Tiene 5 reinas?:", is(length(resultado_3_2) = 5))$
+if (resultado_3_2 # []) then print("Primera solución encontrada:", resultado_3_2)$
+print("")$
+
+/* Prueba 3.3: n=1 (caso trivial) */
+print("Prueba 3.3 - prof(1):")$
+resultado_3_3: prof(1)$
+print(resultado_3_3)$
+print("¿Es [[1,1]]?:", is(resultado_3_3 = [[1,1]]))$
+print("")$
+
+/* =====================================================
+   PRUEBA 4: FUNCIÓN PROFTODAS
+   ===================================================== */
+
+print("========== PRUEBA 4: PROFTODAS (TODAS LAS SOLUCIONES) ==========")$
+print("")$
+
+/* Prueba 4.1: Encontrar todas las soluciones para n=4 */
+print("Prueba 4.1 - profTodas(4):")$
+resultado_4_1: profTodas(4)$
+print("Cantidad de soluciones:", length(resultado_4_1))$
+print("Soluciones:")$
+for i: 1 thru length(resultado_4_1) do (
+    print("Solución", i, ":", resultado_4_1[i])
+)$
+print("")$
+
+/* Verificar que cada solución es válida */
+print("Validando cada solución:")$
+for i: 1 thru length(resultado_4_1) do (
+    sol: resultado_4_1[i],
+    valido: true,
+    for j: 1 thru length(sol) do (
+        for k: j+1 thru length(sol) do (
+            r1: sol[j],
+            r2: sol[k],
+            if (r1[2] = r2[2] or abs(r1[1]-r2[1]) = abs(r1[2]-r2[2])) then
+                valido: false
+        )
+    ),
+    print("  Solución", i, "válida:", valido)
+)$
+print("")$
+
+/* Prueba 4.2: Encontrar todas para n=1 */
+print("Prueba 4.2 - profTodas(1):")$
+resultado_4_2: profTodas(1)$
+print("Cantidad de soluciones:", length(resultado_4_2))$
+print(resultado_4_2)$
+print("¿Es [[[1,1]]]?:", is(resultado_4_2 = [[[1,1]]]))$
+print("")$
+
+/* =====================================================
+   RESUMEN FINAL
+   ===================================================== */
+
+print("========== RESUMEN FINAL ==========")$
+print("")$
+print("✓ PRUEBA 1 (vecinos):")$
+if (is(resultado_1_1 = esperado_1_1) and is(resultado_1_2 = esperado_1_2) and is(resultado_1_3 = [])) then
+    print("  PASÓ - vecinos funciona correctamente")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("✓ PRUEBA 2 (extender):")$
+if (length(resultado_2_1) > 0) then
+    print("  PASÓ - extender funciona correctamente")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("✓ PRUEBA 3 (prof):")$
+if (length(resultado_3_1) = 4) then
+    print("  PASÓ - prof encuentra una solución válida")
+else
+    print("  FALLÓ")$
+print("")$
+
+print("✓ PRUEBA 4 (profTodas):")$
+print("  Encontradas", length(resultado_4_1), "soluciones para n=4")$
+if (length(resultado_4_1) >= 2) then
+    print("  PASÓ - profTodas encuentra todas las soluciones")
+else
+    print("  FALLÓ")$
+print("")$

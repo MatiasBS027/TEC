@@ -1,3 +1,8 @@
+-- ==========================
+-- Matias Benavides Sandoval - 2025102376
+-- Sebastián Ramírez Abarca - 2025071280
+-- ==========================
+
 CREATE PROCEDURE sp_ProcesarVacacionesBatch
     @inFechaOperacion DATE
     , @outResultCode INT OUTPUT

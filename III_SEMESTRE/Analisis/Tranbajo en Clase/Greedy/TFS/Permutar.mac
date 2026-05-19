@@ -1,0 +1,21 @@
+/* Permutar 
+*/
+
+borrar(x, lista):= delete(x, lista);
+
+permutar(lista):= block (
+    
+    if lista = [] then 
+        [] 
+    elseif length(lista) = 1 then 
+        [lista] 
+    else 
+        apply(append, 
+            map( lambda ([i],
+                map( lambda ([p], cons(i,p)),
+                    permutar(borrar(i, lista))
+                )
+            ),
+        lista
+    )
+);

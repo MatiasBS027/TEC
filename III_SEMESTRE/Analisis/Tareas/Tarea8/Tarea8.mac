@@ -1,0 +1,139 @@
+/*
+Matias Benavides Sandoval
+2025102376
+*/
+
+
+/* ===================================================
+HELPERS DEL GRAFO Y FUNCIONES DE COSTO
+- Funciones para obtener nodos, vecinos, peso de aristas y costo de rutas
+=================================================== */
+
+obtenerNodos(grafo) := block (
+	
+	return(map(first, grafo))
+);
+
+vecinos(nodo, grafo) := block (
+	[entrada : false],
+
+	for entrada in grafo do (
+		if first(entrada) = nodo then (
+			return(second(entrada))
+		)
+	),
+	return([])
+);
+
+pesoArista(u, v, grafo) := block (
+	[entrada, par, peso : false],
+
+	/* Buscar la pareja (u,v) recorriendo todas las aristas */
+	for entrada in grafo do (
+		for par in second(entrada) do (
+			if equal(first(entrada), u) and equal(first(par), v) then (
+				peso: second(par)
+			)
+		)
+	),
+
+	if peso = false then 
+		return(1000000) 
+	else 
+		return(peso)
+);
+
+costoRuta(ruta, grafo) := block (
+	[total : 0, i],
+
+	for i: 1 thru length(ruta) - 1 do (
+		total: total + pesoArista(ruta[i], ruta[i + 1], grafo)
+	),
+	return(total)
+);
+
+
+/* ===================================================
+TSP Permu
+- Usa permutaciones de Maxima para generar ordenes de visita
+- Construye rutas cerradas [start,...,start]
+- Devuelve TODAS las rutas de coste minimo en el formato solicitado
+=================================================== */
+
+tspPermu(start, grafo) := block (
+	[nodos, otros, permutaciones, costoMinimo : false, mejoresRutas : [], permu, ruta, costo],
+
+	nodos: obtenerNodos(grafo),
+
+	otros: delete(start, nodos),
+
+	permutaciones: listify(permutations(otros)),
+
+	for permu in permutaciones do (
+		ruta: append(append([start], permu), [start]),
+		costo: costoRuta(ruta, grafo),
+
+		if costoMinimo = false or costo < costoMinimo then (
+			costoMinimo: costo,
+			mejoresRutas: [[ruta, costo]]
+		)
+		else if costo = costoMinimo then (
+			mejoresRutas: endcons([ruta, costo], mejoresRutas)
+		)
+	),
+	return(mejoresRutas)
+);
+
+
+/* ===================================================
+TSP GREEDY - Vecino mas cercano
+- Inicia en `start`, en cada paso elige el vecino no visitado 
+con menor peso (desempate: orden de la lista de adyacencia)
+- Cierra el ciclo volviendo al inicio
+- Devuelve una sola ruta y su costo
+=================================================== */
+
+tspGreedy(start, grafo) := block (
+	[nodos, visitados, ruta, actual, listaVecinos, mejorNodo, mejorPeso, entradaVecino, costo],
+
+	nodos: obtenerNodos(grafo),
+	visitados: [start],
+	ruta: [start],
+	actual: start,
+
+	while length(visitados) < length(nodos) do (
+		/* obtener lista de vecinos directamente desde el grafo (evita ambiguedades) */
+		listaVecinos: [],
+		for entrada in grafo do (
+			if first(entrada) = actual then (
+				listaVecinos: second(entrada)
+			)
+		),
+
+		mejorNodo: false,
+		mejorPeso: false,
+
+		/* elegir vecino no visitado con menor peso */
+		for entradaVecino in listaVecinos do (
+			if not member(first(entradaVecino), visitados) then (
+				if mejorPeso = false or second(entradaVecino) < mejorPeso then (
+					mejorPeso: second(entradaVecino),
+					mejorNodo: first(entradaVecino)
+				)
+			)
+		),
+
+		/* Si no se encontró un nodo candidato, salir para evitar falsos */
+		if mejorNodo = false then (
+			return([endcons(start, ruta), 1000000])
+		),
+
+		visitados: endcons(mejorNodo, visitados),
+		ruta: endcons(mejorNodo, ruta),
+		actual: mejorNodo
+	),
+
+	ruta: endcons(start, ruta),
+	costo: costoRuta(ruta, grafo),
+	return([ruta, costo])
+);

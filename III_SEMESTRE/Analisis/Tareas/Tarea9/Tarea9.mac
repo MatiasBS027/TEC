@@ -2,3 +2,148 @@
 Matias Benavides Sandoval
 2025102376
 */
+
+
+/* ===================================================
+HELPERS DE LA MOCHILA
+- Funciones para obtener datos del objeto y construir celdas
+=================================================== */
+
+ObtenerNombreObjeto(objeto) := block(
+	[],
+	return(first(objeto))
+);
+
+ObtenerValorObjeto(objeto) := block(
+	[],
+	return(first(second(objeto)))
+);
+
+ObtenerPesoObjeto(objeto) := block(
+	[],
+	return(second(second(objeto)))
+);
+
+CeldaBase() := block(
+	[],
+	return([0, []])
+);
+
+SeleccionarConObjeto(celda, nombreObjeto) := block(
+	[],
+	return(append(second(celda), [nombreObjeto]))
+);
+
+
+/* ===================================================
+TRANSICION DP
+- Construccion de filas y seleccion de la mejor celda
+=================================================== */
+
+SeleccionarMejorCelda(celdaSinTomar, celdaTomar) := block(
+	[valorSinTomar, valorTomar],
+
+	valorSinTomar: first(celdaSinTomar),
+	valorTomar: first(celdaTomar),
+
+	if valorTomar > valorSinTomar then (
+		return(celdaTomar)
+	)
+	else if valorSinTomar > valorTomar then (
+		return(celdaSinTomar)
+	)
+	else (
+		return(celdaSinTomar)
+	)
+);
+
+ConstruirFilaBase(objeto, capacidad) := block(
+
+	/* ===================================================
+	CONSTRUCCION DE MATRIZ
+	- Fila inicial, filas siguientes y salida final ks
+	=================================================== */
+
+	[nombreObjeto, valorObjeto, pesoObjeto, fila, capacidadActual, celda],
+
+	nombreObjeto: ObtenerNombreObjeto(objeto),
+	valorObjeto: ObtenerValorObjeto(objeto),
+	pesoObjeto: ObtenerPesoObjeto(objeto),
+	fila: [],
+
+	for capacidadActual: 1 thru capacidad do (
+		if pesoObjeto <= capacidadActual then (
+			celda: [valorObjeto, [nombreObjeto]]
+		)
+		else (
+			celda: CeldaBase()
+		),
+
+		fila: endcons(celda, fila)
+	),
+
+	return(fila)
+);
+
+ConstruirFilaSiguiente(objeto, filaAnterior, capacidad) := block(
+	[nombreObjeto, valorObjeto, pesoObjeto, fila, capacidadActual,
+	celdaSinTomar, celdaTomar, celdaResto],
+
+	nombreObjeto: ObtenerNombreObjeto(objeto),
+	valorObjeto: ObtenerValorObjeto(objeto),
+	pesoObjeto: ObtenerPesoObjeto(objeto),
+	fila: [],
+
+	for capacidadActual: 1 thru capacidad do (
+		celdaSinTomar: filaAnterior[capacidadActual],
+
+		if pesoObjeto > capacidadActual then (
+			celdaTomar: CeldaBase()
+		)
+		else if pesoObjeto = capacidadActual then (
+			celdaTomar: [valorObjeto, [nombreObjeto]]
+		)
+		else (
+			celdaResto: filaAnterior[capacidadActual - pesoObjeto],
+			celdaTomar: [valorObjeto + first(celdaResto), SeleccionarConObjeto(celdaResto, nombreObjeto)]
+		),
+
+		fila: endcons(SeleccionarMejorCelda(celdaSinTomar, celdaTomar), fila)
+	),
+
+	return(fila)
+);
+
+ks(capacidad, objetos) := block(
+	[tabla, encabezado, filaAnterior, filaActual, objeto, indiceObjeto, indiceCapacidad],
+
+	if capacidad < 1 then (
+		encabezado: cons(xx, []),
+		tabla: [encabezado],
+		for objeto in objetos do (
+			tabla: endcons([ObtenerNombreObjeto(objeto)], tabla)
+		),
+		return(tabla)
+	),
+
+	encabezado: cons(xx, makelist(indiceCapacidad, indiceCapacidad, 1, capacidad)),
+	tabla: [encabezado],
+	filaAnterior: false,
+	indiceObjeto: 0,
+
+	for objeto in objetos do (
+		indiceObjeto: indiceObjeto + 1,
+
+		if indiceObjeto = 1 then (
+			filaActual: ConstruirFilaBase(objeto, capacidad)
+		)
+		else (
+			filaActual: ConstruirFilaSiguiente(objeto, filaAnterior, capacidad)
+		),
+
+		tabla: endcons(cons(ObtenerNombreObjeto(objeto), filaActual), tabla),
+		filaAnterior: filaActual
+	),
+
+	return(tabla)
+);

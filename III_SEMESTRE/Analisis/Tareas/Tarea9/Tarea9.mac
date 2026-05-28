@@ -57,12 +57,12 @@ SeleccionarMejorCelda(celdaSinTomar, celdaTomar) := block(
 	)
 );
 
-ConstruirFilaBase(objeto, capacidad) := block(
+/* ===================================================
+CONSTRUCCION DE MATRIZ
+- Fila inicial, filas siguientes y salida final ks
+=================================================== */
 
-	/* ===================================================
-	CONSTRUCCION DE MATRIZ
-	- Fila inicial, filas siguientes y salida final ks
-	=================================================== */
+ConstruirFilaBase(objeto, capacidad) := block(
 
 	[nombreObjeto, valorObjeto, pesoObjeto, fila, capacidadActual, celda],
 
@@ -84,6 +84,11 @@ ConstruirFilaBase(objeto, capacidad) := block(
 
 	return(fila)
 );
+
+/* ===================================================
+CONSTRUCCION DE FILAS SIGUIENTES
+- Para cada objeto, se construye una fila comparando la opcion de tomar o no tomar el objeto	
+=================================================== */
 
 ConstruirFilaSiguiente(objeto, filaAnterior, capacidad) := block(
 	[nombreObjeto, valorObjeto, pesoObjeto, fila, capacidadActual,
@@ -114,17 +119,13 @@ ConstruirFilaSiguiente(objeto, filaAnterior, capacidad) := block(
 	return(fila)
 );
 
+/* ===================================================
+CONSTRUCCION DE TABLA FINAL
+- Se construye la tabla final con los encabezados y las filas correspondientes
+=================================================== */
+
 ks(capacidad, objetos) := block(
 	[tabla, encabezado, filaAnterior, filaActual, objeto, indiceObjeto, indiceCapacidad],
-
-	if capacidad < 1 then (
-		encabezado: cons(xx, []),
-		tabla: [encabezado],
-		for objeto in objetos do (
-			tabla: endcons([ObtenerNombreObjeto(objeto)], tabla)
-		),
-		return(tabla)
-	),
 
 	encabezado: cons(xx, makelist(indiceCapacidad, indiceCapacidad, 1, capacidad)),
 	tabla: [encabezado],

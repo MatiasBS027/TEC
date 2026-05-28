@@ -1,0 +1,10 @@
+/**
+Generar subsecuencias de una cadena
+*/
+
+allSubseq(lista) := block (
+    [res], 
+    res: powerSet(setify(lista)),
+    res: listify(map(listify, res)), 
+    return (res)
+);

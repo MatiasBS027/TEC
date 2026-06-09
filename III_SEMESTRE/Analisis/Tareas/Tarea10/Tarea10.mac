@@ -1,0 +1,95 @@
+/*
+Matias Benavides Sandoval
+2025102376
+*/
+
+/* ===================================================
+EXTRACCION DEL IDENTIFICADOR
+- Retorna el nombre o etiqueta principal del registro
+=================================================== */
+
+ide(dat) := block(
+	[],
+	return(first(dat))
+);
+
+/* ===================================================
+EXTRACCION DE LOS ATRIBUTOS PREDICTIVOS
+- Separa la lista interna y elimina el valor objetivo final
+=================================================== */
+
+xs(dat) := block(
+	[inner, n, i, res],
+	inner: second(dat),
+	n: length(inner),
+	res: [],
+	if n <= 1 then return([]),
+	for i:1 thru n-1 do (
+		res: endcons(inner[i], res)
+	),
+	return(res)
+);
+
+/* ===================================================
+EXTRACCION DE LA VARIABLE OBJETIVO
+- Obtiene el ultimo valor de la lista interna del registro
+=================================================== */
+
+ys(dat) := block(
+	[inner, n],
+	inner: second(dat),
+	n: length(inner),
+	return(inner[n])
+);
+
+/* ===================================================
+CALCULO DE DISTANCIA EUCLIDIANA
+- Compara dos vectores de la misma dimension y retorna su proximidad
+=================================================== */
+
+distancia(x1, x2) := block(
+	[n, i, s],
+	n: length(x1),
+	s: 0,
+	if n # length(x2) then (
+		error("distancia: vectores de diferente dimension")
+	),
+	for i:1 thru n do (
+		s: s + (x1[i] - x2[i])^2
+	),
+	return(float(sqrt(s)))
+);
+
+/* ===================================================
+BUSQUEDA Y PROMEDIO DE LOS K VECINOS MAS CERCANOS
+- Calcula distancias, ordena por cercania y promedia los objetivos elegidos
+=================================================== */
+
+knn(x, k, datos) := block(
+	[vecinos, dlist, n, i, total, kk, lista],
+
+	vecinos: [],
+	for dat in datos do (
+		/* forzar evaluacion de xs y ys en variables locales */
+		lista: xs(dat),
+		yval: ys(dat),
+		vecinos: endcons([distancia(x, lista), yval], vecinos)
+	),
+
+	if length(vecinos) = 0 then (
+		return(false)
+	),
+
+	/* ordenar por distancia ascendente (sort es lexicografico) */
+	vecinos: sort(vecinos),
+	n: length(vecinos),
+	kk: if k > n then n else k,
+
+	total: 0,
+	for i:1 thru kk do (
+		total: total + second(vecinos[i])
+	),
+
+	return(total/kk)
+);
+

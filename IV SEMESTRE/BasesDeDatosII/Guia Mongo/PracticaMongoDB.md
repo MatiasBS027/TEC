@@ -21,7 +21,11 @@ use cineDB
 
 ---
 
+
+
 ## 2. Parte 1 — Inserción de datos
+
+
 
 ### Insertar documentos realistas en la colección `peliculas` (6 documentos: 2 de Peter Jackson, Matrix, Inception, Interstellar y Tenet).
 
@@ -58,6 +62,8 @@ db.peliculas.insertMany([
 
 ---
 
+
+
 ### Verificar la cantidad de documentos insertados.
 
 **Comentario:** `countDocuments` cuenta los documentos de la colección para confirmar la inserción.
@@ -76,7 +82,11 @@ db.peliculas.countDocuments({})
 
 ---
 
+
+
 ## 3. Parte 2 — Actualización de documentos
+
+
 
 ### a. Actualizar el rating de la película "Matrix" a 9.0.
 
@@ -101,6 +111,8 @@ db.peliculas.updateOne({ titulo: "Matrix" }, { $set: { rating: 9.0 } })
 ```
 
 ---
+
+
 
 ### b. Añadir un nuevo actor al reparto de "Matrix": Carrie-Anne Moss como Trinity.
 
@@ -151,7 +163,11 @@ db.peliculas.find({"titulo":"Matrix"})
 
 ---
 
+
+
 ## 4. Parte 3 — Consultas simples (`find`)
+
+
 
 ### a. Encontrar todas las películas dirigidas por "Peter Jackson".
 
@@ -198,6 +214,8 @@ db.peliculas.find({"director":"Peter Jackson"})
 
 ---
 
+
+
 ### b. Encontrar todas las películas de género "Ciencia Ficción" con rating mayor o igual a 8.5.
 
 **Comentario:** `find` combina filtro de igualdad en `genero` con operador de comparación `$gte` en `rating` para exigir ambas condiciones a la vez; la proyección muestra solo los campos de interés.
@@ -218,10 +236,13 @@ db.peliculas.find({ genero: "Ciencia Ficción", rating: { $gte: 8.5 } }, { _id: 
 ]
 ```
 
-
 ---
 
+
+
 ## 5. Parte 4 — Agregaciones avanzadas (`aggregate`)
+
+
 
 ### a. Mostrar el número total de películas por cada género.
 
@@ -244,6 +265,8 @@ db.peliculas.aggregate({$group:{_id: "$genero", total:{$sum:1}}})
 
 ---
 
+
+
 ### b. Mostrar el promedio de rating de todas las películas agrupadas por género.
 
 **Comentario:** `$group` con acumulador `$avg: "$rating"` calcula el promedio por género.
@@ -264,6 +287,8 @@ db.peliculas.aggregate({$group:{_id: "$genero", promedio_rating :{$avg:"$rating"
 ```
 
 ---
+
+
 
 ### c. Mostrar el título e ingresos de las 3 películas con mayores ingresos.
 
@@ -287,6 +312,8 @@ db.peliculas.aggregate([{ $sort: { "ingresos": -1 } },{ $limit: 3 },{ $project: 
 
 ---
 
+
+
 ### d. Mostrar el total de ingresos generados por todas las películas dirigidas por "Peter Jackson".
 
 **Comentario:** `$match` filtra solo las de Peter Jackson y `$group` con `$sum: "$ingresos"` acumula el total.
@@ -305,8 +332,9 @@ db.peliculas.aggregate([{ $match: { "director": "Peter Jackson" } },{ $group: { 
 ]
 ```
 
-
 ---
+
+
 
 ### e. Encontrar el actor que más veces ha aparecido en películas y la cantidad de apariciones.
 
@@ -326,7 +354,7 @@ db.peliculas.aggregate([{ $unwind: "$reparto" },{ $group: { _id: "$reparto.nombr
 ]
 ```
 
-**Tabla completa (mismo pipeline sin `$limit`):**
+**Tabla completa (mismo pipeline sin** `$limit`**):**
 
 ```text
 [
@@ -344,7 +372,11 @@ db.peliculas.aggregate([{ $unwind: "$reparto" },{ $group: { _id: "$reparto.nombr
 
 ---
 
+
+
 ## 6. Parte 5 — Eliminación de documentos
+
+
 
 ### a. Eliminar todas las películas con un rating menor a 6.0 (se inserta antes "Dragon Ball Evolution" con rating 2.7 para demostrar el borrado).
 
@@ -390,6 +422,8 @@ db.peliculas.deleteMany({ "rating": { $lt: 6.0 } })
 
 ---
 
+
+
 ### b. Eliminar la película cuyo título sea "Matrix".
 
 **Comentario:** `deleteOne` con filtro de igualdad `{ titulo: "Matrix" }` borra únicamente ese documento.
@@ -411,6 +445,8 @@ db.peliculas.deleteOne({ "titulo": "Matrix" })
 
 ---
 
+
+
 ### Verificación final — documentos restantes.
 
 **Comentario:** `countDocuments` confirma el estado final: de 6 documentos (+1 insertado para la prueba) se eliminaron 2, quedan 5.
@@ -424,5 +460,6 @@ db.peliculas.countDocuments({})
 **Salida o resultado:**
 
 ```text
-COUNT FINAL=5
+5
 ```
+

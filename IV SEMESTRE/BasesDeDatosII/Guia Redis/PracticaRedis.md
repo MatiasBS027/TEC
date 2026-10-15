@@ -18,7 +18,7 @@ APPEND nombre_curso " (IC-4302)"
 **Salida o resultado:**
 
 ```text
-(integer) 26
+(integer) 27
 ```
 
 ---
@@ -34,7 +34,7 @@ GET nombre_curso
 **Salida o resultado:**
 
 ```text
-"Bases de Datos II(IC-4302)"
+"Bases de Datos II (IC-4302)"
 ```
 
 ---
@@ -50,7 +50,7 @@ STRLEN nombre_curso
 **Salida o resultado:**
 
 ```text
-(integer) 26
+(integer) 27
 ```
 
 ---

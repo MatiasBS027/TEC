@@ -5,7 +5,7 @@
 - Alternativas válidas según la guía: Neo4j Desktop, AuraDB o Docker.
 
 ## Carga de datos
-1. Crear instancia vacía en Neo4j Desktop (ignorar `Load from .dump`).
+1. Crear instancia vacía en Neo4j Desktop.
 2. Abrir la herramienta `Query` y ejecutar por bloques, en orden:
    - Bloque 1: `CREATE CONSTRAINT` de unicidad en `Movie.title` y `Person.name`.
    - Bloque 2: nodos `Movie` (12) y `Person` (24) con `MERGE`.

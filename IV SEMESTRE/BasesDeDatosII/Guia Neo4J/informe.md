@@ -3,6 +3,7 @@
 
 ## 1. Portada
 - Curso: Bases de Datos II, Sede Central Cartago
+- **Integrantes:** Matias Benavides Sandoval — 2025102376
 - Práctica: construcción, consulta y análisis de base de datos orientada a grafos en Neo4j con Cypher
 - Entregables: `practica_neo4j.cypher`, informe PDF, `README.md`, evidencias de carga
 

@@ -1,0 +1,6 @@
+p.name,conexiones,peliculas,cantidadPeliculas
+Keanu Reeves,"[ACTED_IN, PRODUCED, DIRECTED]","[The Matrix, John Wick, Speed, Man of Tai Chi]",4
+Lana Wachowski,"[DIRECTED, WROTE]","[The Matrix, Cloud Atlas]",2
+Lilly Wachowski,"[DIRECTED, WROTE]","[The Matrix, Cloud Atlas]",2
+Tom Hanks,"[ACTED_IN, PRODUCED, WROTE]","[Forrest Gump, Apollo 13, Cast Away, Cloud Atlas, Toy Story]",5
+Gary Sinise,"[ACTED_IN, PRODUCED]","[Forrest Gump, Apollo 13]",2

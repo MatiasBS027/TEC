@@ -1,0 +1,5 @@
+quienSigue,aQuienSigue,pelicula,calificacion,seguidorTambienReseno
+James Thompson,Alice Johnson,The Matrix,5,TRUE
+James Thompson,Alice Johnson,Forrest Gump,4,FALSE
+James Thompson,Bob Smith,Forrest Gump,5,FALSE
+James Thompson,Bob Smith,Apollo 13,4,FALSE

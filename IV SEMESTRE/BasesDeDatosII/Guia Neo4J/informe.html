@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Informe Neo4j - Bases de Datos II</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:40px;color:#111;line-height:1.5}
+h1{font-size:22px}h2{font-size:18px;margin-top:28px;border-bottom:1px solid #ccc;padding-bottom:4px}h3{font-size:15px;margin-top:18px}
+code{background:#f2f2f2;padding:1px 5px;font-size:12.5px}pre{background:#f6f6f6;padding:10px;font-size:12px;overflow-x:auto}
+img{max-width:100%;border:1px solid #ccc;margin:8px 0}
+table{border-collapse:collapse;font-size:12.5px}td,th{border:1px solid #ccc;padding:4px 8px}
+.page{page-break-after:always}
+</style></head><body>
+<h1>Informe — Práctica de Laboratorio Neo4j<br><small>Bases de Datos II — Prof. Kenneth Obando Rodríguez</small></h1>
+<h2>1. Ambiente</h2>
+<p>Neo4j Desktop 2.2.1, instancia local <code>practica-neo4j</code>, base <code>neo4j</code>, usuario <code>neo4j</code>, Cypher 25. Datos generados con IA según autorización del docente.</p>
+<h2>2. Carga de datos</h2>
+<p>Constraints de unicidad en <code>Movie.title</code> y <code>Person.name</code>. 36 nodos (24 Person, 12 Movie), 48 relaciones (ACTED_IN, DIRECTED, PRODUCED, WROTE, REVIEWED, FOLLOWS).</p>
+<img src="evidencias/Q16a.png" alt="Carga">
+<h2>3. Resultados Q1–Q18 (resumen)</h2>
+<p>Consultas completas en <code>practica_neo4j.cypher</code>. Tablas en <code>Qn.csv</code>, capturas en <code>evidencias/Qn.png</code>.</p>
+<h3>Q1 Películas por década — 7 filas</h3><img src="evidencias/Q1.png">
+<h3>Q2 Reparto The Matrix — 6 actores</h3><img src="evidencias/Q2.png">
+<h3>Q3 Películas con directores — 12</h3><img src="evidencias/Q3.png">
+<h3>Q4 Nacidos después de 1965 — 3</h3><img src="evidencias/Q4.png">
+<h3>Q5 Colaboradores Keanu — 6</h3><img src="evidencias/Q5.png">
+<h3>Q6 Múltiples funciones — 5</h3><img src="evidencias/Q6.png">
+<h3>Q7 Reparto amplio — The Matrix (6)</h3><img src="evidencias/Q7.png">
+<h3>Q8 Seguidos y reseñas — 4</h3><img src="evidencias/Q8.png">
+<h3>Q9 Ruta Keanu–Hanks — 4 saltos</h3><img src="evidencias/Q9.png">
+<h3>Q10 Recomendación James — Forrest Gump 4.5, Apollo 13 4.0</h3><img src="evidencias/Q10.png">
+<h3>Q11 Red colaboración Top10</h3><img src="evidencias/Q11.png">
+<h3>Q12 Bacon — 12 alcanzables</h3><img src="evidencias/Q12.png">
+<h3>Q13 Actuaron y dirigieron — Keanu</h3><img src="evidencias/Q13.png">
+<h3>Q14 Múltiples roles — 2</h3><img src="evidencias/Q14.png">
+<h3>Q15 Similares — John Wick/The Matrix (2)</h3><img src="evidencias/Q15.png">
+<h3>Q16 Materialización — 30 relaciones</h3><img src="evidencias/Q16.png">
+<h3>Q17 Top colaboraciones</h3><img src="evidencias/Q17.png">
+<h2>4. Q18 EXPLAIN / PROFILE</h2>
+<p>Q4 (media): filtro + agregación simple, bajo costo. Q11 (difícil): doble Expand + count DISTINCT + sort, costo mayor. Mejoras: usar índices de constraints, evitar cartesiano, acotar <code>*..10</code>, filtrar <code>&lt;&gt;</code> temprano.</p>
+<img src="evidencias/Q18A.png"><img src="evidencias/Q18B.png">
+<img src="evidencias/Q18C.png"><img src="evidencias/Q18D.png">
+<h2>5. Conclusiones</h2>
+<p>Cypher expresa recorridos y agregaciones de grafo de forma directa. OPTIONAL MATCH + collect, shortestPath, y MERGE para materializar conocimiento son los patrones clave. El orden Q1–Q15 antes de Q16 preserva reproducibilidad.</p>
+</body></html>
